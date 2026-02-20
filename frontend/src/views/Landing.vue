@@ -1,0 +1,226 @@
+<template>
+  <div class="container">
+    <div class="navbar">
+      <div class="logo">📦 CheckIt Na Na</div>
+      <div class="nav-links">
+        <router-link to="/signup" id="signin">Sign In</router-link>
+        <router-link to="/login" id="login">Log In</router-link>
+      </div>
+    </div>
+
+    <div class="hero">
+      <h1>Inventory Management <br /><span>Made Simple</span></h1>
+      <p>
+        Take control of your stock with our powerful, intuitive platform.
+        Track inventory, analyze trends, and optimize your operations with
+        real-time insights.
+      </p>
+      <div class="hero-button">
+        <button class="btn btn-primary">Start Free Trial</button>
+        <router-link to="/signup">Sign In</router-link>
+      </div>
+    </div>
+
+    <div class="features">
+      <div class="card">
+        <h3>Track Sales</h3>
+        <p>
+          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Natus
+          possimus itaque suscipit labore tempora aut at quae ea, nesciunt beatae
+          quos obcaecati ut dolor ipsum sed rerum alias velit illum..
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Monitor Products</h3>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur
+          perferendis, aliquid, mollitia esse ut nesciunt non alias nobis quia
+          saepe totam, pariatur necessitatibus ratione accusantium quos facilis
+          rerum maxime. Et?.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Reports</h3>
+        <p>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Exercitationem,
+          in pariatur veniam non fugit praesentium ad nulla qui obcaecati optio
+          recusandae esse sapiente labore commodi, quod assumenda vero. Quod,
+          tempore..
+        </p>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+</script>
+<style scoped>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background: #f4f6f8;
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.container {
+    width: 100%;
+    /* max-width: 1100px; */
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 60px;
+}
+
+.logo {
+    font-weight: 700;
+    font-size: 20px;
+    color: rgb(227, 123, 4);
+    color: rgb(235, 94, 43);
+}
+
+.nav-links {
+    display: flex;
+    gap: 20px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #333;
+
+    font-weight: 500;
+    /* margin-top: 5px; */
+    border: 1px solid #ccc;
+    padding: 5px 12px;
+    border-radius: 5px;
+    /* background-color: red; */
+}
+
+#login {
+    background-color: #0f766e;
+    background-color: rgb(235, 94, 43);
+
+    color: white;
+}
+
+#signup {
+    background-color: white;
+    color: #0f766e;
+}
+
+.btn {
+    padding: 10px 18px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.3s ease;
+}
+
+.btn-primary {
+    background-color: #0f766e;
+    background-color: rgb(235, 94, 43);
+
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #0d5f59;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid #ccc;
+}
+
+.hero {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.hero h1 {
+    font-size: 40px;
+    margin-bottom: 20px;
+}
+
+.hero h1 span {
+    color: #0f766e;
+    color: rgb(235, 94, 43);
+
+}
+
+.hero p {
+    color: #666;
+    max-width: 600px;
+    margin: 0 auto 30px;
+}
+
+.hero-button a {
+    text-decoration: none;
+    background-color: rgb(235, 94, 43);
+    color: black;
+    padding: 20px;
+    font-size: 15px;
+    border-radius: 10px;
+    font-weight: 700;
+}
+
+.hero-button {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.card {
+    background: #eaecec;
+    padding: 25px;
+    border-radius: 15px;
+    text-align: center;
+    transition: 0.3s ease;
+    border: 1px solid #eee;
+}
+
+.card:hover {
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+}
+
+.card h3 {
+    margin-bottom: 10px;
+}
+
+.card p {
+    color: #666;
+    font-size: 14px;
+}
+
+.stats {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 50px;
+    font-size: 14px;
+    color: #666;
+}
+</style>
