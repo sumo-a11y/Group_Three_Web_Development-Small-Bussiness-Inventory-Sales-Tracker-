@@ -34,6 +34,7 @@ const user = db.define('User', {
         onDelete: 'CASCADE'
     }
 }, {
-    timestamps: true
+    timestamps: true,
+    freezeTableName: true
 });
 export default user;

@@ -5,6 +5,8 @@ import morgan from 'morgan';
 import session from 'express-session';
 import dotenv from 'dotenv';
 import router from './route/auth.routes.js';
+import db from './config/connect.js';
+
 dotenv.config();
 
 const app = express();
@@ -22,7 +24,9 @@ app.use(session({
     cookie: { secure: false, maxAge: 60000 * 60 }
 }));
 
-
+// Database Sync
+await db.sync({ alter: true });
+console.log("All models synced correctly..")
 // Routes
 app.use('/api/auth', router);
 app.get('/', (req, res) => {

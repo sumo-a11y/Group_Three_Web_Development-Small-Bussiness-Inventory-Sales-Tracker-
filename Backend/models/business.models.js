@@ -28,7 +28,8 @@ const Business = db.define('Business', {
         allowNull: true
     }
 }, {
-    timestamps: true
+    timestamps: true,
+    freezeTableName: true
 });
 
 export default Business;
