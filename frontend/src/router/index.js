@@ -2,11 +2,13 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Landing from '../views/Landing.vue'
 import Login from '../views/Login.vue'
 import SignIn from '../views/SignIn.vue'
+import Dashboard from '../views/Dashboard.vue'
 
 const routes = [
   { path: '/', name: 'Landing', component: Landing },
   { path: '/login', name: 'Login', component: Login },
-  { path: '/signup', name: 'SignIn', component: SignIn }
+  { path: '/signup', name: 'SignIn', component: SignIn },
+  { path: '/dashboard', name: 'Dashboard', component: Dashboard }
 ]
 
 const router = createRouter({

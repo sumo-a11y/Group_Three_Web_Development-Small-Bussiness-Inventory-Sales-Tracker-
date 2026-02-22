@@ -25,7 +25,7 @@ app.use(session({
 }));
 
 // Database Sync
-await db.sync({ alter: true });
+await db.sync();
 console.log("All models synced correctly..")
 // Routes
 app.use('/api/auth', router);

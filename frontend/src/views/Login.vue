@@ -30,12 +30,20 @@
 
       <div class="form-group">
         <label>Email Address</label>
-        <input type="email" placeholder="Enter your email" />
+        <input
+          type="email"
+          v-model="form.email"
+          placeholder="Enter your email"
+        />
       </div>
 
       <div class="form-group">
         <label>Password</label>
-        <input type="password" placeholder="Enter your password" />
+        <input
+          type="password"
+          v-model="form.password"
+          placeholder="Enter your password"
+        />
       </div>
 
       <div class="checkbox">
@@ -43,10 +51,37 @@
         <span>Remember me</span>
       </div>
 
-      <button class="create-btn">Sign In</button>
+      <button class="create-btn" @click="handleSubmit">Sign In</button>
     </div>
   </div>
 </template>
 
+
 <script setup>
+import { ref } from "vue";
+import api from "../services/api.js";
+import { useRouter } from "vue-router";
+
+const form = ref({
+  email: "",
+  password: "",
+});
+
+const routes = useRouter();
+
+const handleSubmit = async () => {
+  try {
+    const response = await api.post("api/auth/login", {
+      email: form.value.email,
+      password: form.value.password,
+    });
+    alert("Login successfully!");
+    localStorage.setItem("token", response.data.token);
+    localStorage.setItem("businessName", response.data.user.businessName);
+    routes.push("/Dashboard");
+  } catch (error) {
+    alert("Error Logging: " + (error.response?.data?.message || error.message));
+  }
+};
 </script>
+
