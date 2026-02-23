@@ -1,10 +1,9 @@
+<script setup></script>
+
 <template>
-  <router-view />
+  <div>
+    <router-view />
+  </div>
 </template>
 
-<script setup>
-</script>
-
-<style>
-/* empty - global styles in assets */
-</style>
+<style scoped></style>
