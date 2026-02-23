@@ -13,7 +13,7 @@
         <li
           class="border rounded py-2 px-4 bg-orange-600 cursor-pointer hover:bg-white hover:text-black text-white font-bold transition text-xl"
         >
-          <router-link to="/login">Login</router-link>
+          <router-link to="/login">LogIn</router-link>
         </li>
       </ul>
     </div>
