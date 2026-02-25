@@ -1,5 +1,7 @@
 <template>
-  <nav class="flex justify-between items-center px-10 py-4">
+  <nav
+    class="flex justify-between items-center px-13 py-8 bg-orange-100 shadow fixed w-full top-0 left-0 z-10"
+  >
     <div>
       <h1 class="text-2xl font-bold text-orange-600">Check it NaNa</h1>
     </div>

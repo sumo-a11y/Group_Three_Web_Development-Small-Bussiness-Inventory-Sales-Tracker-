@@ -11,7 +11,7 @@
       <span class="text-orange-600 text-4xl md:text-5xl font-bold mt-4">
         Made Simple
       </span>
-      <p class="mt-6 text-lg text-gray-600 max-w-5xl">
+      <p class="mt-6 text-xl text-gray-600 max-w-5xl">
         Track your inventory and sales with ease using our simple and powerful
         platform built for modern businesses. Monitor stock levels in real time,
         reduce errors, and generate clear reports to make smarter decisions. Our
@@ -30,8 +30,8 @@
     </section>
 
     <!-- ABOUT -->
-    <section class="px-6 mt-20" data-aos="fade-up">
-      <h2 class="text-center text-5xl font-bold mb-10">
+    <section class="px-13 py-20 mt-20 bg-gray-50" data-aos="fade-up">
+      <h2 class="text-center text-6xl font-bold">
         About <span class="text-orange-600">Us</span>
       </h2>
 
@@ -62,7 +62,7 @@
 
     <!-- CTA -->
     <section
-      class="cta flex flex-col items-center justify-center text-center px-6 mt-32 mb-32"
+      class="cta flex flex-col items-center justify-center text-center py-20 px-13 bg-orange-600 text-white"
       data-aos="zoom-in"
     >
       <h1 class="text-4xl md:text-6xl font-bold">
@@ -72,13 +72,17 @@
         Start managing your inventory and sales smarter today.
       </p>
       <RouterLink to="/signup" class="mt-10">
-        <Button>Get Started Now <i class="fa-solid fa-arrow-right"></i></Button>
+        <button
+          class="bg-black border-2 border-black py-2 px-4 text-xl rounded-full font-bold transition duration-150 hover:bg-white hover:text-black hover:border-2 hover:border-black"
+        >
+          Get Started Now <i class="fa-solid fa-arrow-right"></i>
+        </button>
       </RouterLink>
     </section>
 
     <!-- PRICING -->
-    <section class="mt-32 px-6" data-aos="fade-up">
-      <h2 class="text-center text-5xl font-bold">
+    <section class="px-13 py-20 mt-15" data-aos="fade-up">
+      <h2 class="text-center text-6xl font-bold">
         Pricing <span class="text-orange-600">Plans</span>
       </h2>
 
