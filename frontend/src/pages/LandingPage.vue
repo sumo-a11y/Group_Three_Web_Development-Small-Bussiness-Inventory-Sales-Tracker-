@@ -4,10 +4,10 @@
 
     <!-- HERO -->
     <section
-      class="flex flex-col items-center justify-center min-h-screen px-6 text-center"
+      class="flex flex-col items-center justify-center mt-28 py-20 px-6 text-center"
       data-aos="fade-up"
     >
-      <h1 class="text-5xl md:text-6xl font-bold mt-12">Inventory Management</h1>
+      <h1 class="text-5xl md:text-8xl font-bold">Inventory Management</h1>
       <span class="text-orange-600 text-4xl md:text-5xl font-bold mt-4">
         Made Simple
       </span>
@@ -19,7 +19,7 @@
         efficiently.
       </p>
 
-      <div class="flex gap-4 mt-8">
+      <div class="flex gap-4 mt-8 mb-8">
         <RouterLink to="/signup"
           ><Button>Get Started <i class="fa-solid fa-arrow-right"></i></Button
         ></RouterLink>
@@ -30,7 +30,7 @@
     </section>
 
     <!-- ABOUT -->
-    <section class="px-13 py-20 mt-20 bg-gray-50" data-aos="fade-up">
+    <section class="px-13 py-20  bg-gray-50" data-aos="fade-up">
       <h2 class="text-center text-6xl font-bold">
         About <span class="text-orange-600">Us</span>
       </h2>
@@ -62,7 +62,7 @@
 
     <!-- CTA -->
     <section
-      class="cta flex flex-col items-center justify-center text-center py-20 px-13 bg-orange-600 text-white"
+      class="cta flex flex-col items-center justify-center text-center py-20 px-13 bg-orange-600 text-white h-100 cta-bg"
       data-aos="zoom-in"
     >
       <h1 class="text-4xl md:text-6xl font-bold">
@@ -72,11 +72,9 @@
         Start managing your inventory and sales smarter today.
       </p>
       <RouterLink to="/signup" class="mt-10">
-        <button
-          class="bg-black border-2 border-black py-2 px-4 text-xl rounded-full font-bold transition duration-150 hover:bg-white hover:text-black hover:border-2 hover:border-black"
-        >
+        <Button class="py-5 px-10">
           Get Started Now <i class="fa-solid fa-arrow-right"></i>
-        </button>
+        </Button>
       </RouterLink>
     </section>
 
@@ -103,8 +101,8 @@
     </section>
 
     <!-- TESTIMONIALS -->
-    <section class="mt-32 px-6" data-aos="fade-up">
-      <h2 class="text-center text-5xl font-bold">
+    <section class="px-13 py-20 mt-20 bg-gray-50" data-aos="fade-up">
+      <h2 class="text-center text-6xl font-bold">
         A Word From Our <span class="text-orange-600">Customers</span>
       </h2>
 
@@ -118,8 +116,8 @@
     </section>
 
     <!-- TEAM -->
-    <section class="mt-32 px-6" data-aos="fade-up">
-      <h2 class="text-center text-5xl font-bold">
+    <section class="px-13 py-20 mt-15" data-aos="fade-up">
+      <h2 class="text-center text-6xl font-bold">
         Meet Our <span class="text-orange-600">Team</span>
       </h2>
 
@@ -141,21 +139,14 @@
     </section>
 
     <!-- CONTACT -->
-    <section class="mt-32 px-6" data-aos="fade-up">
-      <h2 class="text-center text-5xl font-bold mb-10">
+    <section class="px-13 py-20 mt-15 bg-gray-50" data-aos="fade-up">
+      <h2 class="text-center text-6xl font-bold mb-15">
         Contact <span class="text-orange-600">Us</span>
       </h2>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-6xl mx-auto">
         <!-- LEFT: CONTACT INFO + MAP -->
         <div class="space-y-6">
-          <div>
-            <h3 class="text-4xl font-semibold">Our Office</h3>
-            <p class="text-gray-600">Broad Street, Monrovia, Liberia</p>
-            <p class="text-gray-600">📞 +231 770 123 456</p>
-            <p class="text-gray-600">✉️ support@checkitnana.com</p>
-          </div>
-
           <!-- GOOGLE MAP -->
           <div class="w-full h-80 rounded overflow-hidden border">
             <iframe
@@ -165,6 +156,12 @@
               referrerpolicy="no-referrer-when-downgrade"
             >
             </iframe>
+          </div>
+
+          <div class="text-center">
+            <p class="text-gray-600">Broad Street, Monrovia, Liberia</p>
+            <p class="text-gray-600">📞 +231 770 123 456</p>
+            <p class="text-gray-600">✉️ support@checkitnana.com</p>
           </div>
         </div>
 
@@ -194,19 +191,19 @@
 
           <!-- SOCIAL LINKS -->
           <div class="mt-6 text-center">
-            <p class="mb-2 font-semibold">Follow us</p>
+            <p class="mb-2 font-semibold text-2xl">Follow us</p>
             <div class="flex justify-center gap-6 text-xl">
               <a href="#" class="hover:text-orange-600"
-                ><i class="fa-brands fa-facebook"></i
+                ><i class="fa-brands fa-facebook text-3xl"></i
               ></a>
               <a href="#" class="hover:text-orange-600"
-                ><i class="fa-brands fa-twitter"></i
+                ><i class="fa-brands fa-twitter text-3xl"></i
               ></a>
               <a href="#" class="hover:text-orange-600"
-                ><i class="fa-brands fa-linkedin"></i
+                ><i class="fa-brands fa-linkedin text-3xl"></i
               ></a>
               <a href="#" class="hover:text-orange-600"
-                ><i class="fa-brands fa-github"></i
+                ><i class="fa-brands fa-github text-3xl"></i
               ></a>
             </div>
           </div>
@@ -215,7 +212,7 @@
     </section>
 
     <!-- FOOTER -->
-    <footer class="bg-black text-white mt-32 p-10">
+    <footer class="bg-black text-white p-10">
       <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10">
         <!-- QUICK LINKS -->
         <div>
@@ -405,5 +402,13 @@ const plans = [
   50% {
     transform: translateY(-10px);
   }
+}
+
+.cta-bg {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.6)),
+    url("../assets/pattern.webp");
+  background-size: cover;
+  background-position: center;
+  height: 60vh;
 }
 </style>
