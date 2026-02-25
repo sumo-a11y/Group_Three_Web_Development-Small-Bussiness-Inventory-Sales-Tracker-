@@ -5,18 +5,20 @@
     </div>
     <div>
       <ul class="flex space-x-4">
-        <li
-          class="border rounded py-2 px-4 text-xl font-bold cursor-pointer hover:bg-orange-600 hover:text-white transition"
-        >
-          <router-link to="/signup">SignUp</router-link>
+        <li>
+          <Button>
+            <router-link to="/signup">SignUp</router-link>
+          </Button>
         </li>
-        <li
-          class="border rounded py-2 px-4 bg-orange-600 cursor-pointer hover:bg-white hover:text-black text-white font-bold transition text-xl"
-        >
-          <router-link to="/login">LogIn</router-link>
+        <li>
+          <Button>
+            <router-link to="/login">LogIn</router-link>
+          </Button>
         </li>
       </ul>
     </div>
   </nav>
 </template>
-<script scoped></script>
+<script setup>
+import Button from "@/components/Button.vue";
+</script>
