@@ -4,5 +4,95 @@
 
 
 body {
-    font-family: 'Poppins', sans-serif;
+  font-family: 'Poppins', sans-serif;
+}
+
+:root {
+  --px-primary: #ea580c;
+  /* orange-600 */
+  --px-primary-700: #c2410c;
+  --px-soft: #fff7ed;
+  /* orange-50 */
+  --px-border: rgba(15, 23, 42, 0.08);
+}
+
+/* smoother font rendering */
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* modern scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(234, 88, 12, .25);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(234, 88, 12, .35);
+}
+
+.kpi {
+  @apply bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition p-5 relative overflow-hidden;
+  border-left: 4px solid var(--px-primary);
+}
+
+.btn-ghost {
+  @apply inline-flex items-center justify-center rounded-xl px-5 py-2.5 font-semibold text-slate-700 border border-slate-200 bg-white transition;
+}
+
+.icon-chip {
+  @apply w-11 h-11 rounded-2xl grid place-items-center border;
+  background: var(--px-soft);
+  border-color: rgba(234, 88, 12, .18);
+  color: var(--px-primary);
+}
+
+.card {
+  @apply bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-md transition;
+}
+
+.btn-primary {
+  @apply bg-orange-600 text-white px-4 py-2.5 rounded-xl font-semibold shadow-sm hover:bg-orange-700 transition inline-flex items-center;
+}
+
+.btn-secondary {
+  @apply bg-white border border-gray-200 text-gray-700 px-4 py-2.5 rounded-xl font-semibold hover:bg-orange-50 hover:border-orange-200 transition inline-flex items-center;
+}
+
+.pill-orange {
+  @apply text-xs font-bold px-2.5 py-1 rounded-full bg-orange-50 text-orange-700 border border-orange-100;
+}
+
+.card {
+  @apply bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-md transition;
+}
+
+.pill-orange {
+  @apply text-xs font-bold px-2.5 py-1 rounded-full bg-orange-50 text-orange-700 border border-orange-100;
+}
+
+.btn-secondary {
+  @apply bg-white border border-gray-200 text-gray-700 px-4 py-2.5 rounded-xl font-semibold hover:bg-orange-50 hover:border-orange-200 transition inline-flex items-center justify-center;
+}
+
+.dot {
+  @apply w-2.5 h-2.5 rounded-full;
+}
+
+.dot-critical {
+  @apply bg-red-500;
+}
+
+.dot-warning {
+  @apply bg-orange-500;
+}
+
+.dot-ok {
+  @apply bg-green-500;
 }
