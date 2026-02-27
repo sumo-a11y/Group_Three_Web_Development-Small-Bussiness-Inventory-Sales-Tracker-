@@ -3,52 +3,54 @@
     <!-- Mobile overlay -->
     <div
       v-if="open"
-      class="fixed inset-0 bg-black bg-opacity-40 z-30 md:hidden"
+      class="fixed inset-0 bg-black/40 z-40 md:hidden"
       @click="$emit('close')"
     ></div>
 
     <!-- Sidebar -->
     <aside
-      :class="['sidebar', open ? 'open' : '']"
-      class="fixed top-0 left-0 h-screen w-64 bg-white shadow z-40 transform -translate-x-full md:translate-x-0 transition-transform"
+      class="fixed top-0 left-0 h-screen w-64 bg-white shadow z-50 transition-transform duration-300 md:translate-x-0"
+      :class="open ? 'translate-x-0' : '-translate-x-full'"
     >
       <div class="flex flex-col h-full">
         <!-- Header -->
         <div class="flex items-center justify-between px-6 py-4 border-b">
-          <span class="text-xl font-bold text-orange-600">
-            <i class="fa-solid fa-cubes mr-2"></i>
+          <span
+            class="text-xl font-bold text-orange-600 flex items-center gap-2"
+          >
+            <i class="fa-solid fa-cubes"></i>
             {{ superAdmin ? "Super Admin" : "Business Admin" }}
           </span>
           <button
-            class="md:hidden text-gray-500 text-2xl"
+            class="md:hidden text-slate-500 text-2xl"
             @click="$emit('close')"
           >
             <i class="fa-solid fa-xmark"></i>
           </button>
         </div>
 
-        <!-- Nav with internal scroll -->
-        <nav class="flex-1 px-6 py-4 overflow-y-auto">
+        <!-- Nav -->
+        <nav class="flex-1 px-4 py-4 overflow-y-auto">
           <ul class="space-y-2">
-            <!-- Dashboard -->
             <li>
               <RouterLink
-                to="/"
+                to="/dashboard"
                 class="nav-link"
-                :class="{ active: isActive('/') }"
+                :class="{ active: isActive('/dashboard') }"
+                @click="$emit('close')"
               >
                 <i class="fa-solid fa-gauge"></i>
                 Dashboard
               </RouterLink>
             </li>
 
-            <!-- Super Admin Links -->
             <template v-if="superAdmin">
               <li>
                 <RouterLink
                   to="/businesses"
                   class="nav-link"
                   :class="{ active: isActive('/businesses') }"
+                  @click="$emit('close')"
                 >
                   <i class="fa-solid fa-building"></i>
                   Businesses
@@ -59,30 +61,21 @@
                   to="/admins"
                   class="nav-link"
                   :class="{ active: isActive('/admins') }"
+                  @click="$emit('close')"
                 >
                   <i class="fa-solid fa-user-shield"></i>
                   Admins
                 </RouterLink>
               </li>
-              <li>
-                <RouterLink
-                  to="/reports"
-                  class="nav-link"
-                  :class="{ active: isActive('/reports') }"
-                >
-                  <i class="fa-solid fa-chart-pie"></i>
-                  Reports
-                </RouterLink>
-              </li>
             </template>
 
-            <!-- Business Admin Links -->
             <template v-else>
               <li>
                 <RouterLink
                   to="/products"
                   class="nav-link"
                   :class="{ active: isActive('/products') }"
+                  @click="$emit('close')"
                 >
                   <i class="fa-solid fa-box"></i>
                   Products
@@ -93,6 +86,7 @@
                   to="/sales"
                   class="nav-link"
                   :class="{ active: isActive('/sales') }"
+                  @click="$emit('close')"
                 >
                   <i class="fa-solid fa-chart-line"></i>
                   Sales
@@ -103,6 +97,7 @@
                   to="/inventory"
                   class="nav-link"
                   :class="{ active: isActive('/inventory') }"
+                  @click="$emit('close')"
                 >
                   <i class="fa-solid fa-warehouse"></i>
                   Inventory
@@ -113,6 +108,7 @@
                   to="/suppliers"
                   class="nav-link"
                   :class="{ active: isActive('/suppliers') }"
+                  @click="$emit('close')"
                 >
                   <i class="fa-solid fa-truck"></i>
                   Suppliers
@@ -123,6 +119,7 @@
                   to="/customers"
                   class="nav-link"
                   :class="{ active: isActive('/customers') }"
+                  @click="$emit('close')"
                 >
                   <i class="fa-solid fa-users"></i>
                   Customers
@@ -133,6 +130,7 @@
                   to="/reports"
                   class="nav-link"
                   :class="{ active: isActive('/reports') }"
+                  @click="$emit('close')"
                 >
                   <i class="fa-solid fa-file-lines"></i>
                   Reports
@@ -140,12 +138,12 @@
               </li>
             </template>
 
-            <!-- Settings -->
-            <li>
+            <li class="pt-2">
               <RouterLink
                 to="/settings"
                 class="nav-link"
                 :class="{ active: isActive('/settings') }"
+                @click="$emit('close')"
               >
                 <i class="fa-solid fa-gear"></i>
                 Settings
@@ -155,11 +153,12 @@
         </nav>
 
         <!-- Logout -->
-        <div class="px-6 py-4 border-t">
+        <div class="px-4 py-4 border-t">
           <button
-            class="w-full bg-orange-600 text-white py-2 rounded font-semibold hover:bg-orange-700 transition flex items-center justify-center"
+            @click="logout"
+            class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-colors"
           >
-            <i class="fa-solid fa-right-from-bracket mr-2"></i>
+            <i class="fa-solid fa-right-from-bracket"></i>
             Logout
           </button>
         </div>
@@ -170,7 +169,8 @@
 
 <script setup>
 import { defineProps } from "vue";
-import { RouterLink, useRoute } from "vue-router";
+import { RouterLink, useRoute, useRouter } from "vue-router";
+import { useAuthStore } from "@/stores/auth.store";
 
 defineProps({
   open: Boolean,
@@ -178,54 +178,44 @@ defineProps({
 });
 
 const route = useRoute();
+const router = useRouter();
+const auth = useAuthStore();
 
-// Helper to mark active links
+const logout = async () => {
+  const ok = confirm("Are you sure you want to logout?");
+  if (!ok) return;
+  await auth.logout();
+  router.replace("/login");
+};
+
 const isActive = (path) => route.path === path;
 </script>
 
 <style scoped>
-.sidebar {
-  transition: transform 0.3s ease;
-}
-
-/* Mobile open/close */
-.sidebar.open {
-  transform: translateX(0);
-}
-
-/* Nav links */
 .nav-link {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.6rem 0.75rem;
-  border-radius: 0.375rem;
-  color: #374151;
-  font-weight: 500;
+  padding: 0.7rem 0.9rem;
+  border-radius: 0.75rem;
+  color: #334155;
+  font-weight: 600;
   transition: all 0.2s;
 }
 .nav-link:hover {
   background-color: #fff7ed;
   color: #ea580c;
 }
-
-/* Active state */
 .nav-link.active {
   background-color: #f97316;
   color: white;
 }
 
-/* Internal scroll for nav */
-nav {
-  overflow-y: auto;
-}
-
-/* Custom scrollbar (optional) */
 nav::-webkit-scrollbar {
   width: 6px;
 }
 nav::-webkit-scrollbar-thumb {
   background-color: #f97316;
-  border-radius: 3px;
+  border-radius: 999px;
 }
 </style>

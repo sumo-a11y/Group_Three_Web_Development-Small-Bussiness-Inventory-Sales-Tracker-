@@ -1,123 +1,91 @@
 <template>
   <div class="card">
-    <div class="flex items-center justify-between gap-3">
+    <div class="flex items-center justify-between">
       <div>
-        <h3 class="text-lg font-bold text-gray-900">{{ title }}</h3>
-        <p class="text-sm text-gray-500">{{ subtitle }}</p>
+        <h3 class="text-3xl font-extrabold text-black/80">Stock Health</h3>
+        <p class="text-lg text-slate-500">Low stock distribution</p>
       </div>
-
-      <span class="pill-orange"> {{ totalLowStock }} items </span>
+      <span class="pill-orange">{{ totalLowStock }} items</span>
     </div>
 
-    <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
-      <div class="h-60">
-        <canvas ref="canvasEl"></canvas>
+    <div class="mt-4">
+      <apexchart
+        type="donut"
+        height="320"
+        :options="options"
+        :series="series"
+      />
+    </div>
+
+    <div class="mt-4 grid grid-cols-1 gap-2 text-sm">
+      <div class="flex items-center justify-between">
+        <span class="flex items-center gap-2"
+          ><span class="dot dot-red"></span>Critical (≤ 5)</span
+        >
+        <b>{{ breakdown.critical }}</b>
+      </div>
+      <div class="flex items-center justify-between">
+        <span class="flex items-center gap-2"
+          ><span class="dot dot-orange"></span>Warning (6–10)</span
+        >
+        <b>{{ breakdown.warning }}</b>
+      </div>
+      <div class="flex items-center justify-between">
+        <span class="flex items-center gap-2"
+          ><span class="dot dot-green"></span>Healthy (≥ 11)</span
+        >
+        <b>{{ breakdown.healthy }}</b>
       </div>
 
-      <div class="space-y-3">
-        <div class="flex items-center justify-between text-sm">
-          <div class="flex items-center gap-2">
-            <span class="dot dot-critical"></span>
-            <span class="text-gray-700 font-semibold">Critical (≤ 5)</span>
-          </div>
-          <span class="font-bold text-gray-900">{{ breakdown.critical }}</span>
-        </div>
-
-        <div class="flex items-center justify-between text-sm">
-          <div class="flex items-center gap-2">
-            <span class="dot dot-warning"></span>
-            <span class="text-gray-700 font-semibold">Warning (6–10)</span>
-          </div>
-          <span class="font-bold text-gray-900">{{ breakdown.warning }}</span>
-        </div>
-
-        <div class="flex items-center justify-between text-sm">
-          <div class="flex items-center gap-2">
-            <span class="dot dot-ok"></span>
-            <span class="text-gray-700 font-semibold">Healthy (≥ 11)</span>
-          </div>
-          <span class="font-bold text-gray-900">{{ breakdown.healthy }}</span>
-        </div>
-
-        <button class="btn-secondary w-full">
-          <i class="fa-solid fa-warehouse mr-2"></i> Review Stock
-        </button>
-      </div>
+      <button class="btn-ghost w-full mt-2">
+        <i class="fa-solid fa-warehouse mr-2"></i> Review Stock
+      </button>
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed, onMounted, onBeforeUnmount, ref } from "vue";
-import Chart from "chart.js/auto";
+import { computed } from "vue";
 
 const props = defineProps({
-  title: { type: String, default: "Stock Health" },
-  subtitle: { type: String, default: "Low stock distribution" },
-
-  // pass actual counts from API later
   breakdown: {
     type: Object,
-    default: () => ({
-      critical: 6, // <= 5
-      warning: 8, // 6-10
-      healthy: 306, // >= 11
-    }),
+    default: () => ({ critical: 5, warning: 4, healthy: 10 }),
   },
+  totalLowStock: { type: Number, default: 9 },
 });
 
-const canvasEl = ref(null);
-const chartInstance = ref(null);
+const series = computed(() => [
+  props.breakdown.critical,
+  props.breakdown.warning,
+  props.breakdown.healthy,
+]);
 
-const totalLowStock = computed(
-  () => props.breakdown.critical + props.breakdown.warning
-);
-
-function buildChart() {
-  const ctx = canvasEl.value?.getContext("2d");
-  if (!ctx) return;
-
-  const data = [
-    props.breakdown.critical,
-    props.breakdown.warning,
-    props.breakdown.healthy,
-  ];
-
-  chartInstance.value = new Chart(ctx, {
-    type: "doughnut",
-    data: {
-      labels: ["Critical (≤5)", "Warning (6–10)", "Healthy (≥11)"],
-      datasets: [
-        {
-          data,
-          borderWidth: 0,
-          cutout: "72%",
-          backgroundColor: [
-            "rgba(244, 63, 94, 0.85)", // critical (rose)
-            "rgba(234, 88, 12, 0.85)", // warning (orange brand)
-            "rgba(34, 197, 94, 0.75)", // healthy (green)
-          ],
+const options = computed(() => ({
+  chart: { fontFamily: "inherit" },
+  labels: ["Critical (≤ 5)", "Warning (6–10)", "Healthy (≥ 11)"],
+  colors: ["#ef4444", "#ea580c", "#22c55e"],
+  stroke: { width: 0 },
+  legend: { show: false },
+  dataLabels: { enabled: false },
+  plotOptions: {
+    pie: {
+      donut: {
+        size: "72%",
+        labels: {
+          show: true,
+          total: {
+            show: true,
+            label: "Low Stock",
+            color: "#0f172a",
+            formatter: () => String(props.totalLowStock),
+          },
+          value: { show: true, color: "#0f172a" },
         },
-      ],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: { enabled: true },
       },
     },
-  });
-}
-
-function destroyChart() {
-  if (chartInstance.value) {
-    chartInstance.value.destroy();
-    chartInstance.value = null;
-  }
-}
-
-onMounted(buildChart);
-onBeforeUnmount(destroyChart);
+  },
+  tooltip: { y: { formatter: (v) => Intl.NumberFormat().format(v) } },
+}));
 </script>
+

@@ -2,7 +2,7 @@
   <div class="kpi">
     <div class="flex items-start justify-between gap-4">
       <div>
-        <p class="text-sm text-slate-500">{{ title }}</p>
+        <p class="text-xl text-gray-500">{{ title }}</p>
         <p class="mt-2 text-3xl font-extrabold tracking-tight text-slate-900">
           {{ value }}
         </p>

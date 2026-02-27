@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen bg-slate-50">
-    <!-- Sidebar (fixed) -->
+    <!-- Sidebar-->
     <SideBar
       :open="sidebarOpen"
       @close="sidebarOpen = false"
@@ -13,26 +13,27 @@
       <header
         class="sticky top-0 z-40 bg-white/80 backdrop-blur border-b border-slate-200"
       >
-        <div class="px-6 sm:px-6 lg:px-8 py-7">
+        <div class="px-4 sm:px-6 lg:px-6 py-7">
           <div
-            class="mx-auto max-w-350 flex flex-col md:flex-row md:items-center md:justify-between gap-3"
+            class="mx-auto max-w-450 flex flex-col md:flex-row md:items-center md:justify-between gap-3"
           >
             <!-- Left -->
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-3 min-w-0">
               <button
                 class="md:hidden text-2xl text-orange-600 hover:text-orange-700 transition"
-                @click="sidebarOpen = !sidebarOpen"
+                @click="sidebarOpen = true"
                 aria-label="Toggle sidebar"
               >
                 <i class="fa-solid fa-bars"></i>
               </button>
 
               <div class="flex flex-col leading-tight">
-                <span class="text-4xl font-extrabold text-black"
-                  >Hello, Business Name</span
-                >
-                <span class="text-xl text-slate-500"
-                  >Inventory & Sales Tracker</span
+                <span
+                  class="xl:text-4xl lg:text-3xl md:text-2xl text-xl font-extrabold text-black"
+                  >Welcome Back,
+                  <span class="text-orange-600">{{
+                    auth.businessName || "Business Owner"
+                  }}</span></span
                 >
               </div>
             </div>
@@ -48,18 +49,18 @@
                   v-model="searchQuery"
                   type="text"
                   placeholder="Search products, invoices, customers..."
-                  class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm"
+                  class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-orange-500 text-xl"
                 />
               </div>
 
               <!-- Notifications -->
               <div class="relative">
                 <button
-                  class="relative w-10 h-10 rounded-xl border border-slate-200 bg-white hover:bg-orange-50 hover:border-orange-200 transition grid place-items-center"
+                  class="relative w-12 h-12 rounded-xl border border-slate-200 bg-white hover:bg-orange-50 hover:border-orange-200 transition grid place-items-center cursor-pointer"
                   @click="toggleNotifications"
                   aria-label="Notifications"
                 >
-                  <i class="fa-solid fa-bell text-slate-700"></i>
+                  <i class="fa-solid fa-bell text-slate-700 text-xl"></i>
                   <span
                     v-if="notifications.length"
                     class="absolute -top-1 -right-1 min-w-5 h-5 px-1 rounded-full bg-orange-600 text-white text-xs grid place-items-center border-2 border-white"
@@ -110,15 +111,11 @@
               </div>
 
               <!-- User -->
-              <div class="flex items-center gap-2 pl-1">
-                <span
-                  class="hidden md:block text-sm font-semibold text-slate-700"
-                  >Admin</span
-                >
+              <div class="flex items-center gap-2 pl-1 cursor-pointer">
                 <img
-                  src="/favicon.ico"
+                  src="../assets/Roland.jpg"
                   alt="Profile"
-                  class="w-10 h-10 rounded-xl border border-orange-200"
+                  class="w-10 h-10 rounded-full border border-orange-200"
                 />
               </div>
             </div>
@@ -128,17 +125,19 @@
 
       <!-- Content -->
       <main class="px-4 sm:px-6 lg:px-8 py-6">
-        <div class="mx-auto max-w-350 space-y-6">
+        <div class="mx-10 max-w-450 space-y-6">
           <!-- Page heading -->
           <div
             class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-3"
           >
             <div>
-              <h1 class="text-3xl font-extrabold tracking-tight text-slate-900">
-                Dashboard
+              <h1
+                class="text-4xl font-extrabold tracking-tight text-orange-600"
+              >
+                Overview
               </h1>
-              <p class="text-slate-500 text-sm mt-1">
-                Today’s snapshot of inventory health and sales performance.
+              <p class="text-slate-500 text-xl mt-1">
+                Today&apos;s snapshot of inventory health and sales performance.
               </p>
             </div>
 
@@ -207,8 +206,10 @@
               >
                 <div class="flex items-center justify-between">
                   <div>
-                    <p class="text-white/80 text-sm">Good {{ greeting }}</p>
-                    <h3 class="text-2xl font-extrabold mt-1">Admin</h3>
+                    <p class="text-gray-200 text-xl">Good {{ greeting }}</p>
+                    <h3 class="text-4xl font-extrabold mt-1">
+                      {{ auth.businessName || "Business Owner" }}
+                    </h3>
                   </div>
                   <div
                     class="w-12 h-12 rounded-2xl bg-white/15 grid place-items-center"
@@ -217,10 +218,10 @@
                   </div>
                 </div>
 
-                <p class="mt-4 text-white/90 text-sm leading-relaxed">
+                <p class="mt-4 text-white/90 text-xl leading-relaxed">
                   You have
-                  <span class="font-bold">{{ kpis.lowStock }}</span> low-stock
-                  items. Review restock alerts and prevent stockouts.
+                  <span class="font-bold">{{ kpis.lowStock }}</span>
+                  low-stock items. Review restock alerts and prevent stockouts.
                 </p>
 
                 <button
@@ -231,13 +232,13 @@
               </div>
 
               <div class="p-6">
-                <h4 class="font-bold text-slate-900">Quick Insights</h4>
+                <h4 class="font-bold text-black text-3xl">Quick Insights</h4>
                 <ul class="mt-3 space-y-3 text-sm">
                   <li class="flex items-start gap-3">
                     <span
                       class="mt-1 w-2.5 h-2.5 rounded-full bg-orange-500"
                     ></span>
-                    <p class="text-slate-700">
+                    <p class="text-gray-500 text-lg">
                       Top selling:
                       <span class="font-semibold">{{
                         topProducts[0]?.name
@@ -248,18 +249,9 @@
                     <span
                       class="mt-1 w-2.5 h-2.5 rounded-full bg-orange-300"
                     ></span>
-                    <p class="text-slate-700">
+                    <p class="text-gray-500 text-lg">
                       Best margin:
                       <span class="font-semibold">{{ bestMarginProduct }}</span>
-                    </p>
-                  </li>
-                  <li class="flex items-start gap-3">
-                    <span
-                      class="mt-1 w-2.5 h-2.5 rounded-full bg-slate-300"
-                    ></span>
-                    <p class="text-slate-700">
-                      Pending invoices:
-                      <span class="font-semibold">{{ pendingInvoices }}</span>
                     </p>
                   </li>
                 </ul>
@@ -286,9 +278,11 @@
             <!-- Recent Sales -->
             <div class="card xl:col-span-1">
               <div class="flex items-center justify-between">
-                <h3 class="text-lg font-bold text-slate-900">Recent Sales</h3>
+                <h3 class="text-3xl font-extrabold text-black/80">
+                  Recent Sales
+                </h3>
                 <button
-                  class="text-sm text-orange-700 font-semibold hover:underline"
+                  class="text-lg cursor-pointer text-orange-700 font-semibold hover:underline"
                 >
                   See all
                 </button>
@@ -298,11 +292,11 @@
                 <li
                   v-for="s in recentSales"
                   :key="s.id"
-                  class="flex items-center justify-between p-3 rounded-2xl border border-slate-100 hover:border-orange-200 hover:bg-orange-50/40 transition"
+                  class="flex items-center justify-between p-3 rounded-2xl border border-slate-100 hover:border-orange-200 hover:bg-orange-50/40 transition text-xl"
                 >
                   <div>
                     <p class="font-semibold text-slate-900">{{ s.product }}</p>
-                    <p class="text-xs text-slate-500">
+                    <p class="text-lg text-slate-500">
                       {{ s.time }} • Qty {{ s.qty }}
                     </p>
                   </div>
@@ -316,10 +310,10 @@
             <!-- Upcoming Restocks -->
             <div class="card xl:col-span-2">
               <div class="flex items-center justify-between">
-                <h3 class="text-lg font-bold text-slate-900">
+                <h3 class="text-3xl font-extrabold text-black/80">
                   Upcoming Restocks
                 </h3>
-                <span class="text-xs text-slate-500">{{ monthLabel }}</span>
+                <span class="text-lg text-slate-500">{{ monthLabel }}</span>
               </div>
 
               <ul class="mt-4 space-y-3">
@@ -329,8 +323,10 @@
                   class="flex items-start justify-between gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-100"
                 >
                   <div>
-                    <p class="font-semibold text-slate-900">{{ r.product }}</p>
-                    <p class="text-xs text-slate-500">
+                    <p class="font-semibold text-xl text-slate-900">
+                      {{ r.product }}
+                    </p>
+                    <p class="text-lg text-slate-500">
                       {{ r.date }} • Supplier: {{ r.supplier }}
                     </p>
                   </div>
@@ -345,8 +341,8 @@
             </div>
           </section>
 
-          <footer class="text-xs text-slate-400 pb-8">
-            © {{ new Date().getFullYear() }} Providex • Inventory & Sales
+          <footer class="text-lg text-center text-slate-400 pb-8">
+            © {{ new Date().getFullYear() }} Check it NaNa • Inventory & Sales
             Tracking
           </footer>
         </div>
@@ -362,6 +358,9 @@ import SalesChart from "@/components/SalesChart.vue";
 import TopProductsBarChart from "@/components/TopProductsBarChart.vue";
 import LowStockChartBar from "@/components/LowStockChartBar.vue";
 import KpiCard from "@/components/KpiCard.vue";
+
+import { useAuthStore } from "@/stores/auth.store";
+const auth = useAuthStore();
 
 const sidebarOpen = ref(false);
 const searchQuery = ref("");
