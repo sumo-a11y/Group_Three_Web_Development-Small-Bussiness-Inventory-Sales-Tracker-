@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -14,6 +15,16 @@ import subscrptionRoutes from './route/subscription.routes.js';
 import subscriptionPlanRoutes from './route/subscriptionPlans.routes.js';
 
 import db from './config/connect.js';
+=======
+import express from "express";
+import cors from "cors";
+import helmet from "helmet";
+import morgan from "morgan";
+import session from "express-session";
+import dotenv from "dotenv";
+import router from "./route/auth.routes.js";
+import db from "./config/connect.js";
+>>>>>>> origin
 
 dotenv.config();
 
@@ -22,6 +33,7 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(helmet());
+<<<<<<< HEAD
 app.use(cors({
     origin: "http://localhost:5173",
     credentials: true,
@@ -30,16 +42,28 @@ app.use(cors({
 app.use(morgan('combined'));
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
+=======
+app.use(
+  cors({
+    origin: "http://localhost:5173", // Adjust this to your frontend URL
+    credentials: true,
+  }),
+);
+app.use(morgan("combined"));
+>>>>>>> origin
 app.use(express.json());
-app.use(session({
-    secret: process.env.SESSION_SECRET || 'your-secret-key',
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || "your-secret-key",
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false, maxAge: 60000 * 60 }
-}));
+    cookie: { secure: false, maxAge: 60000 * 60 },
+  }),
+);
 
 // Database Sync
 await db.sync();
+<<<<<<< HEAD
 console.log("All models synced correctly..")
 // auth Routes and all other routes
 app.use('/api/auth', router);
@@ -53,9 +77,16 @@ app.use('/api/subscription-plans', subscriptionPlanRoutes);
 // Root route
 app.get('/', (req, res) => {
     res.send('Welcome to the Inventory and Sales Tracker API!');
+=======
+console.log("All models synced correctly..");
+// Routes
+app.use("/api/auth", router);
+app.get("/", (req, res) => {
+  res.send("Welcome to the Inventory and Sales Tracker API!");
+>>>>>>> origin
 });
 
 // Start the server
 app.listen(PORT, () => {
-    console.log(`Server is running on port http://localhost:${PORT}`);
+  console.log(`Server is running on port http://localhost:${PORT}`);
 });
