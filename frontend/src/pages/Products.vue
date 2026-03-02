@@ -271,8 +271,6 @@
       </main>
     </div>
 
-    <!-- me -->
-
     <div class="mx-10 max-w-450 space-y-6">
       <!-- Page heading -->
 
