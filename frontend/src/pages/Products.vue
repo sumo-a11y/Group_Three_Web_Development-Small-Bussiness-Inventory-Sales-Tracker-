@@ -125,13 +125,6 @@
       <!-- Main Content -->
       <main class="flex-1 p-6 overflow-y-auto">
         <!-- Top Bar -->
-        <div class="flex justify-between items-center mb-6">
-          <input
-            type="text"
-            placeholder="Search something..."
-            class="w-1/3 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
-          />
-        </div>
 
         <!-- Header Card -->
 
@@ -147,9 +140,18 @@
                 v-model="productSearch"
                 type="text"
                 placeholder="Type product name..."
-                class="px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+                class="px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
               />
-              <button class="px-4 py-2 border rounded-lg">Filter</button>
+              <select
+                v-model="filterBy"
+                class="px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
+              >
+                <option value="">Sort By</option>
+                <option value="Price">Price (Low to High)</option>
+                <option value="Quantity">Quantity (High to Low)</option>
+                <option value="Status">Status (Active First)</option>
+              </select>
+
               <button class="btn-primary">+ Add Products</button>
             </div>
           </div>
@@ -305,6 +307,7 @@ const sidebarOpen = ref(false);
 const searchQuery = ref("");
 // product section search filter
 const productSearch = ref("");
+const filterBy = ref("");
 const showNotifications = ref(false);
 const currentPage = ref(1);
 const itemsPerPage = ref(5);
@@ -494,11 +497,39 @@ const products = ref([
 ]);
 
 // Pagination computed properties
-// filter products according to search input
+// filter and sort products according to search input and filter selection
 const filteredProducts = computed(() => {
-  if (!productSearch.value) return products.value;
-  const term = productSearch.value.toLowerCase();
-  return products.value.filter((p) => p.name.toLowerCase().includes(term));
+  let result = products.value;
+
+  // Apply search filter
+  if (productSearch.value) {
+    const term = productSearch.value.toLowerCase();
+    result = result.filter((p) => p.name.toLowerCase().includes(term));
+  }
+
+  // Apply sorting based on selected filter
+  if (filterBy.value === "Price") {
+    result = [...result].sort((a, b) => {
+      const priceA = parseFloat(a.price.replace(/[$,]/g, ""));
+      const priceB = parseFloat(b.price.replace(/[$,]/g, ""));
+      return priceA - priceB;
+    });
+  } else if (filterBy.value === "Quantity") {
+    result = [...result].sort((a, b) => {
+      const qtyA = parseInt(a.quantity.replace(/,/g, ""));
+      const qtyB = parseInt(b.quantity.replace(/,/g, ""));
+      return qtyB - qtyA; // descending
+    });
+  } else if (filterBy.value === "Status") {
+    result = [...result].sort((a, b) => {
+      // Active first, then Inactive
+      if (a.status === "Active" && b.status !== "Active") return -1;
+      if (a.status !== "Active" && b.status === "Active") return 1;
+      return 0;
+    });
+  }
+
+  return result;
 });
 
 const totalPages = computed(() =>
@@ -520,8 +551,12 @@ const pagesArray = computed(() => {
   return pages;
 });
 
-// reset page when search term or page size changes
+// reset page when search term, filter, or page size changes
 watch(productSearch, () => {
+  currentPage.value = 1;
+});
+
+watch(filterBy, () => {
   currentPage.value = 1;
 });
 
