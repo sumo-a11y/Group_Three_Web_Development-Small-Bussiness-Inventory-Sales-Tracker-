@@ -1,33 +1,21 @@
 <template>
   <div class="min-h-screen bg-slate-50">
-    <SideBar
-      :open="sidebarOpen"
-      @close="sidebarOpen = false"
-      :superAdmin="true"
-    />
+    <SideBar :open="sidebarOpen" @close="sidebarOpen = false" :superAdmin="true" />
 
     <div class="ml-0 md:ml-64 min-h-screen flex flex-col">
       <!-- Topbar -->
-      <header
-        class="sticky top-0 z-40 bg-white/80 backdrop-blur border-b border-slate-200"
-      >
+      <header class="sticky top-0 z-40 bg-white/80 backdrop-blur border-b border-slate-200">
         <div class="px-4 sm:px-6 lg:px-8 py-4">
-          <div
-            class="mx-auto max-w-7xl flex items-center justify-between gap-4"
-          >
+          <div class="mx-auto max-w-7xl flex items-center justify-between gap-4">
             <div class="flex items-center gap-4 min-w-0">
               <button
                 class="md:hidden inline-flex items-center justify-center w-11 h-11 rounded-xl border border-slate-200 bg-white hover:bg-orange-50 hover:border-orange-200 transition"
-                @click="sidebarOpen = true"
-                aria-label="Open sidebar"
-              >
+                @click="sidebarOpen = true" aria-label="Open sidebar">
                 <i class="fa-solid fa-bars text-slate-700 text-xl"></i>
               </button>
 
               <div class="min-w-0">
-                <p
-                  class="text-xl sm:text-2xl font-extrabold text-slate-900 truncate"
-                >
+                <p class="text-xl sm:text-2xl font-extrabold text-slate-900 truncate">
                   System Admin <span class="text-orange-600">Dashboard</span>
                 </p>
                 <p class="text-sm text-slate-500">
@@ -38,10 +26,8 @@
 
             <div class="flex items-center gap-3">
               <!-- Range -->
-              <select
-                v-model="range"
-                class="hidden sm:block px-3 py-2.5 rounded-xl border border-slate-200 bg-white text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-orange-500"
-              >
+              <select v-model="range"
+                class="hidden sm:block px-3 py-2.5 rounded-xl border border-slate-200 bg-white text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-orange-500">
                 <option value="7d">Last 7 days</option>
                 <option value="30d">Last 30 days</option>
                 <option value="90d">Last 90 days</option>
@@ -49,46 +35,29 @@
 
               <!-- Search -->
               <div class="relative hidden md:block w-80">
-                <i
-                  class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
-                ></i>
-                <input
-                  v-model="searchQuery"
-                  type="text"
-                  placeholder="Search businesses, admins, logs..."
-                  class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm"
-                />
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                <input v-model="searchQuery" type="text" placeholder="Search businesses, admins, logs..."
+                  class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm" />
               </div>
 
               <!-- Notifications -->
               <div class="relative">
                 <button
                   class="relative w-11 h-11 rounded-xl border border-slate-200 bg-white hover:bg-orange-50 hover:border-orange-200 transition grid place-items-center"
-                  @click="showNotifications = !showNotifications"
-                  aria-label="Notifications"
-                >
+                  @click="showNotifications = !showNotifications" aria-label="Notifications">
                   <i class="fa-solid fa-bell text-slate-700"></i>
-                  <span
-                    v-if="notifications.length"
-                    class="absolute -top-1 -right-1 min-w-5 h-5 px-1 rounded-full bg-orange-600 text-white text-xs grid place-items-center border-2 border-white"
-                  >
+                  <span v-if="notifications.length"
+                    class="absolute -top-1 -right-1 min-w-5 h-5 px-1 rounded-full bg-orange-600 text-white text-xs grid place-items-center border-2 border-white">
                     {{ notifications.length }}
                   </span>
                 </button>
 
-                <div
-                  v-if="showNotifications"
-                  class="absolute right-0 mt-2 w-80 bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden"
-                >
-                  <div
-                    class="px-4 py-3 bg-orange-50 border-b border-orange-100"
-                  >
+                <div v-if="showNotifications"
+                  class="absolute right-0 mt-2 w-80 bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden">
+                  <div class="px-4 py-3 bg-orange-50 border-b border-orange-100">
                     <div class="flex items-center justify-between">
                       <p class="font-semibold text-orange-800">System Alerts</p>
-                      <button
-                        class="text-xs text-orange-800 hover:underline"
-                        @click="notifications = []"
-                      >
+                      <button class="text-xs text-orange-800 hover:underline" @click="notifications = []">
                         Clear
                       </button>
                     </div>
@@ -98,28 +67,20 @@
                   </div>
 
                   <ul class="max-h-80 overflow-auto">
-                    <li
-                      v-for="n in notifications"
-                      :key="n.id"
-                      class="px-4 py-3 text-sm hover:bg-slate-50 cursor-pointer border-b border-slate-100 last:border-b-0"
-                    >
+                    <li v-for="n in notifications" :key="n.id"
+                      class="px-4 py-3 text-sm hover:bg-slate-50 cursor-pointer border-b border-slate-100 last:border-b-0">
                       <p class="text-slate-800">{{ n.message }}</p>
                       <p class="text-xs text-slate-500 mt-0.5">{{ n.time }}</p>
                     </li>
 
-                    <li
-                      v-if="notifications.length === 0"
-                      class="px-4 py-6 text-sm text-slate-500"
-                    >
+                    <li v-if="notifications.length === 0" class="px-4 py-6 text-sm text-slate-500">
                       No alerts 🎉
                     </li>
                   </ul>
                 </div>
               </div>
 
-              <div
-                class="w-11 h-11 rounded-full bg-orange-100 border border-orange-200 grid place-items-center"
-              >
+              <div class="w-11 h-11 rounded-full bg-orange-100 border border-orange-200 grid place-items-center">
                 <i class="fa-solid fa-user-shield text-orange-700"></i>
               </div>
             </div>
@@ -130,13 +91,9 @@
       <main class="px-4 sm:px-6 lg:px-8 py-6">
         <div class="mx-auto max-w-7xl space-y-6">
           <!-- Heading + actions -->
-          <div
-            class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-3"
-          >
+          <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-3">
             <div>
-              <h1
-                class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900"
-              >
+              <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
                 Platform Analytics
               </h1>
               <p class="text-slate-500 text-sm mt-1">
@@ -162,38 +119,14 @@
 
           <!-- KPI cards (enterprise style + sparkline) -->
           <section class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-            <KpiSpark
-              title="Total Businesses"
-              :value="stats.totalBusinesses"
-              :delta="'+3'"
-              deltaTone="up"
-              icon="fa-solid fa-building"
-              :sparkSeries="spark.businesses"
-            />
-            <KpiSpark
-              title="Active Users"
-              :value="stats.activeUsers"
-              :delta="'+12'"
-              deltaTone="up"
-              icon="fa-solid fa-users"
-              :sparkSeries="spark.users"
-            />
-            <KpiSpark
-              title="Monthly Revenue"
-              :value="formatMoney(stats.monthlyRevenue)"
-              :delta="'+8.4%'"
-              deltaTone="up"
-              icon="fa-solid fa-coins"
-              :sparkSeries="spark.revenue"
-            />
-            <KpiSpark
-              title="API Error Rate"
-              :value="stats.errorRate"
-              :delta="'-0.2%'"
-              deltaTone="down"
-              icon="fa-solid fa-triangle-exclamation"
-              :sparkSeries="spark.errors"
-            />
+            <KpiSpark title="Total Businesses" :value="stats.totalBusinesses" :delta="'+3'" deltaTone="up"
+              icon="fa-solid fa-building" :sparkSeries="spark.businesses" />
+            <KpiSpark title="Active Users" :value="stats.activeUsers" :delta="'+12'" deltaTone="up"
+              icon="fa-solid fa-users" :sparkSeries="spark.users" />
+            <KpiSpark title="Monthly Revenue" :value="formatMoney(stats.monthlyRevenue)" :delta="'+8.4%'" deltaTone="up"
+              icon="fa-solid fa-coins" :sparkSeries="spark.revenue" />
+            <KpiSpark title="API Error Rate" :value="stats.errorRate" :delta="'-0.2%'" deltaTone="down"
+              icon="fa-solid fa-triangle-exclamation" :sparkSeries="spark.errors" />
           </section>
 
           <!-- System Charts -->
@@ -215,12 +148,7 @@
               </div>
 
               <div class="mt-4">
-                <VueApexCharts
-                  type="area"
-                  height="320"
-                  :options="growthOptions"
-                  :series="growthSeries"
-                />
+                <VueApexCharts type="area" height="320" :options="growthOptions" :series="growthSeries" />
               </div>
 
               <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -263,12 +191,7 @@
                 </div>
 
                 <div class="mt-4">
-                  <VueApexCharts
-                    type="donut"
-                    height="260"
-                    :options="planOptions"
-                    :series="planSeries"
-                  />
+                  <VueApexCharts type="donut" height="260" :options="planOptions" :series="planSeries" />
                 </div>
               </div>
 
@@ -285,12 +208,7 @@
                 </div>
 
                 <div class="mt-4">
-                  <VueApexCharts
-                    type="bar"
-                    height="220"
-                    :options="errorBarOptions"
-                    :series="errorBarSeries"
-                  />
+                  <VueApexCharts type="bar" height="220" :options="errorBarOptions" :series="errorBarSeries" />
                 </div>
               </div>
             </div>
@@ -308,9 +226,7 @@
                     Recently created businesses
                   </p>
                 </div>
-                <button
-                  class="text-sm font-semibold text-orange-700 hover:underline"
-                >
+                <button class="text-sm font-semibold text-orange-700 hover:underline">
                   See all
                 </button>
               </div>
@@ -334,25 +250,17 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr
-                      v-for="b in businesses"
-                      :key="b.id"
-                      class="border-b border-slate-100 hover:bg-slate-50"
-                    >
+                    <tr v-for="b in businesses" :key="b.id" class="border-b border-slate-100 hover:bg-slate-50">
                       <td class="p-3">
                         <p class="font-semibold text-slate-900">{{ b.name }}</p>
                         <p class="text-xs text-slate-500">{{ b.plan }}</p>
                       </td>
                       <td class="p-3 text-slate-700">{{ b.owner }}</td>
                       <td class="p-3">
-                        <span
-                          class="px-2.5 py-1 rounded-full text-xs font-semibold border"
-                          :class="
-                            b.status === 'Active'
-                              ? 'bg-green-50 text-green-700 border-green-100'
-                              : 'bg-slate-50 text-slate-700 border-slate-100'
-                          "
-                        >
+                        <span class="px-2.5 py-1 rounded-full text-xs font-semibold border" :class="b.status === 'Active'
+                          ? 'bg-green-50 text-green-700 border-green-100'
+                          : 'bg-slate-50 text-slate-700 border-slate-100'
+                          ">
                           {{ b.status }}
                         </span>
                       </td>
@@ -368,19 +276,14 @@
                 <h3 class="text-lg font-extrabold text-slate-900">
                   Recent Activity
                 </h3>
-                <button
-                  class="text-sm font-semibold text-orange-700 hover:underline"
-                >
+                <button class="text-sm font-semibold text-orange-700 hover:underline">
                   View logs
                 </button>
               </div>
 
               <ul class="mt-4 space-y-3">
-                <li
-                  v-for="l in activity"
-                  :key="l.id"
-                  class="p-3 rounded-2xl border border-slate-100 hover:border-orange-200 hover:bg-orange-50/30 transition"
-                >
+                <li v-for="l in activity" :key="l.id"
+                  class="p-3 rounded-2xl border border-slate-100 hover:border-orange-200 hover:bg-orange-50/30 transition">
                   <p class="text-sm font-semibold text-slate-900">
                     {{ l.title }}
                   </p>
@@ -388,9 +291,7 @@
                 </li>
               </ul>
 
-              <div
-                class="mt-6 p-4 rounded-2xl bg-slate-50 border border-slate-100"
-              >
+              <div class="mt-6 p-4 rounded-2xl bg-slate-50 border border-slate-100">
                 <p class="text-sm font-semibold text-slate-900">
                   System Status
                 </p>
@@ -426,8 +327,8 @@ const rangeLabel = computed(() =>
   range.value === "7d"
     ? "7 days"
     : range.value === "90d"
-    ? "90 days"
-    : "30 days"
+      ? "90 days"
+      : "30 days"
 );
 
 const stats = ref({
@@ -652,5 +553,4 @@ const KpiSpark = defineComponent({
 });
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

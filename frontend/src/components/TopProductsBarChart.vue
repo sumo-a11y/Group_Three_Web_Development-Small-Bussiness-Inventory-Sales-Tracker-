@@ -6,10 +6,8 @@
         <p class="text-lg text-slate-500">Best performing products</p>
       </div>
 
-      <select
-        v-model="metric"
-        class="text-sm rounded-xl border border-slate-200 bg-white px-5 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500"
-      >
+      <select v-model="metric"
+        class="text-sm rounded-xl border border-slate-200 bg-white px-5 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500">
         <option value="sales">By Sales</option>
         <option value="qty">By Quantity</option>
       </select>
@@ -44,8 +42,8 @@ const series = computed(() => [
 ]);
 
 const options = computed(() => ({
-  chart: { toolbar: { show: false }, fontFamily: "inherit" },
-  colors: ["#ea580c"],
+  chart: { toolbar: { show: true }, fontFamily: "inherit" },
+  colors: ["#f97316"],
   plotOptions: {
     bar: { borderRadius: 10, columnWidth: "45%" },
   },
@@ -76,5 +74,4 @@ const options = computed(() => ({
 }));
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
