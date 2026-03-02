@@ -125,28 +125,33 @@
       <!-- Main Content -->
       <main class="flex-1 p-6 overflow-y-auto">
         <!-- Top Bar -->
-        <div class="flex justify-between items-center mb-6">
-          <input
-            type="text"
-            placeholder="Search something..."
-            class="w-1/3 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
-          />
-        </div>
 
         <!-- Header Card -->
 
         <!-- Product Section -->
         <div class="bg-white p-6 rounded-xl shadow">
           <div class="flex justify-between items-center mb-4">
-            <h2 class="text-lg font-semibold">Product Lists</h2>
+            <h2 class="text-2xl font-semibold text-orange-600">
+              Product Lists
+            </h2>
 
             <div class="flex gap-3">
               <input
+                v-model="productSearch"
                 type="text"
                 placeholder="Type product name..."
-                class="px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+                class="px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
               />
-              <button class="px-4 py-2 border rounded-lg">Filter</button>
+              <select
+                v-model="filterBy"
+                class="px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
+              >
+                <option value="">Sort By</option>
+                <option value="Price">Price (Low to High)</option>
+                <option value="Quantity">Quantity (High to Low)</option>
+                <option value="Status">Status (Active First)</option>
+              </select>
+
               <button class="btn-primary">+ Add Products</button>
             </div>
           </div>
@@ -154,7 +159,7 @@
           <!-- Table -->
           <div class="overflow-x-auto">
             <table class="w-full text-left text-sm">
-              <thead class="text-gray-500 border-b">
+              <thead class="text-black-500 border-b">
                 <tr>
                   <th class="py-3">Product Name</th>
                   <th>Price</th>
@@ -167,164 +172,100 @@
               </thead>
 
               <tbody class="divide-y">
-                <!-- Row -->
-                <tr class="hover:bg-gray-50">
+                <!-- Paginated Rows -->
+                <tr
+                  v-for="product in paginatedProducts"
+                  :key="product.id"
+                  class="hover:bg-gray-50"
+                >
                   <td class="py-4 flex items-center gap-3">
-                    🍊
+                    {{ product.emoji }}
                     <div>
-                      <p class="font-medium">Pure Organic Orange</p>
-                      <p class="text-xs text-gray-400">Txn ID: #GR47</p>
+                      <p class="font-medium">{{ product.name }}</p>
+                      <p class="text-xs text-gray-400">
+                        Txn ID: {{ product.txnId }}
+                      </p>
                     </div>
                   </td>
-                  <td>$48.00</td>
-                  <td>12,700</td>
-                  <td>85%</td>
-                  <td>8,650</td>
-                  <td>$35,750</td>
+                  <td>{{ product.price }}</td>
+                  <td>{{ product.views }}</td>
+                  <td>{{ product.click }}</td>
+                  <td>{{ product.quantity }}</td>
+                  <td>{{ product.revenue }}</td>
                   <td>
                     <span
-                      class="px-2 py-1 text-xs bg-green-100 text-green-600 rounded-full"
+                      :class="
+                        product.status === 'Active'
+                          ? 'px-2 py-1 text-xs bg-green-100 text-green-600 rounded-full'
+                          : 'px-2 py-1 text-xs bg-red-100 text-red-600 rounded-full'
+                      "
                     >
-                      Active
-                    </span>
-                  </td>
-                </tr>
-
-                <!-- Row -->
-                <tr class="hover:bg-gray-50">
-                  <td class="py-4 flex items-center gap-3">
-                    🍑
-                    <div>
-                      <p class="font-medium">Fresh Peaches Plus</p>
-                      <p class="text-xs text-gray-400">Txn ID: #GR46</p>
-                    </div>
-                  </td>
-                  <td>$34.00</td>
-                  <td>11,500</td>
-                  <td>70%</td>
-                  <td>6,500</td>
-                  <td>$24,800</td>
-                  <td>
-                    <span
-                      class="px-2 py-1 text-xs bg-green-100 text-green-600 rounded-full"
-                    >
-                      Active
-                    </span>
-                  </td>
-                </tr>
-
-                <!-- Row -->
-                <tr class="hover:bg-gray-50">
-                  <td class="py-4 flex items-center gap-3">
-                    🍌
-                    <div>
-                      <p class="font-medium">Organic Bananas</p>
-                      <p class="text-xs text-gray-400">Txn ID: #GR45</p>
-                    </div>
-                  </td>
-                  <td>$42.00</td>
-                  <td>9,350</td>
-                  <td>65%</td>
-                  <td>4,100</td>
-                  <td>$20,900</td>
-                  <td>
-                    <span
-                      class="px-2 py-1 text-xs bg-green-100 text-green-600 rounded-full"
-                    >
-                      Active
-                    </span>
-                  </td>
-                </tr>
-                <!-- Row -->
-                <tr class="hover:bg-gray-50">
-                  <td class="py-4 flex items-center gap-3">
-                    🍑
-                    <div>
-                      <p class="font-medium">Fresh Peaches Plus</p>
-                      <p class="text-xs text-gray-400">Txn ID: #GR46</p>
-                    </div>
-                  </td>
-                  <td>$34.00</td>
-                  <td>11,500</td>
-                  <td>70%</td>
-                  <td>6,500</td>
-                  <td>$24,800</td>
-                  <td>
-                    <span
-                      class="px-2 py-1 text-xs bg-green-100 text-green-600 rounded-full"
-                    >
-                      Active
-                    </span>
-                  </td>
-                </tr>
-                <!-- Row -->
-                <tr class="hover:bg-gray-50">
-                  <td class="py-4 flex items-center gap-3">
-                    🍑
-                    <div>
-                      <p class="font-medium">Fresh Peaches Plus</p>
-                      <p class="text-xs text-gray-400">Txn ID: #GR46</p>
-                    </div>
-                  </td>
-                  <td>$34.00</td>
-                  <td>11,500</td>
-                  <td>70%</td>
-                  <td>6,500</td>
-                  <td>$24,800</td>
-                  <td>
-                    <span
-                      class="px-2 py-1 text-xs bg-green-100 text-green-600 rounded-full"
-                    >
-                      Active
-                    </span>
-                  </td>
-                </tr>
-                <!-- Row -->
-                <tr class="hover:bg-gray-50">
-                  <td class="py-4 flex items-center gap-3">
-                    🍑
-                    <div>
-                      <p class="font-medium">Fresh Peaches Plus</p>
-                      <p class="text-xs text-gray-400">Txn ID: #GR46</p>
-                    </div>
-                  </td>
-                  <td>$34.00</td>
-                  <td>11,500</td>
-                  <td>70%</td>
-                  <td>6,500</td>
-                  <td>$24,800</td>
-                  <td>
-                    <span
-                      class="px-2 py-1 text-xs bg-green-100 text-green-600 rounded-full"
-                    >
-                      Active
-                    </span>
-                  </td>
-                </tr>
-                <!-- Row -->
-                <tr class="hover:bg-gray-50">
-                  <td class="py-4 flex items-center gap-3">
-                    🍑
-                    <div>
-                      <p class="font-medium">Fresh Peaches Plus</p>
-                      <p class="text-xs text-gray-400">Txn ID: #GR46</p>
-                    </div>
-                  </td>
-                  <td>$34.00</td>
-                  <td>11,500</td>
-                  <td>70%</td>
-                  <td>6,500</td>
-                  <td>$24,800</td>
-                  <td>
-                    <span
-                      class="px-2 py-1 text-xs bg-green-100 text-green-600 rounded-full"
-                    >
-                      Active
+                      {{ product.status }}
                     </span>
                   </td>
                 </tr>
               </tbody>
             </table>
+          </div>
+
+          <!-- Pagination Controls -->
+          <div class="flex flex-col gap-4 mt-6">
+            <!-- Stats and Items Per Page -->
+            <div class="flex items-center justify-between flex-wrap gap-4">
+              <div class="text-sm text-gray-600">
+                Showing {{ startIndex + 1 }} to
+                {{ Math.min(endIndex, filteredProducts.length) }} of
+                {{ filteredProducts.length }} products
+              </div>
+              <div class="flex items-center gap-2">
+                <label class="text-sm text-gray-600">Items per page:</label>
+                <select
+                  v-model.number="itemsPerPage"
+                  class="px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                >
+                  <option>5</option>
+                  <option>10</option>
+                  <option>15</option>
+                  <option>20</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Pagination Buttons -->
+            <div class="flex items-center justify-between flex-wrap gap-4">
+              <div class="flex items-center gap-2">
+                <button
+                  @click="previousPage"
+                  :disabled="currentPage === 1"
+                  class="px-4 py-2 border border-slate-200 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition"
+                >
+                  <i class="fa-solid fa-chevron-left mr-1"></i> Previous
+                </button>
+
+                <div class="flex gap-1 flex-wrap">
+                  <button
+                    v-for="page in pagesArray"
+                    :key="page"
+                    @click="currentPage = page"
+                    :class="
+                      page === currentPage
+                        ? 'px-3 py-2 bg-orange-600 text-white rounded-lg'
+                        : 'px-3 py-2 border border-slate-200 rounded-lg hover:bg-gray-50'
+                    "
+                  >
+                    {{ page }}
+                  </button>
+                </div>
+
+                <button
+                  @click="nextPage"
+                  :disabled="currentPage === totalPages"
+                  class="px-4 py-2 border border-slate-200 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition"
+                >
+                  Next <i class="fa-solid fa-chevron-right ml-1"></i>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </main>
@@ -352,7 +293,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import SideBar from "@/components/SideBar.vue";
 import SalesChart from "@/components/SalesChart.vue";
 import TopProductsBarChart from "@/components/TopProductsBarChart.vue";
@@ -364,7 +305,277 @@ const auth = useAuthStore();
 
 const sidebarOpen = ref(false);
 const searchQuery = ref("");
+// product section search filter
+const productSearch = ref("");
+const filterBy = ref("");
 const showNotifications = ref(false);
+const currentPage = ref(1);
+const itemsPerPage = ref(5);
+
+// Products Data
+const products = ref([
+  {
+    id: 1,
+    emoji: "🍊",
+    name: "Pure Organic Orange",
+    txnId: "#GR47",
+    price: "$48.00",
+    views: "12,700",
+    click: "85%",
+    quantity: "8,650",
+    revenue: "$35,750",
+    status: "Active",
+  },
+  {
+    id: 2,
+    emoji: "🍑",
+    name: "Fresh Peaches Plus",
+    txnId: "#GR46",
+    price: "$34.00",
+    views: "11,500",
+    click: "70%",
+    quantity: "6,500",
+    revenue: "$24,800",
+    status: "Active",
+  },
+  {
+    id: 3,
+    emoji: "🍌",
+    name: "Organic Bananas",
+    txnId: "#GR45",
+    price: "$42.00",
+    views: "9,350",
+    click: "65%",
+    quantity: "4,100",
+    revenue: "$20,900",
+    status: "Active",
+  },
+  {
+    id: 4,
+    emoji: "🍎",
+    name: "Red Apples Premium",
+    txnId: "#GR44",
+    price: "$55.00",
+    views: "8,200",
+    click: "75%",
+    quantity: "3,200",
+    revenue: "$18,500",
+    status: "Active",
+  },
+  {
+    id: 5,
+    emoji: "🥦",
+    name: "Fresh Broccoli",
+    txnId: "#GR43",
+    price: "$12.00",
+    views: "7,100",
+    click: "60%",
+    quantity: "5,400",
+    revenue: "$14,200",
+    status: "Active",
+  },
+  {
+    id: 6,
+    emoji: "🥕",
+    name: "Organic Carrots",
+    txnId: "#GR42",
+    price: "$18.00",
+    views: "6,500",
+    click: "65%",
+    quantity: "3,800",
+    revenue: "$12,300",
+    status: "Active",
+  },
+  {
+    id: 7,
+    emoji: "🍅",
+    name: "Ripe Tomatoes",
+    txnId: "#GR41",
+    price: "$25.00",
+    views: "5,900",
+    click: "72%",
+    quantity: "2,100",
+    revenue: "$10,800",
+    status: "Inactive",
+  },
+  {
+    id: 8,
+    emoji: "🥬",
+    name: "Fresh Lettuce",
+    txnId: "#GR40",
+    price: "$8.00",
+    views: "4,300",
+    click: "58%",
+    quantity: "1,900",
+    revenue: "$7,200",
+    status: "Active",
+  },
+  {
+    id: 9,
+    emoji: "🧅",
+    name: "Sweet Onions",
+    txnId: "#GR39",
+    price: "$15.00",
+    views: "3,800",
+    click: "55%",
+    quantity: "2,500",
+    revenue: "$8,900",
+    status: "Active",
+  },
+  {
+    id: 10,
+    emoji: "🥒",
+    name: "Pickled Cucumbers",
+    txnId: "#GR38",
+    price: "$22.00",
+    views: "3,200",
+    click: "50%",
+    quantity: "1,600",
+    revenue: "$5,600",
+    status: "Active",
+  },
+  {
+    id: 11,
+    emoji: "🍇",
+    name: "Purple Grapes",
+    txnId: "#GR37",
+    price: "$32.00",
+    views: "2,900",
+    click: "62%",
+    quantity: "1,200",
+    revenue: "$4,800",
+    status: "Active",
+  },
+  {
+    id: 12,
+    emoji: "🍓",
+    name: "Fresh Strawberries",
+    txnId: "#GR36",
+    price: "$28.00",
+    views: "2,500",
+    click: "68%",
+    quantity: "800",
+    revenue: "$3,200",
+    status: "Active",
+  },
+  {
+    id: 13,
+    emoji: "🍌",
+    name: "Banana Bunch",
+    txnId: "#GR35",
+    price: "$24.00",
+    views: "2,100",
+    click: "60%",
+    quantity: "950",
+    revenue: "$2,280",
+    status: "Active",
+  },
+  {
+    id: 14,
+    emoji: "🥝",
+    name: "Kiwi Fruits",
+    txnId: "#GR34",
+    price: "$35.00",
+    views: "1,800",
+    click: "55%",
+    quantity: "650",
+    revenue: "$2,275",
+    status: "Inactive",
+  },
+  {
+    id: 15,
+    emoji: "🍊",
+    name: "Orange Juice Pack",
+    txnId: "#GR33",
+    price: "$16.00",
+    views: "1,500",
+    click: "48%",
+    quantity: "2,200",
+    revenue: "$3,520",
+    status: "Active",
+  },
+]);
+
+// Pagination computed properties
+// filter and sort products according to search input and filter selection
+const filteredProducts = computed(() => {
+  let result = products.value;
+
+  // Apply search filter
+  if (productSearch.value) {
+    const term = productSearch.value.toLowerCase();
+    result = result.filter((p) => p.name.toLowerCase().includes(term));
+  }
+
+  // Apply sorting based on selected filter
+  if (filterBy.value === "Price") {
+    result = [...result].sort((a, b) => {
+      const priceA = parseFloat(a.price.replace(/[$,]/g, ""));
+      const priceB = parseFloat(b.price.replace(/[$,]/g, ""));
+      return priceA - priceB;
+    });
+  } else if (filterBy.value === "Quantity") {
+    result = [...result].sort((a, b) => {
+      const qtyA = parseInt(a.quantity.replace(/,/g, ""));
+      const qtyB = parseInt(b.quantity.replace(/,/g, ""));
+      return qtyB - qtyA; // descending
+    });
+  } else if (filterBy.value === "Status") {
+    result = [...result].sort((a, b) => {
+      // Active first, then Inactive
+      if (a.status === "Active" && b.status !== "Active") return -1;
+      if (a.status !== "Active" && b.status === "Active") return 1;
+      return 0;
+    });
+  }
+
+  return result;
+});
+
+const totalPages = computed(() =>
+  Math.ceil(filteredProducts.value.length / itemsPerPage.value),
+);
+
+const startIndex = computed(() => (currentPage.value - 1) * itemsPerPage.value);
+const endIndex = computed(() => startIndex.value + itemsPerPage.value);
+
+const paginatedProducts = computed(() => {
+  return filteredProducts.value.slice(startIndex.value, endIndex.value);
+});
+
+const pagesArray = computed(() => {
+  const pages = [];
+  for (let i = 1; i <= totalPages.value; i++) {
+    pages.push(i);
+  }
+  return pages;
+});
+
+// reset page when search term, filter, or page size changes
+watch(productSearch, () => {
+  currentPage.value = 1;
+});
+
+watch(filterBy, () => {
+  currentPage.value = 1;
+});
+
+watch(itemsPerPage, () => {
+  currentPage.value = 1;
+});
+
+// Pagination methods
+const previousPage = () => {
+  if (currentPage.value > 1) {
+    currentPage.value--;
+  }
+};
+
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value++;
+  }
+};
 
 const toggleNotifications = () =>
   (showNotifications.value = !showNotifications.value);
