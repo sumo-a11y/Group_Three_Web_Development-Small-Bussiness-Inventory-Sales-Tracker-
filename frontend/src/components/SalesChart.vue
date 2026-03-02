@@ -6,11 +6,9 @@
         <p class="text-sm text-gray-500">{{ subtitle }}</p>
       </div>
 
-      <select
-        v-model="range"
+      <select v-model="range"
         class="text-sm rounded-xl border border-slate-200 bg-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
-        @change="loadRange"
-      >
+        @change="loadRange">
         <option value="6m">Last 6 months</option>
         <option value="3m">Last 3 months</option>
         <option value="30d">Last 30 days</option>
@@ -41,11 +39,11 @@ const series = ref([
 
 const options = ref({
   chart: {
-    toolbar: { show: false },
+    toolbar: { show: true },
     zoom: { enabled: false },
     fontFamily: "inherit",
   },
-  colors: ["#ea580c", "#fb923c", "#94a3b8"], // orange, light orange, slate
+  colors: ["#f97316", "#fb923c", "#94a3b8"], // orange, light orange, slate
   stroke: { curve: "smooth", width: 3 },
   fill: {
     type: "gradient",
@@ -116,5 +114,4 @@ function loadRange() {
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
