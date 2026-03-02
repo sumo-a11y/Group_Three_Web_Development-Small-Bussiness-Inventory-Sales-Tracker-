@@ -7,8 +7,32 @@ body {
   font-family: 'Poppins', sans-serif;
 }
 
+.system-color {
+  background-color: #f97316;
+}
+
+.system-border {
+  border-color: #f97316;
+}
+
+.text-system {
+  color: #f97316;
+}
+
+.system-color-hover:hover {
+  background-color: #fff;
+  border-color: #000;
+  border: 2px solid #000;
+
+}
+
+.system-color-soft {
+  background-color: #ea5a0cac;
+  /* 10% opacity */
+}
+
 :root {
-  --px-primary: #ea580c;
+  --px-primary: #f97316;
   /* orange-600 */
   --px-primary-700: #c2410c;
   --px-soft: #fff7ed;

@@ -7,15 +7,10 @@
           {{ value }}
         </p>
 
-        <span
-          class="mt-3 inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold"
-          :class="toneClass"
-        >
+        <span class="mt-3 inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold"
+          :class="toneClass">
           <i v-if="changeTone === 'up'" class="fa-solid fa-arrow-trend-up"></i>
-          <i
-            v-else-if="changeTone === 'down'"
-            class="fa-solid fa-arrow-trend-down"
-          ></i>
+          <i v-else-if="changeTone === 'down'" class="fa-solid fa-arrow-trend-down"></i>
           <i v-else class="fa-solid fa-circle-info"></i>
           {{ change }}
         </span>
@@ -28,12 +23,8 @@
 
     <!-- mini spark -->
     <div class="mt-4 flex items-end gap-1.5 h-7">
-      <span
-        v-for="i in 12"
-        :key="i"
-        class="w-1.5 rounded-sm bg-orange-200/80"
-        :style="{ height: 6 + ((i * 7) % 18) + 'px' }"
-      ></span>
+      <span v-for="i in 12" :key="i" class="w-1.5 rounded-sm bg-orange-300/80"
+        :style="{ height: 6 + ((i * 7) % 18) + 'px' }"></span>
     </div>
   </div>
 </template>
@@ -58,5 +49,4 @@ const toneClass = computed(() => {
 });
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

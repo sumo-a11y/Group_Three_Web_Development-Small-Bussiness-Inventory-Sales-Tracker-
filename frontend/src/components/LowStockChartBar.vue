@@ -9,31 +9,20 @@
     </div>
 
     <div class="mt-4">
-      <apexchart
-        type="donut"
-        height="320"
-        :options="options"
-        :series="series"
-      />
+      <apexchart type="donut" height="320" :options="options" :series="series" />
     </div>
 
     <div class="mt-4 grid grid-cols-1 gap-2 text-sm">
       <div class="flex items-center justify-between">
-        <span class="flex items-center gap-2"
-          ><span class="dot dot-red"></span>Critical (≤ 5)</span
-        >
+        <span class="flex items-center gap-2"><span class="dot dot-red"></span>Critical (≤ 5)</span>
         <b>{{ breakdown.critical }}</b>
       </div>
       <div class="flex items-center justify-between">
-        <span class="flex items-center gap-2"
-          ><span class="dot dot-orange"></span>Warning (6–10)</span
-        >
+        <span class="flex items-center gap-2"><span class="dot dot-orange"></span>Warning (6–10)</span>
         <b>{{ breakdown.warning }}</b>
       </div>
       <div class="flex items-center justify-between">
-        <span class="flex items-center gap-2"
-          ><span class="dot dot-green"></span>Healthy (≥ 11)</span
-        >
+        <span class="flex items-center gap-2"><span class="dot dot-green"></span>Healthy (≥ 11)</span>
         <b>{{ breakdown.healthy }}</b>
       </div>
 
@@ -64,7 +53,7 @@ const series = computed(() => [
 const options = computed(() => ({
   chart: { fontFamily: "inherit" },
   labels: ["Critical (≤ 5)", "Warning (6–10)", "Healthy (≥ 11)"],
-  colors: ["#ef4444", "#ea580c", "#22c55e"],
+  colors: ["#f97316", "#fbbf24", "#22c55e"],
   stroke: { width: 0 },
   legend: { show: false },
   dataLabels: { enabled: false },
@@ -88,4 +77,3 @@ const options = computed(() => ({
   tooltip: { y: { formatter: (v) => Intl.NumberFormat().format(v) } },
 }));
 </script>
-

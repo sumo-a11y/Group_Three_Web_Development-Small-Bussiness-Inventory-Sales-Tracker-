@@ -15,6 +15,10 @@ const Business = db.define('Business', {
         type: DataTypes.STRING,
         allowNull: false
     },
+    taxIdentificationNumber: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
     address: {
         type: DataTypes.STRING,
         allowNull: true
