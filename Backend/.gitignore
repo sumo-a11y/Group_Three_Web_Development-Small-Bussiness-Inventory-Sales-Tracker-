@@ -15,6 +15,7 @@ yarn-error.log
 dist/
 .cache/
 coverage/
+database.db
 
 # JavaScript
 # Add JavaScript-specific ignores here
