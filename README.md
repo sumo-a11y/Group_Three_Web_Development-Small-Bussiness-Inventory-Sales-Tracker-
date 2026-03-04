@@ -166,9 +166,14 @@ feature branch → development → main
 
 - Team Group Three
 - Maintained by: sumo-a11y
+- Pastoreekahk S Arthur
+- Roland
+- Timmy
+- Gifty
 
 ---
 
 ## 📄 License
 
 This project is for educational and development purposes.
+Powered By: Orange Digital Center / Orange Liberia
