@@ -34,6 +34,20 @@ This system allows business administrators to:
 
 ## 📁 Project Structure
 
+
+---
+```
+## 🌍 Live Demo
+
+Frontend:
+https://sumo-a11y.github.io/Group_Three_Web_Development-Small-Bussiness-Inventory-Sales-Tracker-/
+
+Backend API:
+http://localhost:3000 (local development)
+
+```
+---
+
 ```
 Group_Three_Web_Development-Small-Bussiness-Inventory-Sales-Tracker-
 │
@@ -73,6 +87,10 @@ cd Group_Three_Web_Development-Small-Bussiness-Inventory-Sales-Tracker-
 cd Backend
 npm install
 npx nodemon
+or
+cd Backend
+npm install
+npm run dev
 ```
 
 Backend runs at:
@@ -133,6 +151,18 @@ Main route groups:
 /api/low-stock
 /api/subscriptions
 /api/subscription-plans
+
+## 📬 Example API Request
+
+Login:
+
+POST /api/auth/login
+
+Body:
+{
+  "email": "admin@example.com",
+  "password": "password123"
+}
 ```
 
 ---
@@ -148,6 +178,28 @@ Workflow:
 ```
 feature branch → development → main
 ```
+
+---
+
+---
+## 🔐 Environment Variables
+
+Create a `.env` file inside the Backend folder:
+```
+PORT=3000
+SESSION_SECRET=your-secret-key
+JWT_SECRET=your-jwt-secret
+
+```
+---
+## 🖼 Application Preview
+
+### Login Page
+![Login Screenshot](./frontend/public/login-preview.png)
+
+### Products Dashboard
+![Dashboard Screenshot](./frontend/public/dashboard-preview.png)
+---
 
 ---
 
@@ -167,8 +219,8 @@ feature branch → development → main
 - Team Group Three
 - Maintained by: sumo-a11y
 - Pastoreekahk S Arthur
-- Roland
-- Timmy
+- Roland Zogbay
+- Timothy Edward Sackie
 - Gifty
 
 ---
