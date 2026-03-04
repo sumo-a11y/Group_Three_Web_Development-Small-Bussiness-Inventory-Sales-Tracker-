@@ -43,7 +43,7 @@ Frontend:
 https://sumo-a11y.github.io/Group_Three_Web_Development-Small-Bussiness-Inventory-Sales-Tracker-/
 
 Backend API:
-http://localhost:3000 (local development)
+http://localhost:5000 (local development)
 
 ```
 ---
@@ -96,7 +96,7 @@ npm run dev
 Backend runs at:
 
 ```
-http://localhost:3000
+http://localhost:5000
 ```
 
 ---
