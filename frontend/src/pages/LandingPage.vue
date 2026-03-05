@@ -97,6 +97,7 @@
         </div>
       </div>
     </section>
+
     <!-- ABOUT -->
     <section class="px-13 py-20 bg-gray-50" data-aos="fade-up">
       <h2 class="text-center text-6xl font-bold">
@@ -154,7 +155,7 @@
           'relative flex flex-col items-center p-8 rounded-2xl shadow-lg border transition-transform duration-200 bg-white',
           idx === 1
             ? 'system-border scale-105 z-10 shadow-2xl'
-            : 'border-gray-200',
+            : 'border-gray-200 hover:-translate-y-2 transition-all duration-300',
           'hover:scale-105 hover:shadow-2xl',
         ]">
           <div v-if="idx === 1"
@@ -195,7 +196,7 @@
       </p>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-10">
         <Card v-for="t in testimonials" :key="t.name"
-          class="flex flex-col items-center p-8 rounded-2xl shadow-lg border border-gray-200 bg-white hover:shadow-2xl transition-shadow duration-200 relative">
+          class="flex flex-col items-center p-8 rounded-2xl shadow-lg border border-gray-200 bg-white hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 relative">
           <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-orange-100 rounded-full p-3 shadow">
             <i class="fa-solid fa-quote-left text-2xl text-orange-500"></i>
           </div>
@@ -222,16 +223,19 @@
       </p>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-10">
         <Card v-for="member in team" :key="member.name"
-          class="flex flex-col items-center p-8 rounded-2xl shadow-lg border border-gray-200 bg-white hover:shadow-2xl transition-shadow duration-200 relative">
+          class="flex flex-col items-center p-8 rounded-2xl shadow-lg border border-gray-200 bg-white hover:shadow-3xl  hover:-translate-y-2 transition-all duration-300 relative">
           <div
             class="w-32 h-32 rounded-full mx-auto border-4 border-orange-200 shadow-lg overflow-hidden flex items-center justify-center bg-orange-50">
             <img :src="member.image" :alt="member.name" class="w-full h-full object-cover" />
           </div>
-          <h3 class="text-xl font-semibold text-center mt-5 text-gray-900">
+          <h3 class="text-2xl font-semibold text-center mt-5 text-gray-900">
             {{ member.name }}
           </h3>
-          <p class="text-sm text-center text-system font-semibold mt-1">
+          <p class="text-lg text-center text-system font-semibold mt-1">
             {{ member.role }}
+          </p>
+          <p class="text-sm text-center text-gray-400 font-semibold mt-1">
+            {{ member.desc }}
           </p>
         </Card>
       </div>
@@ -243,7 +247,7 @@
         Contact <span class="text-system">Us</span>
       </h2>
       <p class="text-center text-gray-500 text-xl mb-10">
-        We'd love to hear from you. Reach out with questions or feedback!
+        We&apos;d love to hear from you. Reach out with questions or feedback!
       </p>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-6xl mx-auto">
         <!-- LEFT: CONTACT INFO + MAP -->
@@ -441,16 +445,19 @@ const team = [
   {
     name: "Roland Zogbay",
     role: "Senior Developer",
+    desc: "A FullStack Web developer and Designer. He brings with him strong innovation which leads to the accomplishment of this project.",
     image: new URL("../assets/Roland.jpg", import.meta.url).href,
   },
   {
     name: "Gifty Matthews",
     role: "Team Lead",
+    desc: "A FullStack Web developer and Designer. He brings with him strong innovation which leads to the accomplishment of this project.",
     image: new URL("../assets/gift.jpeg", import.meta.url).href,
   },
   {
     name: "Edward Tim Sackie",
     role: "Backend Engineer",
+    desc: "A FullStack Web developer and Designer. He brings with him strong innovation which leads to the accomplishment of this project.",
     image: new URL("../assets/tims.jpeg", import.meta.url).href,
   },
 ];

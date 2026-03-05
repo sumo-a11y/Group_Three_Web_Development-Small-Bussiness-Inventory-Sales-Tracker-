@@ -65,7 +65,7 @@
           </div>
 
           <router-link to="/signup"
-            class="text-2xl underline font-semibold text-orange-600 hover:text-orange-700 hover:underline">
+            class="text-2xl underline font-semibold text-system hover:text-orange-600 hover:underline">
             Sign Up
           </router-link>
         </div>
@@ -110,7 +110,7 @@
             </label>
 
             <router-link to="/forgot-password"
-              class="text-orange-600 text-lg underline font-semibold cursor-pointer hover:text-orange-800">
+              class="text-system text-lg underline font-semibold cursor-pointer hover:text-orange-800">
               Forgot password?
             </router-link>
           </div>
@@ -127,14 +127,30 @@
           </button>
         </form>
 
-        <div v-if="statusMessage" class="mt-4 text-sm" :class="statusType === 'success' ? 'text-emerald-700' : 'text-red-600'
+        <div v-if="statusMessage" class="mt-4 text-sm" :class="statusType === 'success' ? 'text-emerald-700' : 'text-system'
           ">
           {{ statusMessage }}
         </div>
 
+        <div v-if="showResend" class="mt-4 flex items-center justify-center  gap-3">
+          <span class="text-gray-600">Didn&apos;t received an email?</span>
+          <button type="button"
+            class="text-system  font-semibold hover:text-orange-800 disabled:opacity-50 disabled:cursor-not-allowed"
+            @click="resendVerification" :disabled="isSubmitting || resendCooldown > 0">
+
+            <span v-if="resendCooldown === 0" class=" cursor-pointer underline">Resend verification
+              email</span>
+            <span v-else>Resend in {{ resendCooldown }}s</span>
+          </button>
+
+          <span v-if="resendCooldown > 0" class="text-sm text-slate-500">
+            Please wait…
+          </span>
+        </div>
+
         <div class="mt-6 text-center text-lg text-slate-600">
           Don&apos;t have an account?
-          <router-link to="/signup" class="text-orange-600 font-extrabold hover:underline">
+          <router-link to="/signup" class="text-system font-extrabold hover:underline">
             Create one
           </router-link>
         </div>
@@ -148,13 +164,17 @@
 </template>
 
 <script setup>
-import { ref, reactive } from "vue";
+import { ref, reactive, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useAuthStore } from "@/stores/auth.store";
+import { useToast } from "vue-toast-notification";
+
+import axios from "axios";
 
 const auth = useAuthStore();
 const route = useRoute();
 const router = useRouter();
+const toast = useToast();
 
 const form = ref({
   email: "",
@@ -173,13 +193,53 @@ const fieldErrors = reactive({
   password: "",
 });
 
+// ✅ optional UI state: show resend link if not verified
+const showResend = ref(false);
+
+// cooldown state
+const resendCooldown = ref(0);
+let resendInterval = null;
+
+function startResendCooldown(seconds = 30) {
+  resendCooldown.value = seconds;
+
+  if (resendInterval) clearInterval(resendInterval);
+
+  resendInterval = setInterval(() => {
+    resendCooldown.value -= 1;
+    if (resendCooldown.value <= 0) {
+      resendCooldown.value = 0;
+      clearInterval(resendInterval);
+      resendInterval = null;
+    }
+  }, 1000);
+}
+
 function validateEmail(email) {
   const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return re.test(email);
 }
 
+// ✅ Toast when user arrives from email verification redirect
+onMounted(() => {
+  const verified = route.query.verified;
+
+  if (verified === "1") {
+    toast.success("Email verified successfully. Please login.");
+  } else if (verified === "expired") {
+    toast.error("Verification link expired. Please request a new one.");
+  } else if (verified === "0") {
+    toast.error("Invalid verification link.");
+  }
+});
+const signup = route.query.signup;
+if (signup === "1") toast.success("Account created. Please verify your email, then login.");
+
 async function handleLogin() {
   statusMessage.value = "";
+  statusType.value = "error";
+  showResend.value = false;
+
   fieldErrors.email = "";
   fieldErrors.password = "";
 
@@ -203,13 +263,51 @@ async function handleLogin() {
   isSubmitting.value = true;
   try {
     await auth.login(form.value.email, form.value.password);
+
+    toast.success("Login successful");
+
     router.replace(
       route.query.redirect ||
       (auth.user?.role === "system_admin" ? "/admin" : "/dashboard")
     );
   } catch (err) {
-    statusType.value = "error";
-    statusMessage.value = err?.response?.data?.message || "Login failed.";
+    const status = err?.response?.status;
+    const msg = err?.response?.data?.message || "Login failed.";
+
+    // ✅ If backend blocks unverified emails with 403
+    if (status === 403) {
+      toast.error("Please verify your email before logging in.");
+      statusMessage.value = "Please verify your email. Check your inbox for the verification link.";
+      showResend.value = true;
+    } else {
+      toast.error(msg);
+      statusMessage.value = msg;
+    }
+  } finally {
+    isSubmitting.value = false;
+  }
+}
+
+// ✅ Optional: call backend to resend verification
+async function resendVerification() {
+  if (!form.value.email) {
+    toast.error("Please enter your email first.");
+    return;
+  }
+
+  if (resendCooldown.value > 0) return;
+
+  try {
+    isSubmitting.value = true;
+
+    await axios.post("/api/auth/resend-verification", { email: form.value.email });
+
+    toast.success("Verification email sent. Please check your inbox.");
+    startResendCooldown(30);
+    showResend.value = false;
+  } catch (err) {
+    toast.error(err?.response?.data?.message || "Failed to resend verification email.");
+    console.error("Resend verification error:", err?.response || err);
   } finally {
     isSubmitting.value = false;
   }
