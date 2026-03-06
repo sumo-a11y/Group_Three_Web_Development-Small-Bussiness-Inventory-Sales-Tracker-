@@ -124,6 +124,34 @@
       <!-- <main class="px-4 sm:px-6 lg:px-8 py-6 bg-amber-600"> -->
       <!-- Main Content -->
       <main class="flex-1 p-6 overflow-y-auto">
+        <!-- Success Alert -->
+        <transition
+          enter-active-class="transition duration-300 ease-out"
+          enter-from-class="transform opacity-0 translate-y--2"
+          enter-to-class="transform opacity-100 translate-y-0"
+          leave-active-class="transition duration-200 ease-in"
+          leave-from-class="transform opacity-100 translate-y-0"
+          leave-to-class="transform opacity-0 translate-y--2"
+        >
+          <div
+            v-if="showAlert"
+            class="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg flex items-start gap-3"
+          >
+            <i
+              class="fa-solid fa-check-circle text-green-600 text-xl mt-0.5"
+            ></i>
+            <div>
+              <p class="font-medium text-green-800">{{ alertMessage }}</p>
+            </div>
+            <button
+              @click="showAlert = false"
+              class="ml-auto text-green-600 hover:text-green-700"
+            >
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+        </transition>
+
         <!-- Top Bar -->
 
         <!-- Header Card -->
@@ -152,7 +180,9 @@
                 <option value="Status">Status (Active First)</option>
               </select>
 
-              <button class="btn-primary">+ Add Products</button>
+              <button class="btn-primary" @click="openAddModal">
+                + Add Products
+              </button>
             </div>
           </div>
 
@@ -163,11 +193,9 @@
                 <tr>
                   <th class="py-3">Product Name</th>
                   <th>Price</th>
-                  <th>View</th>
-                  <th>Click</th>
                   <th>Quantity</th>
-                  <th>Revenue</th>
                   <th>Status</th>
+                  <th>Action</th>
                 </tr>
               </thead>
 
@@ -188,10 +216,7 @@
                     </div>
                   </td>
                   <td>{{ product.price }}</td>
-                  <td>{{ product.views }}</td>
-                  <td>{{ product.click }}</td>
                   <td>{{ product.quantity }}</td>
-                  <td>{{ product.revenue }}</td>
                   <td>
                     <span
                       :class="
@@ -202,6 +227,15 @@
                     >
                       {{ product.status }}
                     </span>
+                  </td>
+                  <td>
+                    <button
+                      @click="deleteProduct(product.id)"
+                      class="px-3 py-1.5 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition border border-red-200"
+                      title="Delete product"
+                    >
+                      <i class="fa-solid fa-trash-can mr-1"></i> Remove
+                    </button>
                   </td>
                 </tr>
               </tbody>
@@ -287,6 +321,14 @@
             Tracking
           </footer> -->
     </div>
+
+    <!-- Product Modal -->
+    <ProductModal
+      :isOpen="showAddModal"
+      :initialData="newProduct"
+      @close="closeAddModal"
+      @submit="handleProductSubmit"
+    />
   </div>
 </template>
 
@@ -297,6 +339,7 @@ import SalesChart from "@/components/SalesChart.vue";
 import TopProductsBarChart from "@/components/TopProductsBarChart.vue";
 import LowStockChartBar from "@/components/LowStockChartBar.vue";
 import KpiCard from "@/components/KpiCard.vue";
+import ProductModal from "@/components/ProductModal.vue";
 
 import { useAuthStore } from "@/stores/auth.store";
 const auth = useAuthStore();
@@ -309,19 +352,88 @@ const filterBy = ref("");
 const showNotifications = ref(false);
 const currentPage = ref(1);
 const itemsPerPage = ref(5);
+const showAddModal = ref(false);
+const showAlert = ref(false);
+const alertMessage = ref("");
+const newProduct = ref({
+  id: null,
+  emoji: "",
+  name: "",
+  txnId: "",
+  price: "",
+  quantity: "",
+  status: "Active",
+});
+
+const openAddModal = () => {
+  showAddModal.value = true;
+  resetNewProduct();
+};
+
+const closeAddModal = () => {
+  showAddModal.value = false;
+  resetNewProduct();
+};
+
+const resetNewProduct = () => {
+  newProduct.value = {
+    id: null,
+    emoji: "",
+    name: "",
+    txnId: "",
+    price: "",
+    quantity: "",
+    status: "Active",
+  };
+};
+
+const handleProductSubmit = (productData) => {
+  // assign new id sequentially
+  const nextId = products.value.length
+    ? Math.max(...products.value.map((p) => p.id)) + 1
+    : 1;
+  // Add a default emoji to new products
+  const productCopy = { ...productData, id: nextId, emoji: "📦" };
+  products.value.push(productCopy);
+
+  // Show success alert
+  alertMessage.value = `Product "${productData.name}" added successfully!`;
+  showAlert.value = true;
+
+  // Auto-hide alert after 3 seconds
+  setTimeout(() => {
+    showAlert.value = false;
+  }, 3000);
+
+  closeAddModal();
+};
+
+const addProduct = () => {
+  // assign new id sequentially
+  const nextId = products.value.length
+    ? Math.max(...products.value.map((p) => p.id)) + 1
+    : 1;
+  const productCopy = { ...newProduct.value, id: nextId };
+  products.value.push(productCopy);
+  closeAddModal();
+};
+
+const deleteProduct = (productId) => {
+  const confirmed = confirm("Are you sure you want to delete this product?");
+  if (confirmed) {
+    products.value = products.value.filter((p) => p.id !== productId);
+  }
+};
 
 // Products Data
 const products = ref([
   {
     id: 1,
-    emoji: "🍊",
-    name: "Pure Organic Orange",
+    emoji: "🍚",
+    name: "Rice Bag (25kg)",
     txnId: "#GR47",
-    price: "$48.00",
-    views: "12,700",
-    click: "85%",
-    quantity: "8,650",
-    revenue: "$35,750",
+    price: "$20.00",
+    quantity: "32,000",
     status: "Active",
   },
   {
@@ -330,11 +442,8 @@ const products = ref([
     name: "Fresh Peaches Plus",
     txnId: "#GR46",
     price: "$34.00",
-    views: "11,500",
-    click: "70%",
     quantity: "6,500",
-    revenue: "$24,800",
-    status: "Active",
+    status: "Inactive",
   },
   {
     id: 3,
@@ -342,10 +451,7 @@ const products = ref([
     name: "Organic Bananas",
     txnId: "#GR45",
     price: "$42.00",
-    views: "9,350",
-    click: "65%",
     quantity: "4,100",
-    revenue: "$20,900",
     status: "Active",
   },
   {
@@ -354,143 +460,8 @@ const products = ref([
     name: "Red Apples Premium",
     txnId: "#GR44",
     price: "$55.00",
-    views: "8,200",
-    click: "75%",
     quantity: "3,200",
-    revenue: "$18,500",
-    status: "Active",
-  },
-  {
-    id: 5,
-    emoji: "🥦",
-    name: "Fresh Broccoli",
-    txnId: "#GR43",
-    price: "$12.00",
-    views: "7,100",
-    click: "60%",
-    quantity: "5,400",
-    revenue: "$14,200",
-    status: "Active",
-  },
-  {
-    id: 6,
-    emoji: "🥕",
-    name: "Organic Carrots",
-    txnId: "#GR42",
-    price: "$18.00",
-    views: "6,500",
-    click: "65%",
-    quantity: "3,800",
-    revenue: "$12,300",
-    status: "Active",
-  },
-  {
-    id: 7,
-    emoji: "🍅",
-    name: "Ripe Tomatoes",
-    txnId: "#GR41",
-    price: "$25.00",
-    views: "5,900",
-    click: "72%",
-    quantity: "2,100",
-    revenue: "$10,800",
     status: "Inactive",
-  },
-  {
-    id: 8,
-    emoji: "🥬",
-    name: "Fresh Lettuce",
-    txnId: "#GR40",
-    price: "$8.00",
-    views: "4,300",
-    click: "58%",
-    quantity: "1,900",
-    revenue: "$7,200",
-    status: "Active",
-  },
-  {
-    id: 9,
-    emoji: "🧅",
-    name: "Sweet Onions",
-    txnId: "#GR39",
-    price: "$15.00",
-    views: "3,800",
-    click: "55%",
-    quantity: "2,500",
-    revenue: "$8,900",
-    status: "Active",
-  },
-  {
-    id: 10,
-    emoji: "🥒",
-    name: "Pickled Cucumbers",
-    txnId: "#GR38",
-    price: "$22.00",
-    views: "3,200",
-    click: "50%",
-    quantity: "1,600",
-    revenue: "$5,600",
-    status: "Active",
-  },
-  {
-    id: 11,
-    emoji: "🍇",
-    name: "Purple Grapes",
-    txnId: "#GR37",
-    price: "$32.00",
-    views: "2,900",
-    click: "62%",
-    quantity: "1,200",
-    revenue: "$4,800",
-    status: "Active",
-  },
-  {
-    id: 12,
-    emoji: "🍓",
-    name: "Fresh Strawberries",
-    txnId: "#GR36",
-    price: "$28.00",
-    views: "2,500",
-    click: "68%",
-    quantity: "800",
-    revenue: "$3,200",
-    status: "Active",
-  },
-  {
-    id: 13,
-    emoji: "🍌",
-    name: "Banana Bunch",
-    txnId: "#GR35",
-    price: "$24.00",
-    views: "2,100",
-    click: "60%",
-    quantity: "950",
-    revenue: "$2,280",
-    status: "Active",
-  },
-  {
-    id: 14,
-    emoji: "🥝",
-    name: "Kiwi Fruits",
-    txnId: "#GR34",
-    price: "$35.00",
-    views: "1,800",
-    click: "55%",
-    quantity: "650",
-    revenue: "$2,275",
-    status: "Inactive",
-  },
-  {
-    id: 15,
-    emoji: "🍊",
-    name: "Orange Juice Pack",
-    txnId: "#GR33",
-    price: "$16.00",
-    views: "1,500",
-    click: "48%",
-    quantity: "2,200",
-    revenue: "$3,520",
-    status: "Active",
   },
 ]);
 
@@ -676,6 +647,8 @@ function formatMoney(v) {
     currency: "USD",
   }).format(v);
 }
+
+// expose modal helpers and new product state to template
 </script>
 
 <style scoped>
