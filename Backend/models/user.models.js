@@ -24,6 +24,26 @@ const user = db.define('User', {
         allowNull: false,
         defaultValue: 'business_admin'
     },
+    reset_password_token: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    reset_password_expires: {
+        type: DataTypes.DATE,
+        allowNull: true
+    },
+    email_verified: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
+    },
+    email_verification_token: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    email_verify_expires: {
+        type: DataTypes.DATE,
+        allowNull: true,
+    },
     businessId: {
         type: DataTypes.INTEGER,
         allowNull: false,
