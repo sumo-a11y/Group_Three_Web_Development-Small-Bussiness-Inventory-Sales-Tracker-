@@ -14,7 +14,7 @@
     </div>
 
     <div class="mt-6">
-      <apexchart type="bar" height="430" :options="options" :series="series" />
+      <apexchart type="bar" height="454" :options="options" :series="series" />
     </div>
   </div>
 </template>
