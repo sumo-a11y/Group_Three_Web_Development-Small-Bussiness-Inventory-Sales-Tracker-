@@ -200,12 +200,13 @@
           <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-orange-100 rounded-full p-3 shadow">
             <i class="fa-solid fa-quote-left text-2xl text-orange-500"></i>
           </div>
-          <p class="italic text-gray-600 text-center mt-6">"{{ t.message }}"</p>
+
           <div class="flex flex-col items-center mt-6">
             <div
               class="w-14 h-14 rounded-full bg-orange-200 flex items-center justify-center text-2xl font-bold text-orange-700 mb-2">
               {{ t.name.charAt(0) }}
             </div>
+            <p class="italic text-gray-600 text-center mt-6">"{{ t.message }}"</p>
             <h3 class="font-bold text-center text-lg">{{ t.name }}</h3>
             <p class="text-sm text-center text-gray-500">{{ t.business }}</p>
           </div>
@@ -324,17 +325,18 @@
         <!-- LOGO & BRAND -->
         <div class="flex flex-col gap-4 items-start md:items-start">
           <div class="flex items-center gap-3 mb-2">
-            <img src="/favicon.ico" alt="Logo" class="w-12 h-12 rounded-full shadow border border-orange-400" />
-            <span class="text-2xl font-extrabold tracking-tight text-orange-400">Check it NaNa</span>
+            <img src="../assets/CalltoAction.jpg" alt="Logo"
+              class="w-12 h-12 rounded-full shadow border border-orange-400" />
+            <span class="text-2xl font-extrabold tracking-tight text-system">Check it NaNa</span>
           </div>
-          <p class="text-gray-400 text-sm">
-            Modern inventory management for African businesses.
+          <p class="text-gray-400 text-lg">
+            Modern inventory management for Liberian businesses.
           </p>
         </div>
 
         <!-- QUICK LINKS -->
         <div>
-          <h3 class="text-xl font-bold mb-4 text-orange-300">Quick Links</h3>
+          <h3 class="text-3xl font-bold mb-4 text-system">Quick Links</h3>
           <ul class="space-y-2">
             <li>
               <router-link to="/" class="hover:text-orange-400 transition-colors">Home</router-link>
@@ -353,7 +355,7 @@
 
         <!-- FEATURES -->
         <div>
-          <h3 class="text-xl font-bold mb-4 text-orange-300">Features</h3>
+          <h3 class="text-3xl font-bold mb-4 text-system">Features</h3>
           <ul class="space-y-2">
             <li>
               <span class="hover:text-orange-400 transition-colors cursor-pointer">Inventory Tracking</span>
@@ -372,7 +374,7 @@
 
         <!-- CONTACT INFO & SOCIAL -->
         <div class="flex flex-col gap-4">
-          <h3 class="text-xl font-bold mb-4 text-orange-300">Contact</h3>
+          <h3 class="text-3xl font-bold mb-4 text-system">Contact</h3>
           <div class="flex items-center gap-2 text-gray-300">
             <i class="fa-solid fa-location-dot text-orange-400"></i>
             <span>Broad Street, Monrovia, Liberia</span>
@@ -396,8 +398,8 @@
 
       <hr class="my-8 border-gray-800" />
 
-      <p class="text-center italic text-gray-400 text-sm">
-        © 2026 Check it NaNa. All rights reserved.
+      <p class="text-center italic font-semibold text-gray-300 text-lg">
+        © 2026 Check it NaNa. All rights reserved. Power By <span class="text-system">Orange Digital Center</span>
       </p>
     </footer>
   </div>

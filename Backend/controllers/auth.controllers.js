@@ -78,10 +78,10 @@ export const registerUser = async (req, res) => {
             businessId: business.id,
         });
 
-        // ✅ Generate email verification token
+        //  Generate email verification token
         const { rawToken, hashedToken } = generateTokenPair(); // reuse helper
 
-        // ✅ Use correct field names from your model
+        //  Use correct field names from your model
         user.email_verification_token = hashedToken;
         user.email_verify_expires = new Date(Date.now() + 24 * 60 * 60 * 1000);
         await user.save();
@@ -90,10 +90,10 @@ export const registerUser = async (req, res) => {
             user.email
         )}`;
 
-        // ✅ Don’t fail registration if email fails
+        //  Don’t fail registration if email fails
         sendEmail({
             to: user.email,
-            subject: "Verify your email",
+            subject: "Account Created Successfully.",
             text: `Verify your email: ${verifyLink}`,
             html: `
         <div style="font-family: Arial, sans-serif">
@@ -153,14 +153,14 @@ export const verifyEmailRedirect = async (req, res) => {
             user.email_verify_expires = null;
             await user.save();
 
-            // ✅ send confirmation email (don’t block redirect if it fails)
+            // send confirmation email (don’t block redirect if it fails)
             sendEmail({
                 to: user.email,
-                subject: "Email verified successfully",
+                subject: "Email verified successfully.",
                 text: "Your email has been verified. You can now log in.",
                 html: `
           <div style="font-family: Arial, sans-serif">
-            <h2>Email Verified ✅</h2>
+            <h2>Email Verified </h2>
             <p>Your email has been verified successfully.</p>
             <p>You can now log in to your account.</p>
           </div>
@@ -168,7 +168,7 @@ export const verifyEmailRedirect = async (req, res) => {
             }).catch(console.error);
         }
 
-        // ✅ Redirect to frontend login page
+        // Redirect to frontend login page
         return res.redirect(`${process.env.APP_URL}/login?verified=1`);
     } catch (err) {
         console.error("verifyEmailRedirect error:", err);

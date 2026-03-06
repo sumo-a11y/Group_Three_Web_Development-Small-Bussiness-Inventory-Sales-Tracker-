@@ -232,8 +232,6 @@ onMounted(() => {
     toast.error("Invalid verification link.");
   }
 });
-const signup = route.query.signup;
-if (signup === "1") toast.success("Account created. Please verify your email, then login.");
 
 async function handleLogin() {
   statusMessage.value = "";
