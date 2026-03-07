@@ -34,7 +34,7 @@ body {
 :root {
   --px-primary: #f97316;
   /* orange-600 */
-  --px-primary-700: #c2410c;
+  --px-primary-700: rgb(252, 92, 28);
   --px-soft: #fff7ed;
   /* orange-50 */
   --px-border: rgba(15, 23, 42, 0.08);
@@ -81,9 +81,6 @@ html {
   @apply bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-md transition;
 }
 
-.btn-primary {
-  @apply bg-orange-600 text-white px-4 py-2.5 rounded-xl font-semibold shadow-sm hover:bg-orange-700 transition inline-flex items-center;
-}
 
 .btn-secondary {
   @apply bg-white border border-gray-200 text-gray-700 px-4 py-2.5 rounded-xl font-semibold hover:bg-orange-50 hover:border-orange-200 transition inline-flex items-center;
@@ -150,12 +147,12 @@ html {
 }
 
 .btn-primary {
-  @apply inline-flex items-center justify-center rounded-xl px-5 py-3 font-semibold text-white shadow-sm transition;
-  background: var(--px-primary, #ea580c);
+  @apply inline-flex items-center justify-center cursor-pointer rounded-xl px-5 py-3 font-semibold text-white shadow-sm transition;
+  background: var(--px-primary, #f97316);
 }
 
 .btn-primary:hover {
-  background: var(--px-primary-700, #c2410c);
+  background: var(--px-primary-700, #f97316);
 }
 
 .label {
@@ -186,14 +183,6 @@ html {
   @apply mt-2 text-xs text-red-600;
 }
 
-.btn-primary {
-  @apply inline-flex items-center justify-center rounded-xl px-5 py-3 font-semibold text-white shadow-sm transition disabled:opacity-60 disabled:cursor-not-allowed;
-  background: var(--px-primary, #ea580c);
-}
-
-.btn-primary:hover {
-  background: var(--px-primary-700, #c2410c);
-}
 
 .spinner {
   width: 18px;

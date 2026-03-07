@@ -10,7 +10,10 @@ const authService = {
     },
     logOut(payload) {
         return api.post("api/auth/logout", payload);
-    }
+    },
+    resendVerificationEmail(email) {
+        return api.post("api/auth/resend-verification", { email });
+    },
 };
 
 

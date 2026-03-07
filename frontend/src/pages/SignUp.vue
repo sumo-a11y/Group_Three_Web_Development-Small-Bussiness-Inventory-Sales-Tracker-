@@ -1,28 +1,19 @@
 <template>
-  <div
-    class="min-h-screen bg-slate-50 flex items-center justify-center px-4 sm:px-6 lg:px-8"
-  >
+  <div class="min-h-screen bg-slate-50 flex items-center justify-center px-4 sm:px-6 lg:px-8">
     <div
-      class="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 overflow-hidden rounded-3xl bg-white shadow-xl border border-slate-100"
-    >
+      class="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 overflow-hidden rounded-3xl bg-white shadow-xl border border-slate-100">
       <!-- Left: Brand / Marketing -->
       <div
-        class="relative hidden md:block p-8 sm:p-10 bg-linear-to-br from-orange-600 via-orange-600 to-amber-400 text-white"
-      >
+        class="relative hidden md:block p-8 sm:p-10 bg-linear-to-br from-orange-600 via-orange-600 to-amber-400 text-white">
         <div
-          class="pointer-events-none absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_top,rgba(255,255,255,.85),transparent_55%)]"
-        ></div>
-        <div
-          class="pointer-events-none absolute -bottom-24 -right-24 w-72 h-72 rounded-full bg-white/15 blur-2xl"
-        ></div>
+          class="pointer-events-none absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_top,rgba(255,255,255,.85),transparent_55%)]">
+        </div>
+        <div class="pointer-events-none absolute -bottom-24 -right-24 w-72 h-72 rounded-full bg-white/15 blur-2xl">
+        </div>
 
         <div class="relative">
-          <div
-            class="inline-flex items-center gap-2 rounded-2xl bg-white/15 border border-white/20 px-4 py-2"
-          >
-            <span
-              class="grid place-items-center w-8 h-8 rounded-xl bg-white/15"
-            >
+          <div class="inline-flex items-center gap-2 rounded-2xl bg-white/15 border border-white/20 px-4 py-2">
+            <span class="grid place-items-center w-8 h-8 rounded-xl bg-white/15">
               <i class="fa-solid fa-boxes-stacked"></i>
             </span>
             <div class="leading-tight">
@@ -41,9 +32,7 @@
 
           <div class="mt-8 grid gap-3">
             <div class="flex items-start gap-3">
-              <span
-                class="mt-1 w-7 h-7 rounded-xl bg-white/15 grid place-items-center"
-              >
+              <span class="mt-1 w-7 h-7 rounded-xl bg-white/15 grid place-items-center">
                 <i class="fa-solid fa-check"></i>
               </span>
               <div>
@@ -55,9 +44,7 @@
             </div>
 
             <div class="flex items-start gap-3">
-              <span
-                class="mt-1 w-7 h-7 rounded-xl bg-white/15 grid place-items-center"
-              >
+              <span class="mt-1 w-7 h-7 rounded-xl bg-white/15 grid place-items-center">
                 <i class="fa-solid fa-check"></i>
               </span>
               <div>
@@ -69,9 +56,7 @@
             </div>
 
             <div class="flex items-start gap-3">
-              <span
-                class="mt-1 w-7 h-7 rounded-xl bg-white/15 grid place-items-center"
-              >
+              <span class="mt-1 w-7 h-7 rounded-xl bg-white/15 grid place-items-center">
                 <i class="fa-solid fa-check"></i>
               </span>
               <div>
@@ -93,9 +78,7 @@
       <div class="p-8 sm:p-10">
         <div class="flex items-start justify-between gap-3">
           <div>
-            <h2
-              class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900"
-            >
+            <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
               Create your account
             </h2>
             <p class="mt-1 text-sm text-slate-500">
@@ -103,10 +86,7 @@
             </p>
           </div>
 
-          <router-link
-            to="/login"
-            class="text-2xl font-semibold text-orange-600 hover:text-orange-700 underline"
-          >
+          <router-link to="/login" class="text-2xl font-semibold text-orange-600 hover:text-orange-700 underline">
             Login
           </router-link>
         </div>
@@ -114,21 +94,11 @@
         <form @submit.prevent="handleSubmit" class="mt-8 space-y-5">
           <!-- Full name -->
           <div>
-            <label for="fullName" class="text-lg font-bold text-gray-600"
-              >Full Name</label
-            >
+            <label for="fullName" class="text-lg font-bold text-gray-600">Full Name</label>
             <div class="input-wrap">
               <i class="fa-solid fa-user input-ico"></i>
-              <input
-                v-model="form.fullName"
-                type="text"
-                id="fullName"
-                name="owner_name"
-                placeholder="Enter your full name"
-                class="input"
-                :disabled="isSubmitting"
-                required
-              />
+              <input v-model="form.fullName" type="text" id="fullName" name="owner_name"
+                placeholder="Enter your full name" class="input" :disabled="isSubmitting" required />
             </div>
             <p v-if="fieldErrors.fullName" class="err">
               {{ fieldErrors.fullName }}
@@ -137,42 +107,22 @@
 
           <!-- Email -->
           <div>
-            <label for="email" class="text-lg font-bold text-gray-600"
-              >Email Address</label
-            >
+            <label for="email" class="text-lg font-bold text-gray-600">Email Address</label>
             <div class="input-wrap">
               <i class="fa-solid fa-envelope input-ico"></i>
-              <input
-                v-model="form.email"
-                type="email"
-                id="email"
-                name="email"
-                placeholder="example@gmail.com"
-                class="input"
-                :disabled="isSubmitting"
-                required
-              />
+              <input v-model="form.email" type="email" id="email" name="email" placeholder="example@gmail.com"
+                class="input" :disabled="isSubmitting" required />
             </div>
             <p v-if="fieldErrors.email" class="err">{{ fieldErrors.email }}</p>
           </div>
 
           <!-- Business name -->
           <div>
-            <label for="bName" class="text-lg font-bold text-gray-600"
-              >Business Name</label
-            >
+            <label for="bName" class="text-lg font-bold text-gray-600">Business Name</label>
             <div class="input-wrap">
               <i class="fa-solid fa-store input-ico"></i>
-              <input
-                v-model="form.businessName"
-                type="text"
-                id="bName"
-                name="name"
-                placeholder="Enter the name of your business"
-                class="input"
-                :disabled="isSubmitting"
-                required
-              />
+              <input v-model="form.businessName" type="text" id="bName" name="name"
+                placeholder="Enter the name of your business" class="input" :disabled="isSubmitting" required />
             </div>
             <p v-if="fieldErrors.businessName" class="err">
               {{ fieldErrors.businessName }}
@@ -181,55 +131,27 @@
 
           <!-- TIN -->
           <div>
-            <label for="tinNum" class="text-lg font-bold text-gray-600"
-              >Business TIN Number</label
-            >
+            <label for="tinNum" class="text-lg font-bold text-gray-600">Business TIN Number</label>
             <div class="input-wrap">
               <i class="fa-solid fa-hashtag input-ico"></i>
-              <input
-                v-model="form.tin"
-                type="text"
-                inputmode="numeric"
-                id="tinNum"
-                name="tin"
-                placeholder="Enter your tax identification number"
-                class="input"
-                :disabled="isSubmitting"
-                required
-              />
+              <input v-model="form.tin" type="text" inputmode="numeric" id="tinNum" name="tin"
+                placeholder="Enter your tax identification number" class="input" :disabled="isSubmitting" required />
             </div>
             <p v-if="fieldErrors.tin" class="err">{{ fieldErrors.tin }}</p>
           </div>
 
           <!-- Password -->
           <div>
-            <label for="password" class="text-lg font-bold text-gray-600"
-              >Password</label
-            >
+            <label for="password" class="text-lg font-bold text-gray-600">Password</label>
             <div class="input-wrap">
               <i class="fa-solid fa-lock input-ico"></i>
-              <input
-                v-model="form.password"
-                :type="showPassword ? 'text' : 'password'"
-                id="password"
-                name="hashed_password"
-                placeholder="Create a password"
-                class="input pr-12"
-                :disabled="isSubmitting"
-                required
-              />
-              <button
-                type="button"
-                class="eye-btn"
-                @click="showPassword = !showPassword"
-                :disabled="isSubmitting"
-                aria-label="Toggle password visibility"
-              >
-                <i
-                  :class="
-                    showPassword ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'
-                  "
-                ></i>
+              <input v-model="form.password" :type="showPassword ? 'text' : 'password'" id="password"
+                name="hashed_password" placeholder="Create a password" class="input pr-12" :disabled="isSubmitting"
+                required />
+              <button type="button" class="eye-btn" @click="showPassword = !showPassword" :disabled="isSubmitting"
+                aria-label="Toggle password visibility">
+                <i :class="showPassword ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'
+                  "></i>
               </button>
             </div>
 
@@ -241,14 +163,9 @@
                   {{ strengthLabel }}
                 </p>
               </div>
-              <div
-                class="mt-2 h-2 w-full rounded-full bg-slate-100 overflow-hidden"
-              >
-                <div
-                  class="h-full rounded-full transition-all"
-                  :class="strengthBarClass"
-                  :style="{ width: strengthPercent + '%' }"
-                ></div>
+              <div class="mt-2 h-2 w-full rounded-full bg-slate-100 overflow-hidden">
+                <div class="h-full rounded-full transition-all" :class="strengthBarClass"
+                  :style="{ width: strengthPercent + '%' }"></div>
               </div>
               <p class="hint mt-2 text-lg">
                 Use 8+ chars, uppercase, lowercase, number (and a symbol for
@@ -263,35 +180,18 @@
 
           <!-- Confirm password -->
           <div>
-            <label for="confirmPassword" class="text-lg font-bold text-gray-600"
-              >Confirm Password</label
-            >
+            <label for="confirmPassword" class="text-lg font-bold text-gray-600">Confirm Password</label>
             <div class="input-wrap">
               <i class="fa-solid fa-shield input-ico"></i>
-              <input
-                v-model="form.confirmPassword"
-                :type="showConfirmPassword ? 'text' : 'password'"
-                id="confirmPassword"
-                name="confirmed_password"
-                placeholder="Re-enter your password"
-                class="input pr-12"
-                :disabled="isSubmitting"
-                required
-              />
-              <button
-                type="button"
-                class="eye-btn"
-                @click="showConfirmPassword = !showConfirmPassword"
-                :disabled="isSubmitting"
-                aria-label="Toggle confirm password visibility"
-              >
-                <i
-                  :class="
-                    showConfirmPassword
-                      ? 'fa-solid fa-eye-slash'
-                      : 'fa-solid fa-eye'
-                  "
-                ></i>
+              <input v-model="form.confirmPassword" :type="showConfirmPassword ? 'text' : 'password'"
+                id="confirmPassword" name="confirmed_password" placeholder="Re-enter your password" class="input pr-12"
+                :disabled="isSubmitting" required />
+              <button type="button" class="eye-btn" @click="showConfirmPassword = !showConfirmPassword"
+                :disabled="isSubmitting" aria-label="Toggle confirm password visibility">
+                <i :class="showConfirmPassword
+                  ? 'fa-solid fa-eye-slash'
+                  : 'fa-solid fa-eye'
+                  "></i>
               </button>
             </div>
             <p v-if="fieldErrors.confirmPassword" class="err">
@@ -301,32 +201,19 @@
 
           <!-- Agree -->
           <div class="flex items-start gap-3">
-            <input
-              v-model="form.agree"
-              type="checkbox"
-              id="agree"
+            <input v-model="form.agree" type="checkbox" id="agree"
               class="mt-1 h-4 w-4 rounded border-slate-300 text-orange-600 focus:ring-orange-500"
-              :disabled="isSubmitting"
-              required
-            />
+              :disabled="isSubmitting" required />
             <label for="agree" class="text-lg text-slate-600 leading-relaxed">
               I agree to the
-              <a href="#" class="text-orange-700 font-semibold hover:underline"
-                >Terms of Service</a
-              >
+              <a href="#" class="text-orange-700 font-semibold hover:underline">Terms of Service</a>
               and
-              <a href="#" class="text-orange-700 font-semibold hover:underline"
-                >Privacy Policy</a
-              >.
+              <a href="#" class="text-orange-700 font-semibold hover:underline">Privacy Policy</a>.
             </label>
           </div>
 
           <!-- Submit -->
-          <button
-            type="submit"
-            class="btn-primary w-full"
-            :disabled="isSubmitting"
-          >
+          <button type="submit" class="btn-primary w-full" :disabled="isSubmitting">
             <span v-if="!isSubmitting" class="inline-flex items-center">
               Sign Up <i class="fa-solid fa-arrow-right ml-2"></i>
             </span>
@@ -338,13 +225,8 @@
           </button>
         </form>
 
-        <div
-          v-if="statusMessage"
-          class="mt-4 text-sm"
-          :class="
-            statusType === 'success' ? 'text-emerald-700' : 'text-red-600'
-          "
-        >
+        <div v-if="statusMessage" class="mt-4 text-sm" :class="statusType === 'success' ? 'text-emerald-700' : 'text-red-600'
+          ">
           {{ statusMessage }}
         </div>
 
@@ -358,11 +240,14 @@
 
 <script setup>
 import { useAuthStore } from "@/stores/auth.store";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { ref, reactive, computed } from "vue";
+import { useToast } from "vue-toast-notification";
 
 const auth = useAuthStore();
 const router = useRouter();
+const route = useRoute()
+const toast = useToast()
 
 const showPassword = ref(false);
 const showConfirmPassword = ref(false);
@@ -458,6 +343,9 @@ function resetForm() {
   showConfirmPassword.value = false;
 }
 
+const signup = route.query.signup;
+if (signup === "1") toast.success("Account created. Please verify your email, then login.");
+
 async function handleSubmit() {
   statusMessage.value = "";
   statusType.value = "error";
@@ -489,7 +377,8 @@ async function handleSubmit() {
     fieldErrors.tin = "TIN is required.";
     valid = false;
   } else if (!validateTin(tinStr)) {
-    fieldErrors.tin = "TIN must be at least 6 digits.";
+    fieldErrors.tin = "Tin must be at least 6 digits"
+    fieldErrors.tin = toast.error("TIN must be at least 6 digits.");
     valid = false;
   }
 
@@ -531,11 +420,11 @@ async function handleSubmit() {
   try {
     const res = await auth.register(payload);
     statusType.value = "success";
-    statusMessage.value = res?.message || "Registered successfully!";
+    statusMessage.value = toast.success(res?.message) || "Registered successfully!";
     router.replace("/login");
   } catch (err) {
     statusType.value = "error";
-    statusMessage.value = err?.response?.data?.message || "Signup failed.";
+    statusMessage.value = toast.error(err?.response?.data?.message) || "Signup failed.";
   } finally {
     isSubmitting.value = false;
   }
