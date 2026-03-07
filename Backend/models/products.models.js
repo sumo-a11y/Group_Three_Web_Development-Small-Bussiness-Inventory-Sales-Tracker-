@@ -18,10 +18,19 @@ const Product = db.define('Product', {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false
     },
+    selling_price: {
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: false
+    },
     stock_quantity: {
         type: DataTypes.INTEGER,
         allowNull: false,
         defaultValue: 0
+    },
+    low_stock_threshold: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 10
     },
     businessId: {
         type: DataTypes.INTEGER,
