@@ -1,302 +1,349 @@
 <template>
   <div class="min-h-screen bg-slate-50">
-    <!-- Sidebar-->
-    <SideBar
-      :open="sidebarOpen"
-      @close="sidebarOpen = false"
-      :superAdmin="false"
-    />
+    <!-- Sidebar -->
+    <SideBar :open="sidebarOpen" @close="sidebarOpen = false" :superAdmin="false" />
 
     <!-- Main area -->
     <div class="ml-0 md:ml-64 min-h-screen flex flex-col">
       <!-- Topbar -->
-      <header
-        class="sticky top-0 z-40 bg-white/80 backdrop-blur border-b border-slate-200"
-      >
+      <header class="sticky top-0 z-40 bg-white/80 backdrop-blur border-b border-slate-200">
         <div class="px-4 sm:px-6 lg:px-6 py-7">
-          <div
-            class="mx-auto max-w-450 flex flex-col md:flex-row md:items-center md:justify-between gap-3"
-          >
-            <!-- Left -->
+          <div class="mx-auto max-w-450 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
             <div class="flex items-center gap-3 min-w-0">
-              <button
-                class="md:hidden text-2xl text-orange-600 hover:text-orange-700 transition"
-                @click="sidebarOpen = true"
-                aria-label="Toggle sidebar"
-              >
+              <button class="md:hidden text-2xl text-orange-600 hover:text-orange-700 transition"
+                @click="sidebarOpen = true" aria-label="Toggle sidebar">
                 <i class="fa-solid fa-bars"></i>
               </button>
 
               <div class="flex flex-col leading-tight">
-                <span
-                  class="xl:text-4xl lg:text-3xl md:text-2xl text-xl font-extrabold text-black"
-                  >Products
+                <span class="xl:text-4xl lg:text-3xl md:text-2xl text-xl font-extrabold text-black">
+                  Products
+                </span>
+                <span class="text-sm text-slate-500 mt-1">
+                  Manage stock items, pricing, and product availability
                 </span>
               </div>
             </div>
 
-            <!-- Right -->
             <div class="flex items-center gap-3 w-full md:w-auto">
-              <!-- Search -->
-              <div class="relative flex-1 md:w-105">
-                <i
-                  class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
-                ></i>
-                <input
-                  v-model="searchQuery"
-                  type="text"
-                  placeholder="Search products, invoices, customers..."
-                  class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-orange-500 text-xl"
-                />
+              <div class="relative flex-1 md:w-[420px]">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                <input v-model="searchQuery" type="text" placeholder="Search products..."
+                  class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-orange-500 text-base" />
               </div>
 
-              <!-- Notifications -->
               <div class="relative">
                 <button
                   class="relative w-12 h-12 rounded-xl border border-slate-200 bg-white hover:bg-orange-50 hover:border-orange-200 transition grid place-items-center cursor-pointer"
-                  @click="toggleNotifications"
-                  aria-label="Notifications"
-                >
+                  @click="toggleNotifications" aria-label="Notifications">
                   <i class="fa-solid fa-bell text-slate-700 text-xl"></i>
-                  <span
-                    v-if="notifications.length"
-                    class="absolute -top-1 -right-1 min-w-5 h-5 px-1 rounded-full bg-orange-600 text-white text-xs grid place-items-center border-2 border-white"
-                  >
-                    {{ notifications.length }}
+
+                  <span v-if="unreadNotificationsCount"
+                    class="absolute -top-1 -right-1 min-w-5 h-5 px-1 rounded-full bg-orange-600 text-white text-xs grid place-items-center border-2 border-white">
+                    {{ unreadNotificationsCount }}
                   </span>
                 </button>
 
-                <div
-                  v-if="showNotifications"
-                  class="absolute right-0 mt-2 w-80 bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden"
-                >
-                  <div
-                    class="px-4 py-3 bg-orange-50 border-b border-orange-100"
-                  >
+                <div v-if="showNotifications"
+                  class="absolute right-0 mt-2 w-80 bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden">
+                  <div class="px-4 py-3 bg-orange-50 border-b border-orange-100">
                     <div class="flex items-center justify-between">
                       <p class="font-semibold text-orange-800">Notifications</p>
-                      <button
-                        class="text-xs text-orange-800 hover:underline"
-                        @click="clearNotifications"
-                      >
+                      <button class="text-xs text-orange-800 hover:underline" @click="clearNotifications">
                         Clear
                       </button>
                     </div>
                     <p class="text-xs text-orange-800/70">
-                      Stock alerts & recent activity
+                      Product activity and stock alerts
                     </p>
                   </div>
 
                   <ul class="max-h-80 overflow-auto">
-                    <li
-                      v-for="n in notifications"
-                      :key="n.id"
+                    <li v-for="n in notifications" :key="n.id" @click="markNotificationRead(n.id)"
                       class="px-4 py-3 text-sm hover:bg-slate-50 cursor-pointer border-b border-slate-100 last:border-b-0"
-                    >
-                      <p class="text-slate-800">{{ n.message }}</p>
-                      <p class="text-xs text-slate-500 mt-0.5">{{ n.time }}</p>
+                      :class="n.is_read ? 'bg-white' : 'bg-orange-50/40'">
+                      <p class="text-slate-800 font-medium">{{ n.title }}</p>
+                      <p class="text-slate-600">{{ n.message }}</p>
+                      <p class="text-xs text-slate-500 mt-0.5">
+                        {{ formatNotificationTime(n.createdAt) }}
+                      </p>
                     </li>
 
-                    <li
-                      v-if="notifications.length === 0"
-                      class="px-4 py-6 text-sm text-slate-500"
-                    >
+                    <li v-if="!loadingNotifications && notifications.length === 0"
+                      class="px-4 py-6 text-sm text-slate-500">
                       No notifications 🎉
+                    </li>
+                    <li v-if="loadingNotifications" class="px-4 py-6 text-sm text-slate-500">
+                      Loading notifications...
                     </li>
                   </ul>
                 </div>
               </div>
 
-              <!-- User -->
               <div class="flex items-center gap-2 pl-1 cursor-pointer">
-                <img
-                  src="../assets/Roland.jpg"
-                  alt="Profile"
-                  class="w-10 h-10 rounded-full border border-orange-200"
-                />
+                <img src="../assets/Roland.jpg" alt="Profile"
+                  class="w-10 h-10 rounded-full border border-orange-200 object-cover" />
               </div>
             </div>
           </div>
         </div>
       </header>
 
-      <!-- Content -->
-      <!-- <main class="px-4 sm:px-6 lg:px-8 py-6 bg-amber-600"> -->
       <!-- Main Content -->
       <main class="flex-1 p-6 overflow-y-auto">
         <!-- Success Alert -->
-        <transition
-          enter-active-class="transition duration-300 ease-out"
-          enter-from-class="transform opacity-0 translate-y--2"
-          enter-to-class="transform opacity-100 translate-y-0"
-          leave-active-class="transition duration-200 ease-in"
-          leave-from-class="transform opacity-100 translate-y-0"
-          leave-to-class="transform opacity-0 translate-y--2"
-        >
-          <div
-            v-if="showAlert"
-            class="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg flex items-start gap-3"
-          >
-            <i
-              class="fa-solid fa-check-circle text-green-600 text-xl mt-0.5"
-            ></i>
+        <transition enter-active-class="transition duration-300 ease-out"
+          enter-from-class="transform opacity-0 -translate-y-2" enter-to-class="transform opacity-100 translate-y-0"
+          leave-active-class="transition duration-200 ease-in" leave-from-class="transform opacity-100 translate-y-0"
+          leave-to-class="transform opacity-0 -translate-y-2">
+          <div v-if="showAlert" class="mb-4 p-4 bg-green-50 border border-green-200 rounded-xl flex items-start gap-3">
+            <i class="fa-solid fa-check-circle text-green-600 text-xl mt-0.5"></i>
             <div>
               <p class="font-medium text-green-800">{{ alertMessage }}</p>
             </div>
-            <button
-              @click="showAlert = false"
-              class="ml-auto text-green-600 hover:text-green-700"
-            >
+            <button @click="showAlert = false" class="ml-auto text-green-600 hover:text-green-700">
               <i class="fa-solid fa-xmark"></i>
             </button>
           </div>
         </transition>
 
-        <!-- Top Bar -->
+        <!-- Error Alert -->
+        <transition enter-active-class="transition duration-300 ease-out"
+          enter-from-class="transform opacity-0 -translate-y-2" enter-to-class="transform opacity-100 translate-y-0"
+          leave-active-class="transition duration-200 ease-in" leave-from-class="transform opacity-100 translate-y-0"
+          leave-to-class="transform opacity-0 -translate-y-2">
+          <div v-if="errorMessage" class="mb-4 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3">
+            <i class="fa-solid fa-circle-exclamation text-red-600 text-xl mt-0.5"></i>
+            <div>
+              <p class="font-medium text-red-800">{{ errorMessage }}</p>
+            </div>
+            <button @click="errorMessage = ''" class="ml-auto text-red-600 hover:text-red-700">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+        </transition>
 
-        <!-- Header Card -->
+        <!-- KPI Row -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
+          <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm text-slate-500">Total Products</p>
+                <h3 class="text-2xl font-bold text-slate-900 mt-1">{{ products.length }}</h3>
+              </div>
+              <div class="w-12 h-12 rounded-xl bg-orange-100 text-orange-600 grid place-items-center">
+                <i class="fa-solid fa-boxes-stacked text-lg"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm text-slate-500">In Stock</p>
+                <h3 class="text-2xl font-bold text-slate-900 mt-1">{{ inStockCount }}</h3>
+              </div>
+              <div class="w-12 h-12 rounded-xl bg-green-100 text-green-600 grid place-items-center">
+                <i class="fa-solid fa-circle-check text-lg"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm text-slate-500">Low Stock</p>
+                <h3 class="text-2xl font-bold text-slate-900 mt-1">{{ lowStockCount }}</h3>
+              </div>
+              <div class="w-12 h-12 rounded-xl bg-yellow-100 text-yellow-600 grid place-items-center">
+                <i class="fa-solid fa-triangle-exclamation text-lg"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm text-slate-500">Stock Value</p>
+                <h3 class="text-2xl font-bold text-slate-900 mt-1">{{ formatMoney(stockValue) }}</h3>
+              </div>
+              <div class="w-12 h-12 rounded-xl bg-blue-100 text-blue-600 grid place-items-center">
+                <i class="fa-solid fa-sack-dollar text-lg"></i>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <!-- Product Section -->
-        <div class="bg-white p-6 rounded-xl shadow">
-          <div class="flex justify-between items-center mb-4">
-            <h2 class="text-2xl font-semibold text-orange-600">
-              Product Lists
-            </h2>
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+          <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4 mb-5">
+            <div>
+              <h2 class="text-2xl font-semibold text-slate-900">Product List</h2>
+              <p class="text-sm text-slate-500 mt-1">
+                View and manage products in your inventory
+              </p>
+            </div>
 
-            <div class="flex gap-3">
-              <input
-                v-model="productSearch"
-                type="text"
-                placeholder="Type product name..."
-                class="px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
-              />
-              <select
-                v-model="filterBy"
-                class="px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
-              >
+            <div class="flex flex-col sm:flex-row gap-3">
+              <input v-model="productSearch" type="text" placeholder="Type product name..."
+                class="px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400" />
+
+              <select v-model="filterBy"
+                class="px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400 bg-white">
                 <option value="">Sort By</option>
                 <option value="Price">Price (Low to High)</option>
+                <option value="SellingPrice">Selling Price (Low to High)</option>
                 <option value="Quantity">Quantity (High to Low)</option>
                 <option value="Status">Status (Active First)</option>
               </select>
 
-              <button class="btn-primary" @click="openAddModal">
-                + Add Products
+              <button
+                class="px-5 py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-xl font-medium transition shadow-sm"
+                @click="openAddModal">
+                <i class="fa-solid fa-plus mr-2"></i>
+                Add Product
               </button>
             </div>
           </div>
 
+          <!-- Loading -->
+          <div v-if="loadingProducts" class="py-16 text-center">
+            <div class="w-10 h-10 border-4 border-orange-200 border-t-orange-500 rounded-full animate-spin mx-auto">
+            </div>
+            <p class="text-slate-500 mt-4">Loading products...</p>
+          </div>
+
+          <!-- Empty -->
+          <div v-else-if="filteredProducts.length === 0" class="py-16 text-center">
+            <div class="w-16 h-16 rounded-2xl bg-slate-100 text-slate-400 grid place-items-center mx-auto mb-4">
+              <i class="fa-solid fa-box-open text-2xl"></i>
+            </div>
+            <h3 class="text-lg font-semibold text-slate-800">No products found</h3>
+            <p class="text-slate-500 mt-1">
+              Try changing your search or add a new product.
+            </p>
+          </div>
+
           <!-- Table -->
-          <div class="overflow-x-auto">
+          <div v-else class="overflow-x-auto">
             <table class="w-full text-left text-sm">
-              <thead class="text-black-500 border-b">
+              <thead class="text-slate-500 border-b border-slate-200">
                 <tr>
-                  <th class="py-3">Product Name</th>
-                  <th>Price</th>
-                  <th>Quantity</th>
-                  <th>Status</th>
-                  <th>Action</th>
+                  <th class="py-4 font-semibold">Product Name</th>
+                  <th class="font-semibold">Cost Price</th>
+                  <th class="font-semibold">Selling Price</th>
+                  <th class="font-semibold">Quantity</th>
+                  <th class="font-semibold">Status</th>
+                  <th class="font-semibold">Action</th>
                 </tr>
               </thead>
 
-              <tbody class="divide-y">
-                <!-- Paginated Rows -->
-                <tr
-                  v-for="product in paginatedProducts"
-                  :key="product.id"
-                  class="hover:bg-gray-50"
-                >
-                  <td class="py-4 flex items-center gap-3">
-                    {{ product.emoji }}
-                    <div>
-                      <p class="font-medium">{{ product.name }}</p>
-                      <p class="text-xs text-gray-400">
-                        Txn ID: {{ product.txnId }}
-                      </p>
+              <tbody class="divide-y divide-slate-100">
+                <tr v-for="product in paginatedProducts" :key="product.id" class="hover:bg-slate-50 transition">
+                  <td class="py-4">
+                    <div class="flex items-center gap-3">
+                      <div class="w-11 h-11 rounded-xl bg-orange-50 text-orange-600 grid place-items-center text-lg">
+                        📦
+                      </div>
+                      <div>
+                        <p class="font-semibold text-slate-900">{{ product.name }}</p>
+                        <p class="text-xs text-slate-400">
+                          ID: #PRD{{ String(product.id).padStart(4, "0") }}
+                        </p>
+                        <p v-if="product.description" class="text-xs text-slate-500 mt-1 line-clamp-1">
+                          {{ product.description }}
+                        </p>
+                      </div>
                     </div>
                   </td>
-                  <td>{{ product.price }}</td>
-                  <td>{{ product.quantity }}</td>
+
+                  <td class="text-slate-700">
+                    {{ formatMoney(product.price) }}
+                  </td>
+
+                  <td class="text-slate-700">
+                    {{ formatMoney(product.selling_price) }}
+                  </td>
+
+                  <td class="text-slate-700">
+                    {{ formatNumber(product.stock_quantity) }}
+                  </td>
+
                   <td>
-                    <span
-                      :class="
-                        product.status === 'Active'
-                          ? 'px-2 py-1 text-xs bg-green-100 text-green-600 rounded-full'
-                          : 'px-2 py-1 text-xs bg-red-100 text-red-600 rounded-full'
-                      "
-                    >
-                      {{ product.status }}
+                    <span :class="productStatusClass(product)" class="px-3 py-1 text-xs rounded-full font-medium">
+                      {{ productStatusText(product) }}
                     </span>
                   </td>
+
                   <td>
-                    <button
-                      @click="deleteProduct(product.id)"
-                      class="px-3 py-1.5 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition border border-red-200"
-                      title="Delete product"
-                    >
-                      <i class="fa-solid fa-trash-can mr-1"></i> Remove
-                    </button>
+                    <div class="flex items-center gap-2">
+                      <button @click="openEditModal(product)"
+                        class="px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-lg transition border border-slate-200"
+                        title="Edit product">
+                        <i class="fa-solid fa-pen-to-square mr-1"></i>
+                        Edit
+                      </button>
+
+                      <button @click="deleteProduct(product.id)" :disabled="deletingProductId === product.id"
+                        class="px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition border border-red-200 disabled:opacity-50"
+                        title="Delete product">
+                        <span v-if="deletingProductId !== product.id">
+                          <i class="fa-solid fa-trash-can mr-1"></i>
+                          Remove
+                        </span>
+                        <span v-else>
+                          Deleting...
+                        </span>
+                      </button>
+                    </div>
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
 
-          <!-- Pagination Controls -->
-          <div class="flex flex-col gap-4 mt-6">
-            <!-- Stats and Items Per Page -->
+          <!-- Pagination -->
+          <div v-if="filteredProducts.length > 0" class="flex flex-col gap-4 mt-6">
             <div class="flex items-center justify-between flex-wrap gap-4">
-              <div class="text-sm text-gray-600">
+              <div class="text-sm text-slate-600">
                 Showing {{ startIndex + 1 }} to
                 {{ Math.min(endIndex, filteredProducts.length) }} of
                 {{ filteredProducts.length }} products
               </div>
+
               <div class="flex items-center gap-2">
-                <label class="text-sm text-gray-600">Items per page:</label>
-                <select
-                  v-model.number="itemsPerPage"
-                  class="px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                >
-                  <option>5</option>
-                  <option>10</option>
-                  <option>15</option>
-                  <option>20</option>
+                <label class="text-sm text-slate-600">Items per page:</label>
+                <select v-model.number="itemsPerPage"
+                  class="px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white">
+                  <option :value="5">5</option>
+                  <option :value="10">10</option>
+                  <option :value="15">15</option>
+                  <option :value="20">20</option>
                 </select>
               </div>
             </div>
 
-            <!-- Pagination Buttons -->
             <div class="flex items-center justify-between flex-wrap gap-4">
               <div class="flex items-center gap-2">
-                <button
-                  @click="previousPage"
-                  :disabled="currentPage === 1"
-                  class="px-4 py-2 border border-slate-200 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition"
-                >
-                  <i class="fa-solid fa-chevron-left mr-1"></i> Previous
+                <button @click="previousPage" :disabled="currentPage === 1"
+                  class="px-4 py-2 border border-slate-200 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-50 transition">
+                  <i class="fa-solid fa-chevron-left mr-1"></i>
+                  Previous
                 </button>
 
                 <div class="flex gap-1 flex-wrap">
-                  <button
-                    v-for="page in pagesArray"
-                    :key="page"
-                    @click="currentPage = page"
-                    :class="
-                      page === currentPage
-                        ? 'px-3 py-2 bg-orange-600 text-white rounded-lg'
-                        : 'px-3 py-2 border border-slate-200 rounded-lg hover:bg-gray-50'
-                    "
-                  >
+                  <button v-for="page in pagesArray" :key="page" @click="currentPage = page" :class="page === currentPage
+                    ? 'px-3 py-2 bg-orange-600 text-white rounded-lg'
+                    : 'px-3 py-2 border border-slate-200 rounded-lg hover:bg-slate-50'
+                    ">
                     {{ page }}
                   </button>
                 </div>
 
-                <button
-                  @click="nextPage"
-                  :disabled="currentPage === totalPages"
-                  class="px-4 py-2 border border-slate-200 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition"
-                >
-                  Next <i class="fa-solid fa-chevron-right ml-1"></i>
+                <button @click="nextPage" :disabled="currentPage === totalPages"
+                  class="px-4 py-2 border border-slate-200 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-50 transition">
+                  Next
+                  <i class="fa-solid fa-chevron-right ml-1"></i>
                 </button>
               </div>
             </div>
@@ -305,48 +352,23 @@
       </main>
     </div>
 
-    <div class="mx-10 max-w-450 space-y-6">
-      <!-- Page heading -->
-
-      <!-- KPI cards row -->
-
-      <!-- Middle section -->
-
-      <!-- Charts row -->
-
-      <!-- Bottom section -->
-
-      <!-- <footer class="text-lg text-center text-slate-400 pb-8">
-            © {{ new Date().getFullYear() }} Check it NaNa • Inventory & Sales
-            Tracking
-          </footer> -->
-    </div>
-
     <!-- Product Modal -->
-    <ProductModal
-      :isOpen="showAddModal"
-      :initialData="newProduct"
-      @close="closeAddModal"
-      @submit="handleProductSubmit"
-    />
+    <ProductModal :isOpen="showAddModal" :initialData="newProduct" :isEditMode="isEditMode" @close="closeAddModal"
+      @submit="handleProductSubmit" />
   </div>
 </template>
 
 <script setup>
-import { computed, ref, watch } from "vue";
+import axios from "axios";
+import { computed, onMounted, ref, watch } from "vue";
 import SideBar from "@/components/SideBar.vue";
-import SalesChart from "@/components/SalesChart.vue";
-import TopProductsBarChart from "@/components/TopProductsBarChart.vue";
-import LowStockChartBar from "@/components/LowStockChartBar.vue";
-import KpiCard from "@/components/KpiCard.vue";
 import ProductModal from "@/components/ProductModal.vue";
 
-import { useAuthStore } from "@/stores/auth.store";
-const auth = useAuthStore();
+const API_BASE_URL = "http://localhost:5000/api/products";
+const NOTIFICATION_API = "http://localhost:5000/api/notifications"
 
 const sidebarOpen = ref(false);
 const searchQuery = ref("");
-// product section search filter
 const productSearch = ref("");
 const filterBy = ref("");
 const showNotifications = ref(false);
@@ -355,19 +377,95 @@ const itemsPerPage = ref(5);
 const showAddModal = ref(false);
 const showAlert = ref(false);
 const alertMessage = ref("");
+const errorMessage = ref("");
+const loadingProducts = ref(false);
+const deletingProductId = ref(null);
+const loadingNotifications = ref(false);
+const isEditMode = ref(false);
+const editingProductId = ref(null);
+
+const products = ref([]);
+
 const newProduct = ref({
   id: null,
-  emoji: "",
   name: "",
-  txnId: "",
+  description: "",
   price: "",
-  quantity: "",
-  status: "Active",
+  selling_price: "",
+  stock_quantity: "",
+  low_stock_threshold: 10,
 });
 
+const notifications = ref([]);
+
+const getToken = () => localStorage.getItem("token");
+
+const axiosConfig = () => ({
+  headers: {
+    Authorization: `Bearer ${getToken()}`
+  }
+});
+
+const fetchNotifications = async () => {
+  loadingNotifications.value = true;
+
+  try {
+    const response = await axios.get(NOTIFICATION_API, axiosConfig());
+    notifications.value = Array.isArray(response.data) ? response.data : [];
+  } catch (error) {
+    console.error("Failed to fetch notifications:", error);
+  } finally {
+    loadingNotifications.value = false;
+  }
+};
+
+const unreadNotificationsCount = computed(() => {
+  return notifications.value.filter((n) => !n.is_read).length;
+});
+
+const showSuccess = (message) => {
+  alertMessage.value = message;
+  showAlert.value = true;
+
+  setTimeout(() => {
+    showAlert.value = false;
+  }, 3000);
+};
+
+const resetNewProduct = () => {
+  newProduct.value = {
+    id: null,
+    name: "",
+    description: "",
+    price: "",
+    selling_price: "",
+    stock_quantity: "",
+    low_stock_threshold: 10
+  };
+  isEditMode.value = false;
+  editingProductId.value = null;
+};
+
 const openAddModal = () => {
-  showAddModal.value = true;
   resetNewProduct();
+  showAddModal.value = true;
+};
+
+const openEditModal = (product) => {
+  isEditMode.value = true;
+  editingProductId.value = product.id;
+
+  newProduct.value = {
+    id: product.id,
+    name: product.name || "",
+    description: product.description || "",
+    price: product.price ?? "",
+    selling_price: product.selling_price ?? "",
+    stock_quantity: product.stock_quantity ?? "",
+    low_stock_threshold: product.low_stock_threshold ?? 10,
+  };
+
+  showAddModal.value = true;
 };
 
 const closeAddModal = () => {
@@ -375,126 +473,123 @@ const closeAddModal = () => {
   resetNewProduct();
 };
 
-const resetNewProduct = () => {
-  newProduct.value = {
-    id: null,
-    emoji: "",
-    name: "",
-    txnId: "",
-    price: "",
-    quantity: "",
-    status: "Active",
-  };
+const fetchProducts = async () => {
+  loadingProducts.value = true;
+  errorMessage.value = "";
+
+  try {
+    const response = await axios.get(API_BASE_URL, axiosConfig());
+    products.value = Array.isArray(response.data) ? response.data : [];
+  } catch (error) {
+    errorMessage.value =
+      error.response?.data?.message || "Failed to fetch products";
+  } finally {
+    loadingProducts.value = false;
+  }
 };
 
-const handleProductSubmit = (productData) => {
-  // assign new id sequentially
-  const nextId = products.value.length
-    ? Math.max(...products.value.map((p) => p.id)) + 1
-    : 1;
-  // Add a default emoji to new products
-  const productCopy = { ...productData, id: nextId, emoji: "📦" };
-  products.value.push(productCopy);
+const handleProductSubmit = async (productData) => {
+  errorMessage.value = "";
 
-  // Show success alert
-  alertMessage.value = `Product "${productData.name}" added successfully!`;
-  showAlert.value = true;
+  try {
+    const payload = {
+      name: productData.name,
+      description: productData.description,
+      price: Number(productData.price),
+      selling_price: Number(productData.selling_price),
+      stock_quantity: Number(productData.stock_quantity),
+      low_stock_threshold: Number(productData.low_stock_threshold ?? 10),
+    };
 
-  // Auto-hide alert after 3 seconds
-  setTimeout(() => {
-    showAlert.value = false;
-  }, 3000);
+    if (isEditMode.value && editingProductId.value) {
+      const response = await axios.put(
+        `${API_BASE_URL}/${editingProductId.value}`,
+        payload,
+        axiosConfig()
+      );
 
-  closeAddModal();
+      const updatedProduct = response.data.product;
+      const index = products.value.findIndex((p) => p.id === updatedProduct.id);
+
+      if (index !== -1) {
+        products.value[index] = updatedProduct;
+      }
+
+      showSuccess(`Product "${updatedProduct.name}" updated successfully!`);
+    } else {
+      const response = await axios.post(API_BASE_URL, payload, axiosConfig());
+      const createdProduct = response.data.product;
+
+      products.value.unshift(createdProduct);
+      showSuccess(`Product "${createdProduct.name}" added successfully!`);
+    }
+
+    closeAddModal();
+  } catch (error) {
+    errorMessage.value =
+      error.response?.data?.message || "Failed to save product";
+  }
 };
 
-const addProduct = () => {
-  // assign new id sequentially
-  const nextId = products.value.length
-    ? Math.max(...products.value.map((p) => p.id)) + 1
-    : 1;
-  const productCopy = { ...newProduct.value, id: nextId };
-  products.value.push(productCopy);
-  closeAddModal();
-};
+const deleteProduct = async (productId) => {
+  const confirmed = window.confirm("Are you sure you want to delete this product?");
+  if (!confirmed) return;
 
-const deleteProduct = (productId) => {
-  const confirmed = confirm("Are you sure you want to delete this product?");
-  if (confirmed) {
+  deletingProductId.value = productId;
+  errorMessage.value = "";
+
+  try {
+    await axios.delete(`${API_BASE_URL}/${productId}`, axiosConfig());
     products.value = products.value.filter((p) => p.id !== productId);
+    showSuccess("Product deleted successfully!");
+  } catch (error) {
+    errorMessage.value =
+      error.response?.data?.message || "Failed to delete product";
+  } finally {
+    deletingProductId.value = null;
   }
 };
 
-// Products Data
-const products = ref([
-  {
-    id: 1,
-    emoji: "🍚",
-    name: "Rice Bag (25kg)",
-    txnId: "#GR47",
-    price: "$20.00",
-    quantity: "32,000",
-    status: "Active",
-  },
-  {
-    id: 2,
-    emoji: "🍑",
-    name: "Fresh Peaches Plus",
-    txnId: "#GR46",
-    price: "$34.00",
-    quantity: "6,500",
-    status: "Inactive",
-  },
-  {
-    id: 3,
-    emoji: "🍌",
-    name: "Organic Bananas",
-    txnId: "#GR45",
-    price: "$42.00",
-    quantity: "4,100",
-    status: "Active",
-  },
-  {
-    id: 4,
-    emoji: "🍎",
-    name: "Red Apples Premium",
-    txnId: "#GR44",
-    price: "$55.00",
-    quantity: "3,200",
-    status: "Inactive",
-  },
-]);
+const allSearchText = computed(() => {
+  return searchQuery.value.trim().toLowerCase();
+});
 
-// Pagination computed properties
-// filter and sort products according to search input and filter selection
 const filteredProducts = computed(() => {
-  let result = products.value;
+  let result = [...products.value];
 
-  // Apply search filter
-  if (productSearch.value) {
-    const term = productSearch.value.toLowerCase();
-    result = result.filter((p) => p.name.toLowerCase().includes(term));
+  const localSearch = productSearch.value.trim().toLowerCase();
+  const globalSearch = allSearchText.value;
+
+  if (localSearch) {
+    result = result.filter((p) =>
+      String(p.name || "").toLowerCase().includes(localSearch)
+    );
   }
 
-  // Apply sorting based on selected filter
+  if (globalSearch) {
+    result = result.filter((p) => {
+      const name = String(p.name || "").toLowerCase();
+      const description = String(p.description || "").toLowerCase();
+      const id = `#prd${String(p.id).padStart(4, "0")}`.toLowerCase();
+      return (
+        name.includes(globalSearch) ||
+        description.includes(globalSearch) ||
+        id.includes(globalSearch)
+      );
+    });
+  }
+
   if (filterBy.value === "Price") {
-    result = [...result].sort((a, b) => {
-      const priceA = parseFloat(a.price.replace(/[$,]/g, ""));
-      const priceB = parseFloat(b.price.replace(/[$,]/g, ""));
-      return priceA - priceB;
-    });
+    result.sort((a, b) => Number(a.price || 0) - Number(b.price || 0));
+  } else if (filterBy.value === "SellingPrice") {
+    result.sort((a, b) => Number(a.selling_price || 0) - Number(b.selling_price || 0));
   } else if (filterBy.value === "Quantity") {
-    result = [...result].sort((a, b) => {
-      const qtyA = parseInt(a.quantity.replace(/,/g, ""));
-      const qtyB = parseInt(b.quantity.replace(/,/g, ""));
-      return qtyB - qtyA; // descending
-    });
+    result.sort((a, b) => Number(b.stock_quantity || 0) - Number(a.stock_quantity || 0));
   } else if (filterBy.value === "Status") {
-    result = [...result].sort((a, b) => {
-      // Active first, then Inactive
-      if (a.status === "Active" && b.status !== "Active") return -1;
-      if (a.status !== "Active" && b.status === "Active") return 1;
-      return 0;
+    result.sort((a, b) => {
+      const aActive = Number(a.stock_quantity || 0) > 0 ? 1 : 0;
+      const bActive = Number(b.stock_quantity || 0) > 0 ? 1 : 0;
+      return bActive - aActive;
     });
   }
 
@@ -502,7 +597,7 @@ const filteredProducts = computed(() => {
 });
 
 const totalPages = computed(() =>
-  Math.ceil(filteredProducts.value.length / itemsPerPage.value),
+  Math.max(1, Math.ceil(filteredProducts.value.length / itemsPerPage.value))
 );
 
 const startIndex = computed(() => (currentPage.value - 1) * itemsPerPage.value);
@@ -520,20 +615,58 @@ const pagesArray = computed(() => {
   return pages;
 });
 
-// reset page when search term, filter, or page size changes
-watch(productSearch, () => {
+const inStockCount = computed(() => {
+  return products.value.filter((p) => Number(p.stock_quantity || 0) > 0).length;
+});
+
+const lowStockCount = computed(() => {
+  return products.value.filter((p) => {
+    const qty = Number(p.stock_quantity || 0);
+    return qty > 0 && qty <= 10;
+  }).length;
+});
+
+const stockValue = computed(() => {
+  return products.value.reduce((sum, p) => {
+    return sum + Number(p.stock_quantity || 0) * Number(p.selling_price || 0);
+  }, 0);
+});
+
+const productStatusText = (product) => {
+  const qty = Number(product.stock_quantity || 0);
+  if (qty <= 0) return "Out of Stock";
+  if (qty <= 10) return "Low Stock";
+  return "Active";
+};
+
+const productStatusClass = (product) => {
+  const qty = Number(product.stock_quantity || 0);
+  if (qty <= 0) return "bg-red-100 text-red-600";
+  if (qty <= 10) return "bg-yellow-100 text-yellow-700";
+  return "bg-green-100 text-green-600";
+};
+
+const formatMoney = (value) => {
+  return new Intl.NumberFormat(undefined, {
+    style: "currency",
+    currency: "USD",
+  }).format(Number(value || 0));
+};
+
+const formatNumber = (value) => {
+  return new Intl.NumberFormat().format(Number(value || 0));
+};
+
+watch([productSearch, filterBy, itemsPerPage, searchQuery], () => {
   currentPage.value = 1;
 });
 
-watch(filterBy, () => {
-  currentPage.value = 1;
+watch(filteredProducts, () => {
+  if (currentPage.value > totalPages.value) {
+    currentPage.value = totalPages.value;
+  }
 });
 
-watch(itemsPerPage, () => {
-  currentPage.value = 1;
-});
-
-// Pagination methods
 const previousPage = () => {
   if (currentPage.value > 1) {
     currentPage.value--;
@@ -546,109 +679,58 @@ const nextPage = () => {
   }
 };
 
-const toggleNotifications = () =>
-  (showNotifications.value = !showNotifications.value);
+const toggleNotifications = async () => {
+  showNotifications.value = !showNotifications.value;
+  if (showNotifications.value) {
+    await fetchNotifications();
+  }
+};
 
-const kpis = ref({
-  totalSales: 12450,
-  totalOrders: 286,
-  lowStock: 14,
-  grossProfit: 3180,
+const clearNotifications = async () => {
+  try {
+    await axios.delete(NOTIFICATION_API, axiosConfig());
+    notifications.value = [];
+  } catch {
+    console.error('Failed to clear nottification')
+  }
+};
+const markNotificationRead = async (notificationId) => {
+  try {
+    await axios.patch(
+      `${NOTIFICATION_API}/${notificationId}/read`,
+      {},
+      axiosConfig()
+    );
+
+    notifications.value = notifications.value.map((n) =>
+      n.id === notificationId ? { ...n, is_read: true } : n
+    );
+  } catch (error) {
+    console.error("Failed to mark notification as read:", error);
+  }
+};
+
+const formatNotificationTime = (dateValue) => {
+  if (!dateValue) return "";
+
+  const now = new Date();
+  const then = new Date(dateValue);
+  const diffMs = now - then;
+
+  const minutes = Math.floor(diffMs / 60000);
+  const hours = Math.floor(diffMs / 3600000);
+  const days = Math.floor(diffMs / 86400000);
+
+  if (minutes < 1) return "Just now";
+  if (minutes < 60) return `${minutes} min${minutes > 1 ? "s" : ""} ago`;
+  if (hours < 24) return `${hours} hour${hours > 1 ? "s" : ""} ago`;
+  return `${days} day${days > 1 ? "s" : ""} ago`;
+};
+
+onMounted(() => {
+  fetchProducts();
+  fetchNotifications();
 });
-
-const notifications = ref([
-  { id: 1, message: "Low stock: Sugar (6 left)", time: "5 mins ago" },
-  {
-    id: 2,
-    message: "New sale recorded: Rice Bag (Qty 5)",
-    time: "18 mins ago",
-  },
-  {
-    id: 3,
-    message: "Supplier delivery confirmed for Cooking Oil",
-    time: "1 hour ago",
-  },
-]);
-
-const clearNotifications = () => (notifications.value = []);
-
-const topProducts = ref([
-  {
-    name: "Rice Bag (25kg)",
-    category: "Groceries",
-    sku: "RICE-25KG",
-    stock: 32,
-    sales: 1200,
-  },
-  {
-    name: "Sugar (50kg)",
-    category: "Groceries",
-    sku: "SUG-50KG",
-    stock: 6,
-    sales: 850,
-  },
-  {
-    name: "Cooking Oil (5L)",
-    category: "Groceries",
-    sku: "OIL-5L",
-    stock: 18,
-    sales: 650,
-  },
-  {
-    name: "Milk (Tin)",
-    category: "Dairy",
-    sku: "MLK-TIN",
-    stock: 3,
-    sales: 420,
-  },
-]);
-
-const recentSales = ref([
-  { id: 1, product: "Rice Bag", qty: 5, total: 100, time: "Today 10:12" },
-  { id: 2, product: "Cooking Oil", qty: 2, total: 40, time: "Today 09:48" },
-  { id: 3, product: "Sugar", qty: 1, total: 20, time: "Yesterday 16:02" },
-]);
-
-const upcomingRestocks = ref([
-  {
-    id: 1,
-    product: "Sugar (50kg)",
-    qty: 20,
-    supplier: "Kakata Supplies",
-    date: "Fri",
-  },
-  {
-    id: 2,
-    product: "Milk (Tin)",
-    qty: 50,
-    supplier: "Red-Light Wholesale",
-    date: "Mon",
-  },
-]);
-
-const pendingInvoices = 7;
-const bestMarginProduct = computed(() => "Cooking Oil (5L)");
-
-const greeting = computed(() => {
-  const h = new Date().getHours();
-  if (h < 12) return "Morning";
-  if (h < 18) return "Afternoon";
-  return "Evening";
-});
-
-const monthLabel = computed(() => {
-  const d = new Date();
-  return d.toLocaleString(undefined, { month: "long", year: "numeric" });
-});
-
-function formatMoney(v) {
-  return new Intl.NumberFormat(undefined, {
-    style: "currency",
-    currency: "USD",
-  }).format(v);
-}
-
-// expose modal helpers and new product state to template
 </script>
 
 <style scoped>

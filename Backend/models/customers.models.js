@@ -1,32 +1,36 @@
 import db from "../config/connect.js";
 import { DataTypes } from "sequelize";
 
-const LowStockAlert = db.define('LowStockAlert', {
+const Customer = db.define('Customer', {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true
     },
-    productId: {
+    name: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true
+    },
+    phone_number: {
+        type: DataTypes.STRING
+    },
+    businessId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'Product',
+            model: 'Business',
             key: 'id'
         },
         onDelete: 'CASCADE'
-    },
-    threshold: {
-        type: DataTypes.INTEGER,
-        allowNull: false
-    },
-    isActive: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: true
     }
 }, {
     timestamps: true,
     freezeTableName: true
 });
 
-export default LowStockAlert;
+export default Customer;

@@ -5,14 +5,15 @@ import morgan from 'morgan';
 import session from 'express-session';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
+// association file imports
+import './models/association.js'
 import router from './route/auth.routes.js';
 import businessRoutes from './route/business.routes.js';
 import userRoutes from './route/user.routes.js';
-import productRoutes from './route/products.routes.js';
-import lowStockAlertRoutes from './route/lowStockAlert.routes.js';
-import subscrptionRoutes from './route/subscription.routes.js';
-import subscriptionPlanRoutes from './route/subscriptionPlans.routes.js';
-
+import salesRoute from './route/sales.route.js';
+import productRoute from './route/products.routes.js';
+import customerRoute from './route/customer.routes.js'
+import notificationRoute from './route/notification.routes.js';
 import db from './config/connect.js';
 
 dotenv.config();
@@ -47,10 +48,10 @@ console.log("All models synced correctly..")
 app.use('/api/auth', router);
 app.use('/api/business', businessRoutes);
 app.use('/api/users', userRoutes);
-app.use('/api/products', productRoutes);
-app.use('/api/low-stock', lowStockAlertRoutes);
-app.use('/api/subscriptions', subscrptionRoutes);
-app.use('/api/subscription-plans', subscriptionPlanRoutes);
+app.use('/api/customers', customerRoute);
+app.use('/api/sales', salesRoute);
+app.use('/api/products', productRoute)
+app.use('/api/notifications', notificationRoute)
 
 // Root route
 app.get('/', (req, res) => {
