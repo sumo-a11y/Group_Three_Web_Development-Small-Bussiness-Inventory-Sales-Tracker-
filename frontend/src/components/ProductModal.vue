@@ -8,10 +8,10 @@
       <!-- Header -->
       <div class="sticky top-0 bg-white border-b border-slate-200 px-6 py-5 flex items-center justify-between">
         <div>
-          <h2 class="text-2xl font-bold text-slate-900">
+          <h2 class="text-2xl md:3xl font-bold text-slate-900">
             {{ isEditMode ? "Edit Product" : "Add New Product" }}
           </h2>
-          <p class="text-sm text-slate-500 mt-1">
+          <p class="text-sm md:text-lg text-slate-500 mt-1">
             {{
               isEditMode
                 ? "Update the product information below."

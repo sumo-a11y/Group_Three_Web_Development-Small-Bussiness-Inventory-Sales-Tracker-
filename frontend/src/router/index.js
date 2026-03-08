@@ -9,6 +9,9 @@ import BusinessDashboard from "@/pages/BusinessDashboard.vue";
 import AdminDashbaord from "@/pages/AdminDashbaord.vue";
 import Products from "@/pages/Products.vue";
 import Sales from "@/pages/Sales.vue"
+import PurchaseOrders from "@/pages/PurchaseOrders.vue";
+import InventoryPage from "@/pages/InventoryPage.vue";
+import Reports from "@/pages/Reports.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -22,7 +25,10 @@ const router = createRouter({
     {
       path: "/admin", component: AdminDashbaord, meta: { requiresAuth: true, role: "system_admin" }
     },
-    { path: "/sales", component: Sales, meta: { requiresAuth: true } }
+    { path: "/sales", component: Sales, meta: { requiresAuth: true } },
+    { path: "/purchase-orders", component: PurchaseOrders, meta: { requiresAuth: true } },
+    { path: "/inventory", component: InventoryPage, meta: { requiresAuth: true } },
+    { path: "/reports", component: Reports, meta: { requiresAuth: true } }
   ],
 });
 

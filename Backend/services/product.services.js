@@ -1,4 +1,5 @@
 import Product from "../models/products.models.js";
+import Business from "../models/business.models.js";
 import { handleProductStockAlert } from "./saleAlert.services.js";
 
 class AppError extends Error {
@@ -49,6 +50,25 @@ export const getProductsByBusinessService = async (businessId) => {
     return await Product.findAll({
         where: { businessId },
         order: [["createdAt", "DESC"]]
+    });
+};
+
+export const getAllProductsService = async (reqUser) => {
+    const whereClause =
+        reqUser.role === "system_admin"
+            ? {}
+            : { businessId: reqUser.businessId };
+
+    return await Product.findAll({
+        where: whereClause,
+        include: [
+            {
+                model: Business,
+                as: "business",
+                attributes: ["id", "name"],
+            },
+        ],
+        order: [["createdAt", "DESC"]],
     });
 };
 

@@ -224,7 +224,8 @@
                   <h3 class="text-2xl font-extrabold text-black/80">
                     Recent Sales
                   </h3>
-                  <button class="text-base cursor-pointer text-system font-semibold hover:underline">
+                  <button @click="gotoSalesPage"
+                    class="text-base cursor-pointer text-system font-semibold hover:underline">
                     See all
                   </button>
                 </div>
@@ -233,7 +234,7 @@
                   <li v-for="s in recentSales" :key="s.id"
                     class="flex items-center justify-between p-3 rounded-2xl border border-slate-100 hover:border-orange-200 hover:bg-orange-50/40 transition">
                     <div>
-                      <p class="font-semibold text-slate-900">{{ s.product }}</p>
+                      <p class="font-semibold text-slate-900 line-clamp-2">{{ s.product }}</p>
                       <p class="text-sm text-slate-500">
                         {{ formatDateTime(s.time) }} • Qty {{ s.qty }}
                       </p>
@@ -279,7 +280,7 @@
                   </li>
                 </ul>
 
-                <button
+                <button @click="goToPurchaseOrdersPage"
                   class="mt-4 w-full text-system font-semibold py-2.5 rounded-xl border border-system transition cursor-pointer hover:bg-orange-50">
                   <i class="fa-solid fa-truck-fast mr-2"></i>
                   Create Purchase Order
@@ -306,6 +307,7 @@ import TopProductsBarChart from "@/components/TopProductsBarChart.vue";
 import LowStockChartBar from "@/components/LowStockChartBar.vue";
 import KpiCard from "@/components/KpiCard.vue";
 import { useAuthStore } from "@/stores/auth.store";
+import { useRouter } from "vue-router";
 
 const auth = useAuthStore();
 
@@ -313,6 +315,7 @@ const PRODUCTS_API = "http://localhost:5000/api/products";
 const SALES_API = "http://localhost:5000/api/sales";
 const NOTIFICATIONS_API = "http://localhost:5000/api/notifications";
 
+const router = useRouter()
 const sidebarOpen = ref(false);
 const searchQuery = ref("");
 const showNotifications = ref(false);
@@ -334,6 +337,14 @@ const axiosConfig = () => ({
     Authorization: `Bearer ${getToken()}`
   }
 });
+
+const gotoSalesPage = () => {
+  router.push('/sales')
+}
+
+const goToPurchaseOrdersPage = () => {
+  router.push('/purchase-orders')
+}
 
 const loadingDashboard = computed(() => {
   return loadingProducts.value || loadingSales.value || loadingNotifications.value;
@@ -718,20 +729,50 @@ const topProducts = computed(() => {
 });
 const recentSales = computed(() => {
   return [...sales.value]
-    .sort((a, b) => new Date(b.createdAt || b.sale_date) - new Date(a.createdAt || a.sale_date))
+    .sort(
+      (a, b) =>
+        new Date(b.createdAt || b.sale_date) -
+        new Date(a.createdAt || a.sale_date)
+    )
     .slice(0, 5)
     .map((sale) => {
-      const firstItem = sale.items?.[0];
+
+      const items = sale.items || [];
+
+      const productNames = items.map((item) => {
+        return (
+          item.product?.name ||
+          products.value.find(
+            (p) => Number(p.id) === Number(item.productId)
+          )?.name ||
+          "Unknown Product"
+        );
+      });
+
+      let displayName = "Unknown Product";
+
+      if (productNames.length === 1) {
+        displayName = productNames[0];
+      } else if (productNames.length === 2) {
+        displayName = `${productNames[0]} + ${productNames[1]}`;
+      } else if (productNames.length > 2) {
+        displayName = `${productNames[0]}, ${productNames[1]} +${productNames.length - 2} more`;
+      }
+
+      const totalQty = items.reduce(
+        (sum, item) => sum + Number(item.quantity || 0),
+        0
+      );
+
       return {
         id: sale.id,
-        product: firstItem?.product?.name || `${sale.items?.length || 0} item(s)`,
-        qty: sale.items?.reduce((sum, item) => sum + Number(item.quantity || 0), 0) || 0,
+        product: displayName,
+        qty: totalQty,
         total: Number(sale.total_price || 0),
-        time: sale.createdAt || sale.sale_date
+        time: sale.createdAt || sale.sale_date,
       };
     });
 });
-
 const restockCandidates = computed(() => {
   return [...products.value]
     .filter((p) => {

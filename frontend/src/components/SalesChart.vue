@@ -17,14 +17,14 @@
       </select>
     </div>
 
-    <div v-if="loading" class="mt-6 h-[400px] flex items-center justify-center">
+    <div v-if="loading" class="mt-6 h-100 flex items-center justify-center">
       <div class="text-center">
         <div class="w-10 h-10 border-4 border-orange-200 border-t-orange-500 rounded-full animate-spin mx-auto"></div>
         <p class="text-slate-500 mt-4">Loading chart data...</p>
       </div>
     </div>
 
-    <div v-else-if="!hasData" class="mt-6 h-[400px] flex items-center justify-center">
+    <div v-else-if="!hasData" class="mt-6 h-100 flex items-center justify-center">
       <div class="text-center">
         <div class="w-16 h-16 rounded-2xl bg-slate-100 text-slate-400 grid place-items-center mx-auto mb-4">
           <i class="fa-solid fa-chart-area text-2xl"></i>

@@ -2,6 +2,8 @@ import db from "../config/connect.js";
 import Sale from "../models/sales.model.js";
 import SaleItem from "../models/salesItems.models.js";
 import Product from "../models/products.models.js";
+import Business from "../models/business.models.js";
+import user from "../models/user.models.js";
 import { findOrCreateCustomerService } from "./customers.services.js";
 import { handleProductStockAlert } from "./saleAlert.services.js";
 import AppError from "../utils/helpers/app.errors.js";
@@ -117,6 +119,40 @@ export const createSaleService = async ({
         await transaction.rollback();
         throw error;
     }
+};
+export const getAllSalesService = async (reqUser) => {
+    const whereClause =
+        reqUser.role === "system_admin"
+            ? {}
+            : { businessId: reqUser.businessId };
+
+    return await Sale.findAll({
+        where: whereClause,
+        include: [
+            {
+                model: SaleItem,
+                as: "items",
+                include: [
+                    {
+                        model: Product,
+                        as: "product",
+                        attributes: ["id", "name"],
+                    },
+                ],
+            },
+            {
+                model: Business,
+                as: "business",
+                attributes: ["id", "name"],
+            },
+            {
+                model: user,
+                as: "user",
+                attributes: ["id", "name", "email"],
+            },
+        ],
+        order: [["createdAt", "DESC"]],
+    });
 };
 
 export const getBusinessSalesService = async (businessId) => {

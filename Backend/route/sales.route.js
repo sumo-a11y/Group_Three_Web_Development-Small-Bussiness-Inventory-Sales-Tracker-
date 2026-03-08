@@ -4,7 +4,8 @@ import {
     updateSale,
     deleteSale,
     getBusinessSales,
-    getSales
+    getSales,
+    getAllSales
 } from "../controllers/sales.controllers.js";
 import { authMiddleware } from "../utils/middlewares/authMiddleware.js";
 import { roleMiddleware } from '../utils/middlewares/roleMiddleware.js'
@@ -12,11 +13,13 @@ import { roleMiddleware } from '../utils/middlewares/roleMiddleware.js'
 const salesRoute = Router();
 
 salesRoute.use(authMiddleware);
+salesRoute.use(roleMiddleware("business_admin", "system_admin"))
 
-salesRoute.post("/", authMiddleware, roleMiddleware('business_admin'), createSale);
-salesRoute.get("/", authMiddleware, roleMiddleware('business_admin'), getBusinessSales);
-salesRoute.get("/:id", authMiddleware, roleMiddleware('business_admin'), getSales);
-salesRoute.put("/:id", authMiddleware, roleMiddleware('business_admin'), updateSale);
-salesRoute.delete("/:id", authMiddleware, roleMiddleware('business_admin'), deleteSale);
+salesRoute.post("/", createSale);
+salesRoute.get("/", getBusinessSales);
+salesRoute.get("/all-sales", getAllSales)
+salesRoute.get("/:id", getSales);
+salesRoute.put("/:id", updateSale);
+salesRoute.delete("/:id", deleteSale);
 
 export default salesRoute;
