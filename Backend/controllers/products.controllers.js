@@ -2,6 +2,7 @@ import {
     createProductService,
     getProductsByBusinessService,
     getProductByIdService,
+    getAllProductsService,
     updateProductService,
     deleteProductService
 } from "../services/product.services.js";
@@ -20,6 +21,16 @@ export const createProduct = async (req, res) => {
             message: error.message || "Internal server error"
         });
     }
+};
+
+export const getAllProducts = async (req, res) => {
+  try {
+    const products = await getAllProductsService(req.user);
+    return res.status(200).json(products);
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
 };
 
 export const getProductsByBusiness = async (req, res) => {

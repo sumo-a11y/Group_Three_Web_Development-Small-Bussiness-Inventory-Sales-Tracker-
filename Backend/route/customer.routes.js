@@ -12,11 +12,12 @@ import { roleMiddleware } from "../utils/middlewares/roleMiddleware.js";
 const customerRoute = Router();
 
 customerRoute.use(authMiddleware);
+customerRoute.use(roleMiddleware('business_admin', 'system_admin'))
 
-customerRoute.post("/", authMiddleware, roleMiddleware('business_admin'), createCustomer);
-customerRoute.get("/", authMiddleware, roleMiddleware('business_admin'), getCustomersByBusiness);
-customerRoute.get("/:id", authMiddleware, roleMiddleware('business_admin'), getCustomerById);
-customerRoute.put("/:id", authMiddleware, roleMiddleware('business_admin'), updateCustomer);
-customerRoute.delete("/:id", authMiddleware, roleMiddleware('business_admin'), deleteCustomer);
+customerRoute.post("/", createCustomer);
+customerRoute.get("/", getCustomersByBusiness);
+customerRoute.get("/:id", getCustomerById);
+customerRoute.put("/:id", updateCustomer);
+customerRoute.delete("/:id", deleteCustomer);
 
 export default customerRoute;

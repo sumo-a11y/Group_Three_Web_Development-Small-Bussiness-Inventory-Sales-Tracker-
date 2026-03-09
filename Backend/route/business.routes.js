@@ -1,31 +1,29 @@
-// routes for business-related endpoints
-import express from "express";
+import { Router } from "express";
 import {
     createBusiness,
+    deleteBusiness,
     getAllBusinesses,
     getBusinessById,
-    searchBusinesses,
+    getBusinessUsers,
     getBusinessesPaginated,
+    searchBusinesses,
     updateBusiness,
-    addOns,
-    deleteBusiness
 } from "../controllers/business.controllers.js";
 
 import { authMiddleware } from "../utils/middlewares/authMiddleware.js";
-
 import { roleMiddleware } from "../utils/middlewares/roleMiddleware.js";
 
-const businessRoutes = express.Router();
+const businessRoute = Router();
+businessRoute.use(authMiddleware);
+businessRoute.use(roleMiddleware('business_admin', "system_admin"))
 
-businessRoutes.get("/:id", authMiddleware, roleMiddleware("business_admin"))
-businessRoutes.post("/", authMiddleware, roleMiddleware("business_admin"), createBusiness);
-businessRoutes.get("/", authMiddleware, roleMiddleware("business_admin"), getAllBusinesses);
+businessRoute.get("/", getAllBusinesses);
+businessRoute.get("/search", searchBusinesses);
+businessRoute.get("/paginated", getBusinessesPaginated);
+businessRoute.get("/:id", getBusinessById);
+businessRoute.get("/:id/users", getBusinessUsers);
+businessRoute.post("/", createBusiness);
+businessRoute.put("/:id", updateBusiness);
+businessRoute.delete("/:id", deleteBusiness);
 
-businessRoutes.get("/search", authMiddleware, roleMiddleware('business_admin'), searchBusinesses);
-businessRoutes.get("/paginated", authMiddleware, roleMiddleware("business_admin"), getBusinessesPaginated);
-businessRoutes.put("/:id", authMiddleware, roleMiddleware("business_admin"), updateBusiness);
-businessRoutes.get("/:id/users", authMiddleware, roleMiddleware("business_admin", "business_admin"), addOns.getBusinessUsers);
-
-businessRoutes.delete("/:id", authMiddleware, roleMiddleware("business_admin"), deleteBusiness);
-
-export default businessRoutes;
+export default businessRoute;

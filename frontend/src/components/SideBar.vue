@@ -10,10 +10,11 @@
       <div class="flex flex-col h-full">
         <!-- Header -->
         <div class="flex items-center justify-between px-6 py-4 border-b">
-          <span class="text-xl md:2xl font-bold  flex items-center gap-2">
+          <span class="text-xl md:text-2xl font-bold flex items-center gap-2 text-orange-600">
             <i class="fa-solid fa-cubes"></i>
-            {{ superAdmin ? "Super Admin" : "Business Admin" }}
+            {{ superAdmin ? "System Owner" : "Business Admin" }}
           </span>
+
           <button class="md:hidden text-slate-500 text-2xl" @click="$emit('close')">
             <i class="fa-solid fa-xmark"></i>
           </button>
@@ -21,91 +22,113 @@
 
         <!-- Nav -->
         <nav class="flex-1 px-4 py-4 overflow-y-auto">
-          <ul class="space-y-2">
-            <li>
-              <RouterLink to="/dashboard" class="nav-link" :class="{ active: isActive('/dashboard') }"
-                @click="$emit('close')">
-                <i class="fa-solid fa-gauge"></i>
-                Dashboard
-              </RouterLink>
-            </li>
+          <div v-if="superAdmin" class="space-y-5">
+            <div>
+              <p class="px-3 text-xs font-semibold uppercase tracking-wide text-slate-400 mb-2">
+                Overview
+              </p>
+              <ul class="space-y-2">
+                <li v-for="item in superAdminOverviewLinks" :key="item.to">
+                  <RouterLink :to="item.to" class="nav-link" :class="{ active: isActive(item.to) }"
+                    @click="$emit('close')">
+                    <i :class="item.icon"></i>
+                    {{ item.label }}
+                  </RouterLink>
+                </li>
+              </ul>
+            </div>
 
-            <template v-if="superAdmin">
-              <li>
-                <RouterLink to="/businesses" class="nav-link" :class="{ active: isActive('/businesses') }"
-                  @click="$emit('close')">
-                  <i class="fa-solid fa-building"></i>
-                  Businesses
-                </RouterLink>
-              </li>
-              <li>
-                <RouterLink to="/admins" class="nav-link" :class="{ active: isActive('/admins') }"
-                  @click="$emit('close')">
-                  <i class="fa-solid fa-user-shield"></i>
-                  Admins
-                </RouterLink>
-              </li>
-            </template>
+            <div>
+              <p class="px-3 text-xs font-semibold uppercase tracking-wide text-slate-400 mb-2">
+                Management
+              </p>
+              <ul class="space-y-2">
+                <li v-for="item in superAdminManagementLinks" :key="item.to">
+                  <RouterLink :to="item.to" class="nav-link" :class="{ active: isActive(item.to) }"
+                    @click="$emit('close')">
+                    <i :class="item.icon"></i>
+                    {{ item.label }}
+                  </RouterLink>
+                </li>
+              </ul>
+            </div>
 
-            <template v-else>
-              <li>
-                <RouterLink to="/products" class="nav-link" :class="{ active: isActive('/products') }"
-                  @click="$emit('close')">
-                  <i class="fa-solid fa-box"></i>
-                  Products
-                </RouterLink>
-              </li>
-              <li>
-                <RouterLink to="/sales" class="nav-link" :class="{ active: isActive('/sales') }"
-                  @click="$emit('close')">
-                  <i class="fa-solid fa-chart-line"></i>
-                  Sales
-                </RouterLink>
-              </li>
-              <li>
-                <RouterLink to="/inventory" class="nav-link" :class="{ active: isActive('/inventory') }"
-                  @click="$emit('close')">
-                  <i class="fa-solid fa-warehouse"></i>
-                  Inventory
-                </RouterLink>
-              </li>
-              <li>
-                <RouterLink to="/suppliers" class="nav-link" :class="{ active: isActive('/suppliers') }"
-                  @click="$emit('close')">
-                  <i class="fa-solid fa-truck"></i>
-                  Suppliers
-                </RouterLink>
-              </li>
-              <li>
-                <RouterLink to="/customers" class="nav-link" :class="{ active: isActive('/customers') }"
-                  @click="$emit('close')">
-                  <i class="fa-solid fa-users"></i>
-                  Customers
-                </RouterLink>
-              </li>
-              <li>
-                <RouterLink to="/reports" class="nav-link" :class="{ active: isActive('/reports') }"
-                  @click="$emit('close')">
-                  <i class="fa-solid fa-file-lines"></i>
-                  Reports
-                </RouterLink>
-              </li>
-            </template>
+            <div>
+              <p class="px-3 text-xs font-semibold uppercase tracking-wide text-slate-400 mb-2">
+                Platform
+              </p>
+              <ul class="space-y-2">
+                <li v-for="item in superAdminPlatformLinks" :key="item.to">
+                  <RouterLink :to="item.to" class="nav-link" :class="{ active: isActive(item.to) }"
+                    @click="$emit('close')">
+                    <i :class="item.icon"></i>
+                    {{ item.label }}
+                  </RouterLink>
+                </li>
+              </ul>
+            </div>
+          </div>
 
-            <li class="pt-2">
-              <RouterLink to="/settings" class="nav-link" :class="{ active: isActive('/settings') }"
-                @click="$emit('close')">
-                <i class="fa-solid fa-gear"></i>
-                Settings
-              </RouterLink>
-            </li>
-          </ul>
+          <div v-else class="space-y-5">
+            <div>
+              <p class="px-3 text-xs font-semibold uppercase tracking-wide text-slate-400 mb-2">
+                Overview
+              </p>
+              <ul class="space-y-2">
+                <li v-for="item in businessAdminOverviewLinks" :key="item.to">
+                  <RouterLink :to="item.to" class="nav-link" :class="{ active: isActive(item.to) }"
+                    @click="$emit('close')">
+                    <i :class="item.icon"></i>
+                    {{ item.label }}
+                  </RouterLink>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <p class="px-3 text-xs font-semibold uppercase tracking-wide text-slate-400 mb-2">
+                Sales & Stock
+              </p>
+              <ul class="space-y-2">
+                <li v-for="item in businessAdminOperationsLinks" :key="item.to">
+                  <RouterLink :to="item.to" class="nav-link" :class="{ active: isActive(item.to) }"
+                    @click="$emit('close')">
+                    <i :class="item.icon"></i>
+                    {{ item.label }}
+                  </RouterLink>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <p class="px-3 text-xs font-semibold uppercase tracking-wide text-slate-400 mb-2">
+                People & Insights
+              </p>
+              <ul class="space-y-2">
+                <li v-for="item in businessAdminPeopleLinks" :key="item.to">
+                  <RouterLink :to="item.to" class="nav-link" :class="{ active: isActive(item.to) }"
+                    @click="$emit('close')">
+                    <i :class="item.icon"></i>
+                    {{ item.label }}
+                  </RouterLink>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="pt-4 mt-4 border-t border-slate-200">
+            <RouterLink to="/settings" class="nav-link" :class="{ active: isActive('/settings') }"
+              @click="$emit('close')">
+              <i class="fa-solid fa-gear"></i>
+              Settings
+            </RouterLink>
+          </div>
         </nav>
 
         <!-- Logout -->
         <div class="px-4 py-4 border-t border-gray-300">
           <button @click="logout"
-            class="w-full flex items-center justify-center gap-2 px-4 py-2.5 system-color text-white rounded-xl hover:system-color-soft cursor-pointer transition-colors">
+            class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-orange-600 text-white rounded-xl hover:bg-orange-700 cursor-pointer transition-colors">
             <i class="fa-solid fa-right-from-bracket"></i>
             Logout
           </button>
@@ -116,7 +139,6 @@
 </template>
 
 <script setup>
-import { defineProps } from "vue";
 import { RouterLink, useRoute, useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/auth.store";
 
@@ -129,6 +151,42 @@ const route = useRoute();
 const router = useRouter();
 const auth = useAuthStore();
 
+const superAdminOverviewLinks = [
+  { label: "Dashboard", icon: "fa-solid fa-gauge", to: "/admin" },
+  { label: "Reports", icon: "fa-solid fa-chart-line", to: "/system/reports" },
+];
+
+const superAdminManagementLinks = [
+  { label: "Businesses", icon: "fa-solid fa-building", to: "/businesses" },
+  { label: "Users", icon: "fa-solid fa-users", to: "/users" },
+  { label: "System Admins", icon: "fa-solid fa-user-shield", to: "/admins" },
+];
+
+const superAdminPlatformLinks = [
+  { label: "Revenue", icon: "fa-solid fa-coins", to: "/system/revenue" },
+  { label: "Notifications", icon: "fa-solid fa-bell", to: "/system/notifications" },
+  { label: "Purchase Orders", icon: "fa-solid fa-bag-shopping", to: "/system/purchase-orders" },
+  { label: "Audit Logs", icon: "fa-solid fa-shield-halved", to: "/system/logs" },
+  { label: "System Health", icon: "fa-solid fa-server", to: "/system/health" },
+];
+
+const businessAdminOverviewLinks = [
+  { label: "Dashboard", icon: "fa-solid fa-gauge", to: "/dashboard" },
+  { label: "Inventory", icon: "fa-solid fa-warehouse", to: "/inventory" },
+];
+
+const businessAdminOperationsLinks = [
+  { label: "Products", icon: "fa-solid fa-box", to: "/products" },
+  { label: "Sales", icon: "fa-solid fa-chart-line", to: "/sales" },
+  { label: "Purchase Orders", icon: "fa-solid fa-bag-shopping", to: "/purchase-orders" },
+  { label: "Suppliers", icon: "fa-solid fa-truck", to: "/suppliers" },
+];
+
+const businessAdminPeopleLinks = [
+  { label: "Customers", icon: "fa-solid fa-users", to: "/customers" },
+  { label: "Reports", icon: "fa-solid fa-file-lines", to: "/reports" },
+];
+
 const logout = async () => {
   const ok = confirm("Are you sure you want to logout?");
   if (!ok) return;
@@ -136,7 +194,7 @@ const logout = async () => {
   router.replace("/login");
 };
 
-const isActive = (path) => route.path === path;
+const isActive = (path) => route.path === path || route.path.startsWith(`${path}/`);
 </script>
 
 <style scoped>

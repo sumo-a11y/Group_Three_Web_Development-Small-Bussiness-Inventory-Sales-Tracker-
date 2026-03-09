@@ -19,14 +19,14 @@
                 <span class="xl:text-4xl lg:text-3xl md:text-2xl text-xl font-extrabold text-black">
                   Products
                 </span>
-                <span class="text-sm text-slate-500 mt-1">
+                <span class="text-lg text-slate-500 mt-1">
                   Manage stock items, pricing, and product availability
                 </span>
               </div>
             </div>
 
             <div class="flex items-center gap-3 w-full md:w-auto">
-              <div class="relative flex-1 md:w-[420px]">
+              <div class="relative flex-1 md:w-105">
                 <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
                 <input v-model="searchQuery" type="text" placeholder="Search products..."
                   class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-orange-500 text-base" />
@@ -179,17 +179,15 @@
           <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4 mb-5">
             <div>
               <h2 class="text-2xl font-semibold text-slate-900">Product List</h2>
-              <p class="text-sm text-slate-500 mt-1">
+              <p class="text-lg text-slate-500 mt-1">
                 View and manage products in your inventory
               </p>
             </div>
 
             <div class="flex flex-col sm:flex-row gap-3">
-              <input v-model="productSearch" type="text" placeholder="Type product name..."
-                class="px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400" />
 
               <select v-model="filterBy"
-                class="px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400 bg-white">
+                class="px-4 py-3 border text-sm md:text-lg lg:text-xl border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400 bg-white">
                 <option value="">Sort By</option>
                 <option value="Price">Price (Low to High)</option>
                 <option value="SellingPrice">Selling Price (Low to High)</option>
@@ -227,7 +225,7 @@
           <!-- Table -->
           <div v-else class="overflow-x-auto">
             <table class="w-full text-left text-sm">
-              <thead class="text-slate-500 border-b border-slate-200">
+              <thead class="text-slate-500 border-b text-sm md:text-lg lg:text-xl border-slate-200">
                 <tr>
                   <th class="py-4 font-semibold">Product Name</th>
                   <th class="font-semibold">Cost Price</th>
@@ -246,31 +244,32 @@
                         📦
                       </div>
                       <div>
-                        <p class="font-semibold text-slate-900">{{ product.name }}</p>
-                        <p class="text-xs text-slate-400">
+                        <p class="font-semibold text-sm md:text-lg lg:text-xl text-slate-900">{{ product.name }}</p>
+                        <p class="text-xs md:text-sm text-slate-400">
                           ID: #PRD{{ String(product.id).padStart(4, "0") }}
                         </p>
-                        <p v-if="product.description" class="text-xs text-slate-500 mt-1 line-clamp-1">
+                        <p v-if="product.description" class="text-xs md:text-lg text-slate-500 mt-1 line-clamp-1">
                           {{ product.description }}
                         </p>
                       </div>
                     </div>
                   </td>
 
-                  <td class="text-slate-700">
+                  <td class="text-slate-700 text-sm md:text-lg">
                     {{ formatMoney(product.price) }}
                   </td>
 
-                  <td class="text-slate-700">
+                  <td class="text-slate-700 text-sm md:text-lg">
                     {{ formatMoney(product.selling_price) }}
                   </td>
 
-                  <td class="text-slate-700">
+                  <td class="text-slate-700 text-sm md:text-lg">
                     {{ formatNumber(product.stock_quantity) }}
                   </td>
 
                   <td>
-                    <span :class="productStatusClass(product)" class="px-3 py-1 text-xs rounded-full font-medium">
+                    <span :class="productStatusClass(product)"
+                      class="px-3 py-1  text-sm md:text-lg rounded-full font-medium">
                       {{ productStatusText(product) }}
                     </span>
                   </td>
@@ -278,14 +277,14 @@
                   <td>
                     <div class="flex items-center gap-2">
                       <button @click="openEditModal(product)"
-                        class="px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-lg transition border border-slate-200"
+                        class="px-3 py-2 text-sm md:text-lg font-medium text-slate-700 hover:bg-slate-100 rounded-lg transition border border-slate-200"
                         title="Edit product">
                         <i class="fa-solid fa-pen-to-square mr-1"></i>
                         Edit
                       </button>
 
                       <button @click="deleteProduct(product.id)" :disabled="deletingProductId === product.id"
-                        class="px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition border border-red-200 disabled:opacity-50"
+                        class="px-3 py-2 text-sm md:text-lg font-medium text-red-600 hover:bg-red-50 rounded-lg transition border border-red-200 disabled:opacity-50"
                         title="Delete product">
                         <span v-if="deletingProductId !== product.id">
                           <i class="fa-solid fa-trash-can mr-1"></i>
@@ -312,7 +311,7 @@
               </div>
 
               <div class="flex items-center gap-2">
-                <label class="text-sm text-slate-600">Items per page:</label>
+                <label class="text-sm md:text-lg text-slate-600">Items per page:</label>
                 <select v-model.number="itemsPerPage"
                   class="px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white">
                   <option :value="5">5</option>

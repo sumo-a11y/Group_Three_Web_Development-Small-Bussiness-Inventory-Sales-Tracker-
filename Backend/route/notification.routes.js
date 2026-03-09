@@ -11,7 +11,7 @@ import {
 const notificationRoute = Router();
 
 notificationRoute.use(authMiddleware);
-notificationRoute.use(roleMiddleware('business_admin'))
+notificationRoute.use(roleMiddleware('business_admin', 'system_admin'))
 
 notificationRoute.get("/", getNotifications);
 notificationRoute.patch("/:id/read", markNotificationAsRead);

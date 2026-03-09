@@ -1,275 +1,294 @@
 <template>
-  <div class="min-h-screen bg-gray-50 p-4 md:p-6">
-    <!-- Sidebar-->
+  <div class="min-h-screen bg-slate-50">
+    <!-- Sidebar -->
     <SideBar :open="sidebarOpen" @close="sidebarOpen = false" :superAdmin="false" />
+
+    <!-- Main area -->
     <div class="ml-0 md:ml-64 min-h-screen flex flex-col">
-      <!-- Header -->
+      <!-- Topbar -->
+      <header class="sticky top-0 z-40 bg-white/80 backdrop-blur border-b border-slate-200">
+        <div class="px-4 sm:px-6 lg:px-6 py-7">
+          <div class="mx-auto max-w-450 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <!-- Left -->
+            <div class="flex items-center gap-3 min-w-0">
+              <button class="md:hidden text-2xl text-orange-600 hover:text-orange-700 transition"
+                @click="sidebarOpen = true" aria-label="Toggle sidebar">
+                <i class="fa-solid fa-bars"></i>
+              </button>
 
-      <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-6">
-        <div>
-          <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight">
-            Sales
-          </h1>
-          <p class="text-sm md:text-base text-gray-500 mt-1">
-            Track sales activity, create transactions, and manage completed orders.
-          </p>
-        </div>
-
-        <div class="flex items-center gap-3">
-          <button @click="fetchSales"
-            class="inline-flex items-center gap-2 bg-white border border-gray-200 text-gray-700 px-4 py-2.5 rounded-xl shadow-sm hover:shadow-md transition">
-            <i class="fa-solid fa-rotate-right text-sm"></i>
-            Refresh
-          </button>
-
-          <button @click="openNewSaleModal"
-            class="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-5 py-2.5 rounded-xl shadow-md transition font-semibold">
-            <i class="fa-solid fa-plus text-sm"></i>
-            New Sale
-          </button>
-        </div>
-      </div>
-
-      <!-- KPI Cards -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-sm text-gray-500">Total Revenue</p>
-              <h3 class="text-2xl font-bold text-gray-900 mt-1">
-                ${{ totalRevenue.toLocaleString(undefined, {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2
-                }) }}
-              </h3>
-            </div>
-            <div class="w-12 h-12 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center">
-              <i class="fa-solid fa-sack-dollar text-lg"></i>
-            </div>
-          </div>
-        </div>
-
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-sm text-gray-500">Total Sales</p>
-              <h3 class="text-2xl font-bold text-gray-900 mt-1">{{ sales.length }}</h3>
-            </div>
-            <div class="w-12 h-12 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center">
-              <i class="fa-solid fa-cart-shopping text-lg"></i>
-            </div>
-          </div>
-        </div>
-
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-sm text-gray-500">Cash Sales</p>
-              <h3 class="text-2xl font-bold text-gray-900 mt-1">{{ cashSalesCount }}</h3>
-            </div>
-            <div class="w-12 h-12 rounded-xl bg-green-100 text-green-600 flex items-center justify-center">
-              <i class="fa-solid fa-wallet text-lg"></i>
-            </div>
-          </div>
-        </div>
-
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-sm text-gray-500">Card / Mobile</p>
-              <h3 class="text-2xl font-bold text-gray-900 mt-1">{{ nonCashSalesCount }}</h3>
-            </div>
-            <div class="w-12 h-12 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center">
-              <i class="fa-solid fa-credit-card text-lg"></i>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Sales Table -->
-      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-        <div class="p-4 md:p-5 border-b border-gray-100">
-          <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4">
-            <div>
-              <h2 class="text-xl md:text-2xl font-bold text-gray-900">Sales Records</h2>
-              <p class="text-sm text-gray-500 mt-1">
-                View, search, and manage all recorded sales.
-              </p>
-            </div>
-
-            <div class="flex flex-col sm:flex-row gap-3 w-full xl:w-auto">
-              <div class="relative w-full sm:w-80">
-                <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                <input v-model="search" type="text" placeholder="Search by sale ID or payment method"
-                  class="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-400 text-sm" />
+              <div>
+                <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight">
+                  Sales
+                </h1>
+                <p class="text-sm md:text-base text-slate-500 mt-1">
+                  Track sales activity, create transactions, and manage completed orders.
+                </p>
               </div>
+            </div>
 
-              <select v-model="paymentFilter"
-                class="px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-400 text-sm bg-white">
-                <option value="">All Payments</option>
-                <option value="cash">Cash</option>
-                <option value="card">Card</option>
-                <option value="mobile_money">Mobile Money</option>
-              </select>
+            <!-- Right -->
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
+              <button @click="fetchSales"
+                class="inline-flex items-center justify-center gap-2 bg-white border border-slate-200 text-slate-700 px-4 py-3 rounded-xl shadow-sm hover:shadow-md transition">
+                <i class="fa-solid fa-rotate-right text-sm"></i>
+                Refresh
+              </button>
 
-              <select v-model="sortBy"
-                class="px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-400 text-sm bg-white">
-                <option value="newest">Date (Newest)</option>
-                <option value="oldest">Date (Oldest)</option>
-                <option value="highest">Amount (Highest)</option>
-                <option value="lowest">Amount (Lowest)</option>
-              </select>
+              <button @click="openNewSaleModal"
+                class="inline-flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-5 py-3 rounded-xl shadow-md transition font-semibold">
+                <i class="fa-solid fa-plus text-sm"></i>
+                New Sale
+              </button>
             </div>
           </div>
         </div>
+      </header>
 
-        <div v-if="loading" class="p-10 text-center">
-          <div class="w-10 h-10 border-4 border-orange-200 border-t-orange-500 rounded-full animate-spin mx-auto">
+      <!-- Content -->
+      <main class="flex-1 px-4 sm:px-6 lg:px-6 py-6">
+        <div class="mx-auto max-w-450">
+          <!-- KPI Cards -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-sm text-slate-500">Total Revenue</p>
+                  <h3 class="text-2xl font-bold text-slate-900 mt-1">
+                    ${{ totalRevenue.toLocaleString(undefined, {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2
+                    }) }}
+                  </h3>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center">
+                  <i class="fa-solid fa-sack-dollar text-lg"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-sm text-slate-500">Total Sales</p>
+                  <h3 class="text-2xl font-bold text-slate-900 mt-1">{{ sales.length }}</h3>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center">
+                  <i class="fa-solid fa-cart-shopping text-lg"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-sm text-slate-500">Cash Sales</p>
+                  <h3 class="text-2xl font-bold text-slate-900 mt-1">{{ cashSalesCount }}</h3>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-green-100 text-green-600 flex items-center justify-center">
+                  <i class="fa-solid fa-wallet text-lg"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-sm text-slate-500">Card / Mobile</p>
+                  <h3 class="text-2xl font-bold text-slate-900 mt-1">{{ nonCashSalesCount }}</h3>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center">
+                  <i class="fa-solid fa-credit-card text-lg"></i>
+                </div>
+              </div>
+            </div>
           </div>
-          <p class="text-gray-500 mt-4">Loading sales...</p>
-        </div>
 
-        <div v-else-if="errorMessage" class="p-6">
-          <div class="bg-red-50 border border-red-200 text-red-600 rounded-xl px-4 py-3">
-            {{ errorMessage }}
-          </div>
-        </div>
+          <!-- Sales Table -->
+          <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="p-4 md:p-5 border-b border-slate-100">
+              <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4">
+                <div>
+                  <h2 class="text-xl md:text-2xl font-bold text-slate-900">Sales Records</h2>
+                  <p class="text-sm text-slate-500 mt-1">
+                    View, search, and manage all recorded sales.
+                  </p>
+                </div>
 
-        <div v-else-if="filteredSales.length === 0" class="p-10 text-center text-gray-500">
-          No sales found.
-        </div>
-
-        <div v-else class="hidden lg:block overflow-x-auto">
-          <table class="min-w-full">
-            <thead class="bg-gray-50">
-              <tr class="text-left text-sm text-gray-600">
-                <th class="px-6 py-4 font-semibold">Sale ID</th>
-                <th class="px-6 py-4 font-semibold">Items</th>
-                <th class="px-6 py-4 font-semibold">Payment Method</th>
-                <th class="px-6 py-4 font-semibold">Total</th>
-                <th class="px-6 py-4 font-semibold">Date</th>
-                <th class="px-6 py-4 font-semibold text-center">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="sale in filteredSales" :key="sale.id"
-                class="border-t border-gray-100 hover:bg-gray-50 transition">
-                <td class="px-6 py-5">
-                  <div>
-                    <p class="font-semibold text-gray-900">#SAL{{ String(sale.id).padStart(4, '0')
-                    }}
-                    </p>
-                    <p class="text-sm text-gray-500">User ID: {{ sale.userId }}</p>
+                <div class="flex flex-col sm:flex-row gap-3 w-full xl:w-auto">
+                  <div class="relative w-full sm:w-80">
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                    <input v-model="search" type="text" placeholder="Search by sale ID or payment method"
+                      class="w-full pl-11 pr-4 md:text-lg lg:text-xl py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-400 text-sm" />
                   </div>
-                </td>
 
-                <td class="px-6 py-5 text-gray-700">
-                  {{ sale.items?.length || 0 }} item(s)
-                </td>
+                  <select v-model="paymentFilter"
+                    class="px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-400 text-sm md:text-lg lg:text-xl bg-white">
+                    <option value="">All Payments</option>
+                    <option value="cash">Cash</option>
+                    <option value="card">Card</option>
+                    <option value="mobile_money">Mobile Money</option>
+                  </select>
 
-                <td class="px-6 py-5">
+                  <select v-model="sortBy"
+                    class="px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-400 text-sm md:text-lg lg:text-xl bg-white">
+                    <option value="newest">Date (Newest)</option>
+                    <option value="oldest">Date (Oldest)</option>
+                    <option value="highest">Amount (Highest)</option>
+                    <option value="lowest">Amount (Lowest)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div v-if="loading" class="p-10 text-center">
+              <div class="w-10 h-10 border-4 border-orange-200 border-t-orange-500 rounded-full animate-spin mx-auto">
+              </div>
+              <p class="text-slate-500 mt-4">Loading sales...</p>
+            </div>
+
+            <div v-else-if="errorMessage" class="p-6">
+              <div class="bg-red-50 border border-red-200 text-red-600 rounded-xl px-4 py-3">
+                {{ errorMessage }}
+              </div>
+            </div>
+
+            <div v-else-if="filteredSales.length === 0" class="p-10 text-center text-slate-500">
+              No sales found.
+            </div>
+
+            <div v-else class="hidden lg:block overflow-x-auto">
+              <table class="min-w-full">
+                <thead class="bg-slate-50 ">
+                  <tr class="text-left text-sm md:text-lg lg:text-xl text-slate-600">
+                    <th class="px-6 py-4 font-semibold">Sale ID</th>
+                    <th class="px-6 py-4 font-semibold">Items</th>
+                    <th class="px-6 py-4 font-semibold">Payment Method</th>
+                    <th class="px-6 py-4 font-semibold">Total</th>
+                    <th class="px-6 py-4 font-semibold">Date</th>
+                    <th class="px-6 py-4 font-semibold text-center">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="sale in filteredSales" :key="sale.id"
+                    class="border-t border-slate-100 hover:bg-slate-50 transition">
+                    <td class="px-6 py-5 text-sm md:text-lg">
+                      <div>
+                        <p class="font-semibold text-slate-900">#SAL{{ String(sale.id).padStart(4, '0') }}</p>
+                        <p class="text-sm text-slate-500">User ID: {{ sale.userId }}</p>
+                      </div>
+                    </td>
+
+                    <td class="px-6 py-5 text-slate-700">
+                      {{ sale.items?.length || 0 }} item(s)
+                    </td>
+
+                    <td class="px-6 py-5">
+                      <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold"
+                        :class="paymentClass(sale.payment_method)">
+                        {{ formatPaymentMethod(sale.payment_method) }}
+                      </span>
+                    </td>
+
+                    <td class="px-6 py-5 font-bold text-orange-600">
+                      ${{ Number(sale.total_price || 0).toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                      }) }}
+                    </td>
+
+                    <td class="px-6 py-5 text-slate-600">
+                      {{ formatDate(sale.createdAt || sale.sale_date) }}
+                    </td>
+
+                    <td class="px-6 py-5">
+                      <div class="flex justify-center gap-2">
+                        <button @click="viewSale(sale.id)"
+                          class="w-10 h-10 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-100 transition"
+                          title="View">
+                          <i class="fa-regular fa-eye"></i>
+                        </button>
+
+                        <button @click="removeSale(sale.id)" :disabled="deletingSaleId === sale.id"
+                          class="w-10 h-10 rounded-lg border border-red-200 text-red-500 hover:bg-red-50 transition disabled:opacity-50"
+                          title="Delete">
+                          <i v-if="deletingSaleId !== sale.id" class="fa-regular fa-trash-can"></i>
+                          <i v-else class="fa-solid fa-spinner animate-spin"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Mobile Cards -->
+            <div v-if="!loading && !errorMessage && filteredSales.length > 0" class="lg:hidden p-4 space-y-4">
+              <div v-for="sale in filteredSales" :key="sale.id"
+                class="border border-slate-200 rounded-2xl p-4 shadow-sm">
+                <div class="flex items-start justify-between gap-3">
+                  <div>
+                    <p class="font-semibold text-slate-900">#SAL{{ String(sale.id).padStart(4, '0') }}</p>
+                    <p class="text-xs text-slate-500">{{ sale.items?.length || 0 }} item(s)</p>
+                  </div>
+
                   <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold"
                     :class="paymentClass(sale.payment_method)">
                     {{ formatPaymentMethod(sale.payment_method) }}
                   </span>
-                </td>
+                </div>
 
-                <td class="px-6 py-5 font-bold text-orange-600">
-                  ${{ Number(sale.total_price || 0).toLocaleString(undefined, {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                  }) }}
-                </td>
-
-                <td class="px-6 py-5 text-gray-600">
-                  {{ formatDate(sale.createdAt || sale.sale_date) }}
-                </td>
-
-                <td class="px-6 py-5">
-                  <div class="flex justify-center gap-2">
-                    <button @click="viewSale(sale.id)"
-                      class="w-10 h-10 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-100 transition"
-                      title="View">
-                      <i class="fa-regular fa-eye"></i>
-                    </button>
-
-                    <button @click="removeSale(sale.id)" :disabled="deletingSaleId === sale.id"
-                      class="w-10 h-10 rounded-lg border border-red-200 text-red-500 hover:bg-red-50 transition disabled:opacity-50"
-                      title="Delete">
-                      <i v-if="deletingSaleId !== sale.id" class="fa-regular fa-trash-can"></i>
-                      <i v-else class="fa-solid fa-spinner animate-spin"></i>
-                    </button>
+                <div class="grid grid-cols-2 gap-3 mt-4 text-sm">
+                  <div>
+                    <p class="text-slate-400">Total</p>
+                    <p class="font-bold text-orange-600">
+                      ${{ Number(sale.total_price || 0).toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                      }) }}
+                    </p>
                   </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
 
-        <div v-if="!loading && !errorMessage && filteredSales.length > 0" class="lg:hidden p-4 space-y-4">
-          <div v-for="sale in filteredSales" :key="sale.id" class="border border-gray-100 rounded-2xl p-4 shadow-sm">
-            <div class="flex items-start justify-between gap-3">
-              <div>
-                <p class="font-semibold text-gray-900">#SAL{{ String(sale.id).padStart(4, '0') }}</p>
-                <p class="text-xs text-gray-500">{{ sale.items?.length || 0 }} item(s)</p>
+                  <div>
+                    <p class="text-slate-400">User</p>
+                    <p class="font-medium text-slate-800">{{ sale.userId }}</p>
+                  </div>
+
+                  <div class="col-span-2">
+                    <p class="text-slate-400">Date</p>
+                    <p class="font-medium text-slate-800">{{ formatDate(sale.createdAt || sale.sale_date) }}</p>
+                  </div>
+                </div>
+
+                <div class="flex gap-2 mt-4">
+                  <button @click="viewSale(sale.id)"
+                    class="flex-1 py-2.5 rounded-xl border border-slate-200 text-slate-700 font-medium hover:bg-slate-50">
+                    View
+                  </button>
+
+                  <button @click="removeSale(sale.id)" :disabled="deletingSaleId === sale.id"
+                    class="flex-1 py-2.5 rounded-xl border border-red-200 text-red-500 font-medium hover:bg-red-50 disabled:opacity-50">
+                    {{ deletingSaleId === sale.id ? 'Deleting...' : 'Delete' }}
+                  </button>
+                </div>
               </div>
-
-              <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold"
-                :class="paymentClass(sale.payment_method)">
-                {{ formatPaymentMethod(sale.payment_method) }}
-              </span>
-            </div>
-
-            <div class="grid grid-cols-2 gap-3 mt-4 text-sm">
-              <div>
-                <p class="text-gray-400">Total</p>
-                <p class="font-bold text-orange-600">
-                  ${{ Number(sale.total_price || 0).toLocaleString(undefined, {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                  }) }}
-                </p>
-              </div>
-
-              <div>
-                <p class="text-gray-400">User</p>
-                <p class="font-medium text-gray-800">{{ sale.userId }}</p>
-              </div>
-
-              <div class="col-span-2">
-                <p class="text-gray-400">Date</p>
-                <p class="font-medium text-gray-800">{{ formatDate(sale.createdAt || sale.sale_date) }}
-                </p>
-              </div>
-            </div>
-
-            <div class="flex gap-2 mt-4">
-              <button @click="viewSale(sale.id)"
-                class="flex-1 py-2.5 rounded-xl border border-gray-200 text-gray-700 font-medium hover:bg-gray-50">
-                View
-              </button>
-
-              <button @click="removeSale(sale.id)" :disabled="deletingSaleId === sale.id"
-                class="flex-1 py-2.5 rounded-xl border border-red-200 text-red-500 font-medium hover:bg-red-50 disabled:opacity-50">
-                {{ deletingSaleId === sale.id ? 'Deleting...' : 'Delete' }}
-              </button>
             </div>
           </div>
         </div>
-      </div>
+      </main>
 
       <!-- View Sale Modal -->
-      <div v-if="showViewModal" class="fixed inset-0 z-50 bg-black/40 flex items-center justify-center px-4">
-        <div class="w-full max-w-3xl bg-white rounded-2xl shadow-2xl overflow-hidden">
-          <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+      <div v-if="showViewModal" class="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4">
+        <div class="w-full max-w-3xl bg-white rounded-2xl shadow-2xl overflow-hidden max-h-[92vh] flex flex-col">
+          <div class="flex items-center justify-between px-6 py-4 border-b border-slate-100">
             <div>
-              <h3 class="text-2xl font-bold text-gray-900">Sale Details</h3>
-              <p class="text-sm text-gray-500 mt-1" v-if="selectedSale">
+              <h3 class="text-2xl font-bold text-slate-900">Sale Details</h3>
+              <p class="text-lg text-slate-500 mt-1" v-if="selectedSale">
                 #SAL{{ String(selectedSale.id).padStart(4, '0') }}
               </p>
             </div>
 
-            <button @click="closeViewModal" class="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600">
+            <button @click="closeViewModal"
+              class="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600">
               <i class="fa-solid fa-xmark"></i>
             </button>
           </div>
@@ -277,20 +296,20 @@
           <div v-if="viewLoading" class="p-8 text-center">
             <div class="w-10 h-10 border-4 border-orange-200 border-t-orange-500 rounded-full animate-spin mx-auto">
             </div>
-            <p class="text-gray-500 mt-4">Loading sale details...</p>
+            <p class="text-slate-500 mt-4">Loading sale details...</p>
           </div>
 
-          <div v-else-if="selectedSale" class="p-6">
+          <div v-else-if="selectedSale" class="p-6 overflow-y-auto">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-              <div class="bg-gray-50 rounded-xl p-4">
-                <p class="text-sm text-gray-500">Payment Method</p>
-                <p class="font-bold text-gray-900 mt-1">
+              <div class="bg-slate-50 rounded-xl p-4">
+                <p class="text-lg text-slate-500">Payment Method</p>
+                <p class="font-bold text-slate-900 mt-1">
                   {{ formatPaymentMethod(selectedSale.payment_method) }}
                 </p>
               </div>
 
-              <div class="bg-gray-50 rounded-xl p-4">
-                <p class="text-sm text-gray-500">Total Price</p>
+              <div class="bg-slate-50 rounded-xl p-4">
+                <p class="text-lg text-slate-500">Total Price</p>
                 <p class="font-bold text-orange-600 mt-1">
                   ${{ Number(selectedSale.total_price || 0).toLocaleString(undefined, {
                     minimumFractionDigits: 2, maximumFractionDigits: 2
@@ -298,23 +317,23 @@
                 </p>
               </div>
 
-              <div class="bg-gray-50 rounded-xl p-4">
-                <p class="text-sm text-gray-500">Date</p>
-                <p class="font-bold text-gray-900 mt-1">
+              <div class="bg-slate-50 rounded-xl p-4">
+                <p class="text-lg text-slate-500">Date</p>
+                <p class="font-bold text-slate-900 mt-1">
                   {{ formatDate(selectedSale.createdAt || selectedSale.sale_date) }}
                 </p>
               </div>
             </div>
 
-            <div class="border border-gray-100 rounded-2xl overflow-hidden">
-              <div class="px-4 py-3 bg-gray-50 border-b border-gray-100">
-                <h4 class="font-semibold text-gray-900">Sold Items</h4>
+            <div class="border border-slate-100 rounded-2xl overflow-hidden">
+              <div class="px-4 py-3 bg-slate-50 border-b border-slate-100">
+                <h4 class="font-semibold text-sm md:text-xl text-slate-900">Sold Items</h4>
               </div>
 
               <div v-if="selectedSale.items?.length" class="overflow-x-auto">
-                <table class="min-w-full">
+                <table class="min-w-full text-sm">
                   <thead>
-                    <tr class="text-left text-sm text-gray-600">
+                    <tr class="text-left text-lg text-slate-600">
                       <th class="px-4 py-3 font-semibold">Product</th>
                       <th class="px-4 py-3 font-semibold">Qty</th>
                       <th class="px-4 py-3 font-semibold">Unit Price</th>
@@ -322,7 +341,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="item in selectedSale.items" :key="item.id" class="border-t border-gray-100">
+                    <tr v-for="item in selectedSale.items" :key="item.id" class="border-t border-slate-100">
                       <td class="px-4 py-3">
                         {{ item.product?.name || `Product #${item.productId}` }}
                       </td>
@@ -336,7 +355,7 @@
                 </table>
               </div>
 
-              <div v-else class="p-6 text-center text-gray-500">
+              <div v-else class="p-6 text-center text-slate-500">
                 No items found for this sale.
               </div>
             </div>
@@ -346,52 +365,52 @@
 
       <!-- New Sale / POS Modal -->
       <div v-if="showNewSaleModal" class="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-3 md:p-6">
-        <div class="w-full max-w-7xl h-[92vh] bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col">
-          <div class="flex items-center justify-between px-5 md:px-6 py-4 border-b border-gray-100">
+        <div class="w-full max-w-7xl h-[94vh] bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col">
+          <div class="flex items-center justify-between px-5 md:px-6 py-4 border-b border-slate-100">
             <div>
-              <h3 class="text-2xl font-bold text-gray-900">New Sale</h3>
-              <p class="text-sm text-gray-500 mt-1">
+              <h3 class="text-2xl font-bold text-slate-900">New Sale</h3>
+              <p class="text-lg text-slate-500 mt-1">
                 Select products, build the cart, and complete checkout.
               </p>
             </div>
 
             <button @click="closeNewSaleModal"
-              class="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600">
+              class="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600">
               <i class="fa-solid fa-xmark"></i>
             </button>
           </div>
 
           <div class="flex-1 grid grid-cols-1 xl:grid-cols-3 overflow-hidden">
             <!-- Products -->
-            <div class="xl:col-span-2 border-r border-gray-100 flex flex-col min-h-0">
-              <div class="p-4 border-b border-gray-100">
+            <div class="xl:col-span-2 border-r border-slate-100 flex flex-col min-h-0">
+              <div class="p-4 border-b border-slate-100">
                 <div class="relative">
-                  <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                  <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
                   <input v-model="productSearch" type="text" placeholder="Search products..."
-                    class="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-400 text-sm" />
+                    class="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-400 text-sm" />
                 </div>
               </div>
 
               <div v-if="productsLoading" class="p-8 text-center">
                 <div class="w-10 h-10 border-4 border-orange-200 border-t-orange-500 rounded-full animate-spin mx-auto">
                 </div>
-                <p class="text-gray-500 mt-4">Loading products...</p>
+                <p class="text-slate-500 mt-4">Loading products...</p>
               </div>
 
               <div v-else class="p-4 overflow-y-auto min-h-0">
-                <div v-if="filteredProducts.length === 0" class="text-center text-gray-500 py-10">
+                <div v-if="filteredProducts.length === 0" class="text-center text-slate-500 py-10">
                   No products found.
                 </div>
 
                 <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   <button v-for="product in filteredProducts" :key="product.id" @click="addToCart(product)"
-                    class="text-left border border-gray-200 rounded-2xl p-4 hover:border-orange-300 hover:shadow-md transition bg-white">
-                    <div class="flex items-start justify-between gap-3">
+                    class="text-left border border-slate-200 rounded-2xl p-4 hover:border-orange-300 hover:shadow-md transition bg-white">
+                    <div class="text-xl flex items-start justify-between gap-3">
                       <div>
-                        <h4 class="font-semibold text-gray-900 line-clamp-1">
+                        <h4 class="font-semibold text-slate-900 line-clamp-1">
                           {{ product.name }}
                         </h4>
-                        <p class="text-sm text-gray-500 mt-1">
+                        <p class="text-lg text-slate-500 mt-1">
                           Stock: {{ product.stock_quantity ?? 0 }}
                         </p>
                       </div>
@@ -409,8 +428,7 @@
 
                       <span class="text-xs font-medium px-2 py-1 rounded-full"
                         :class="Number(product.stock_quantity || 0) > 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-600'">
-                        {{ Number(product.stock_quantity || 0) > 0 ? 'In Stock' : 'Out of Stock'
-                        }}
+                        {{ Number(product.stock_quantity || 0) > 0 ? 'In Stock' : 'Out of Stock' }}
                       </span>
                     </div>
                   </button>
@@ -419,25 +437,25 @@
             </div>
 
             <!-- Cart -->
-            <div class="flex flex-col min-h-0 bg-gray-50">
-              <div class="p-4 md:p-5 border-b border-gray-100 bg-white">
-                <h4 class="text-xl font-bold text-gray-900">Cart</h4>
-                <p class="text-sm text-gray-500 mt-1">
+            <div class="flex flex-col min-h-0 bg-slate-50">
+              <div class="p-4 md:p-5 border-b border-slate-100 bg-white">
+                <h4 class="text-xl md:text-3xl font-bold text-slate-900">Cart</h4>
+                <p class="text-lg text-slate-500 mt-1">
                   {{ cart.length }} item type(s) selected
                 </p>
               </div>
 
               <!-- Customers section -->
-              <div class="p-4 bg-white border-b border-gray-100 space-y-4 max-h-72 overflow-y-auto">
+              <div class="p-4 bg-white border-b border-slate-100 space-y-4 max-h-72 overflow-y-auto">
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Customer Option</label>
+                  <label class="block text-lg font-medium text-slate-700 mb-2">Customer Option</label>
                   <div class="grid grid-cols-2 gap-2">
                     <button type="button"
                       @click="customerMode = 'existing'; selectedCustomer = null; saleForm.customer_id = ''" :class="[
                         'py-2.5 rounded-xl border font-medium transition',
                         customerMode === 'existing'
                           ? 'bg-orange-50 border-orange-300 text-orange-600'
-                          : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'
+                          : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
                       ]">
                       Existing Customer
                     </button>
@@ -446,7 +464,7 @@
                       'py-2.5 rounded-xl border font-medium transition',
                       customerMode === 'new'
                         ? 'bg-orange-50 border-orange-300 text-orange-600'
-                        : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'
+                        : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
                     ]">
                       New Customer
                     </button>
@@ -456,34 +474,34 @@
                 <!-- Existing Customer Search -->
                 <div v-if="customerMode === 'existing'" class="space-y-3">
                   <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Search Customer</label>
+                    <label class="block text-lg font-medium text-slate-700 mb-2">Search Customer</label>
                     <div class="relative">
                       <i
-                        class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                        class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
                       <input v-model="customerSearch" type="text" placeholder="Search by name or email"
-                        class="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-400 text-sm" />
+                        class="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-400 text-sm" />
                     </div>
                   </div>
 
-                  <div class="border border-gray-200 rounded-2xl bg-white overflow-hidden">
-                    <div v-if="customersLoading" class="p-4 text-sm text-gray-500">
+                  <div class="border border-slate-200 rounded-2xl bg-white overflow-hidden">
+                    <div v-if="customersLoading" class="p-4 text-sm text-slate-500">
                       Loading customers...
                     </div>
 
-                    <div v-else-if="filteredCustomers.length === 0" class="p-4 text-sm text-gray-500">
+                    <div v-else-if="filteredCustomers.length === 0" class="p-4 text-sm text-slate-500">
                       No matching customers found.
                     </div>
 
                     <div v-else class="max-h-44 overflow-y-auto">
                       <button v-for="customer in filteredCustomers" :key="customer.id" type="button"
                         @click="selectCustomer(customer)"
-                        class="w-full text-left px-4 py-3 border-b border-gray-100 last:border-b-0 hover:bg-orange-50 transition"
+                        class="w-full text-left px-4 py-3 border-b border-slate-100 last:border-b-0 hover:bg-orange-50 transition"
                         :class="selectedCustomer?.id === customer.id ? 'bg-orange-50' : 'bg-white'">
                         <div class="flex items-start justify-between gap-3">
                           <div class="min-w-0">
-                            <p class="font-medium text-gray-900 truncate">{{ customer.name }}</p>
-                            <p class="text-xs text-gray-500 truncate">{{ customer.email }}</p>
-                            <p v-if="customer.phone_number" class="text-xs text-gray-400 mt-1">
+                            <p class="font-medium text-slate-900 truncate">{{ customer.name }}</p>
+                            <p class="text-xs text-slate-500 truncate">{{ customer.email }}</p>
+                            <p v-if="customer.phone_number" class="text-xs text-slate-400 mt-1">
                               {{ customer.phone_number }}
                             </p>
                           </div>
@@ -499,9 +517,9 @@
 
                   <div v-if="selectedCustomer" class="rounded-2xl border border-green-200 bg-green-50 px-4 py-3">
                     <p class="text-xs text-green-700 font-medium mb-1">Selected Customer</p>
-                    <p class="font-semibold text-gray-900">{{ selectedCustomer.name }}</p>
-                    <p class="text-sm text-gray-600">{{ selectedCustomer.email }}</p>
-                    <p v-if="selectedCustomer.phone_number" class="text-xs text-gray-500 mt-1">
+                    <p class="font-semibold text-slate-900">{{ selectedCustomer.name }}</p>
+                    <p class="text-sm text-slate-600">{{ selectedCustomer.email }}</p>
+                    <p v-if="selectedCustomer.phone_number" class="text-xs text-slate-500 mt-1">
                       {{ selectedCustomer.phone_number }}
                     </p>
                   </div>
@@ -510,28 +528,28 @@
                 <!-- New Customer -->
                 <div v-if="customerMode === 'new'" class="space-y-3">
                   <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Customer Name</label>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Customer Name</label>
                     <input v-model="saleForm.customer_name" type="text" placeholder="Enter customer name"
-                      class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-400 text-sm" />
+                      class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-400 text-sm" />
                   </div>
 
                   <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Customer Email</label>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Customer Email</label>
                     <input v-model="saleForm.customer_email" type="email" placeholder="Enter customer email"
-                      class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-400 text-sm" />
+                      class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-400 text-sm" />
                   </div>
 
                   <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Phone Number</label>
                     <input v-model="saleForm.customer_phone_number" type="text" placeholder="Enter phone number"
-                      class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-400 text-sm" />
+                      class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-400 text-sm" />
                   </div>
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Payment Method</label>
+                  <label class="block text-lg font-medium text-slate-700 mb-2">Payment Method</label>
                   <select v-model="saleForm.payment_method"
-                    class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-400 text-sm bg-white">
+                    class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-400 text-sm bg-white">
                     <option value="cash">Cash</option>
                     <option value="card">Card</option>
                     <option value="mobile_money">Mobile Money</option>
@@ -540,22 +558,24 @@
               </div>
 
               <div class="flex-1 overflow-y-auto p-4 space-y-3 min-h-0">
-                <div v-if="cart.length === 0" class="h-full flex items-center justify-center text-center text-gray-500">
+                <div v-if="cart.length === 0"
+                  class="h-full flex items-center justify-center text-center text-slate-500">
                   <div>
                     <div
-                      class="w-16 h-16 mx-auto rounded-2xl bg-white border border-gray-200 flex items-center justify-center text-gray-400 mb-3">
+                      class="w-16 h-16 mx-auto rounded-2xl bg-white border border-slate-200 flex items-center justify-center text-slate-400 mb-3">
                       <i class="fa-solid fa-cart-shopping text-2xl"></i>
                     </div>
                     <p class="font-medium">Your cart is empty</p>
-                    <p class="text-sm mt-1">Add products from the left to begin a sale.</p>
+                    <p class="text-lg mt-1">Add products from the left to begin a sale.</p>
                   </div>
                 </div>
 
-                <div v-for="item in cart" :key="item.productId" class="bg-white border border-gray-200 rounded-2xl p-4">
+                <div v-for="item in cart" :key="item.productId"
+                  class="bg-white border border-slate-200 rounded-2xl p-4">
                   <div class="flex items-start justify-between gap-3">
                     <div class="min-w-0">
-                      <p class="font-semibold text-gray-900 truncate">{{ item.name }}</p>
-                      <p class="text-sm text-gray-500 mt-1">
+                      <p class="font-semibold text-slate-900 truncate">{{ item.name }}</p>
+                      <p class="text-sm text-slate-500 mt-1">
                         ${{ Number(item.unit_price).toFixed(2) }} each
                       </p>
                     </div>
@@ -567,24 +587,24 @@
                   </div>
 
                   <div class="flex items-center justify-between mt-4">
-                    <div class="inline-flex items-center border border-gray-200 rounded-xl overflow-hidden">
+                    <div class="inline-flex items-center border border-slate-200 rounded-xl overflow-hidden">
                       <button @click="decreaseQuantity(item.productId)"
-                        class="w-10 h-10 bg-white hover:bg-gray-50 text-gray-700">
+                        class="w-10 h-10 bg-white hover:bg-slate-50 text-slate-700">
                         <i class="fa-solid fa-minus"></i>
                       </button>
 
-                      <div class="w-12 h-10 flex items-center justify-center font-semibold text-gray-900 bg-gray-50">
+                      <div class="w-12 h-10 flex items-center justify-center font-semibold text-slate-900 bg-slate-50">
                         {{ item.quantity }}
                       </div>
 
                       <button @click="increaseQuantity(item.productId)"
-                        class="w-10 h-10 bg-white hover:bg-gray-50 text-gray-700">
+                        class="w-10 h-10 bg-white hover:bg-slate-50 text-slate-700">
                         <i class="fa-solid fa-plus"></i>
                       </button>
                     </div>
 
                     <div class="text-right">
-                      <p class="text-sm text-gray-500">Subtotal</p>
+                      <p class="text-sm text-slate-500">Subtotal</p>
                       <p class="font-bold text-orange-600">
                         ${{ (item.quantity * item.unit_price).toFixed(2) }}
                       </p>
@@ -597,13 +617,13 @@
                 </div>
               </div>
 
-              <div class="p-4 md:p-5 border-t border-gray-100 bg-white">
+              <div class="p-4 md:p-5 border-t border-slate-100 bg-white">
                 <div class="space-y-2 mb-4">
-                  <div class="flex items-center justify-between text-sm text-gray-600">
-                    <span>Items</span>
-                    <span>{{ cartTotalItems }}</span>
+                  <div class="flex items-center justify-between text-sm text-slate-600">
+                    <span class="text-lg">Items</span>
+                    <span class="text-lg">{{ cartTotalItems }}</span>
                   </div>
-                  <div class="flex items-center justify-between text-lg font-bold text-gray-900">
+                  <div class="flex items-center justify-between text-lg font-bold text-slate-900">
                     <span>Total</span>
                     <span class="text-orange-600">${{ cartTotal.toFixed(2) }}</span>
                   </div>
@@ -616,7 +636,7 @@
 
                 <div class="grid grid-cols-2 gap-3">
                   <button @click="clearCart"
-                    class="py-3 rounded-xl border border-gray-200 text-gray-700 font-medium hover:bg-gray-50">
+                    class="py-3 rounded-xl border border-slate-200 text-slate-700 font-medium hover:bg-slate-50">
                     Clear
                   </button>
 
@@ -635,57 +655,56 @@
 
       <!-- Receipt Modal -->
       <div v-if="showReceiptModal && receiptData"
-        class="fixed inset-0 z-[70] bg-black/50 flex items-center justify-center p-3 md:p-6">
-        <div class="w-full max-w-2xl bg-white rounded-3xl shadow-2xl overflow-hidden">
-          <div class="flex items-center justify-between px-5 md:px-6 py-4 border-b border-gray-100">
+        class="fixed inset-0 z-70 bg-black/50 flex items-center justify-center p-3 md:p-6">
+        <div class="w-full max-w-2xl bg-white rounded-3xl shadow-2xl overflow-hidden max-h-[92vh] flex flex-col">
+          <div class="flex items-center justify-between px-5 md:px-6 py-4 border-b border-slate-100">
             <div class="flex items-center gap-3">
               <div class="w-12 h-12 rounded-2xl bg-green-100 text-green-600 flex items-center justify-center">
                 <i class="fa-solid fa-check text-xl"></i>
               </div>
               <div>
-                <h3 class="text-2xl font-bold text-gray-900">Sale Completed</h3>
-                <p class="text-sm text-gray-500 mt-1">Receipt generated successfully.</p>
+                <h3 class="text-2xl font-bold text-slate-900">Sale Completed</h3>
+                <p class="text-lg text-slate-500 mt-1">Receipt generated successfully.</p>
               </div>
             </div>
 
             <button @click="closeReceiptModal"
-              class="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600">
+              class="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600">
               <i class="fa-solid fa-xmark"></i>
             </button>
           </div>
 
-          <div id="receipt-print-area" class="p-5 md:p-6">
-            <div class="text-center border-b border-dashed border-gray-300 pb-5">
-              <h2 class="text-2xl font-extrabold text-gray-900">Sales Receipt</h2>
-              <p class="text-sm text-gray-500 mt-1">Inventory Management System</p>
+          <div id="receipt-print-area" class="p-5 md:p-6 overflow-y-auto">
+            <div class="text-center border-b border-dashed border-slate-300 pb-5">
+              <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900">Sales Receipt</h2>
+              <p class="text-lg text-slate-500 mt-1">Product(s) Breakdown and & Summary</p>
             </div>
 
-            <div class="grid grid-cols-2 gap-4 py-5 border-b border-dashed border-gray-300 text-sm">
+            <div class="grid grid-cols-2 gap-4 py-5 border-b border-dashed border-slate-300 text-sm">
               <div>
-                <p class="text-gray-400">Receipt No</p>
-                <p class="font-semibold text-gray-900">
+                <p class="text-slate-400 text-lg">Receipt No</p>
+                <p class="font-semibold text-slate-900 text-lg">
                   #SAL{{ String(receiptData.sale.id).padStart(4, '0') }}
                 </p>
               </div>
 
               <div class="text-right">
-                <p class="text-gray-400">Date</p>
-                <p class="font-semibold text-gray-900">
-                  {{ formatDate(receiptData.sale.createdAt || receiptData.sale.sale_date || new
-                    Date()) }}
+                <p class="text-slate-400 text-lg">Date</p>
+                <p class="font-semibold text-slate-900 text-lg">
+                  {{ formatDate(receiptData.sale.createdAt || receiptData.sale.sale_date || new Date()) }}
                 </p>
               </div>
 
               <div>
-                <p class="text-gray-400">Customer</p>
-                <p class="font-semibold text-gray-900">
+                <p class="text-slate-400 text-lg">Customer</p>
+                <p class="font-semibold text-slate-900 text-lg">
                   {{ receiptData.customer_name || 'Walk-in Customer' }}
                 </p>
               </div>
 
               <div class="text-right">
-                <p class="text-gray-400">Payment Method</p>
-                <p class="font-semibold text-gray-900">
+                <p class="text-slate-400 text-lg">Payment Method</p>
+                <p class="font-semibold text-slate-900 text-lg">
                   {{ formatPaymentMethod(receiptData.sale.payment_method) }}
                 </p>
               </div>
@@ -695,7 +714,7 @@
               <div class="overflow-x-auto">
                 <table class="min-w-full">
                   <thead>
-                    <tr class="text-left text-sm text-gray-500 border-b border-gray-100">
+                    <tr class="text-left text-sm md:text-lg text-slate-500 border-b border-slate-100">
                       <th class="py-3 font-semibold">Item</th>
                       <th class="py-3 font-semibold">Qty</th>
                       <th class="py-3 font-semibold">Price</th>
@@ -705,18 +724,15 @@
                   <tbody>
                     <tr v-for="item in receiptData.items"
                       :key="`${receiptData.sale.id}-${item.productId}-${item.id || item.name}`"
-                      class="border-b border-gray-50">
+                      class="border-b border-slate-50 text-lg">
                       <td class="py-3 pr-3">
-                        <p class="font-medium text-gray-900">
-                          {{ item.name || item.product?.name || `Product #${item.productId}`
-                          }}
+                        <p class="font-medium text-slate-900">
+                          {{ item.name || item.product?.name || `Product #${item.productId}` }}
                         </p>
                       </td>
-                      <td class="py-3 text-gray-700">{{ item.quantity }}</td>
-                      <td class="py-3 text-gray-700">${{ Number(item.unit_price || 0).toFixed(2)
-                      }}
-                      </td>
-                      <td class="py-3 text-right font-semibold text-gray-900">
+                      <td class="py-3 text-slate-700">{{ item.quantity }}</td>
+                      <td class="py-3 text-slate-700">${{ Number(item.unit_price || 0).toFixed(2) }}</td>
+                      <td class="py-3 text-lg text-right font-semibold text-slate-900">
                         ${{ Number(item.sub_total_price || 0).toFixed(2) }}
                       </td>
                     </tr>
@@ -725,28 +741,28 @@
               </div>
             </div>
 
-            <div class="border-t border-dashed border-gray-300 pt-5 space-y-2">
-              <div class="flex items-center justify-between text-sm text-gray-600">
-                <span>Total Items</span>
-                <span>{{ receiptTotalItems }}</span>
+            <div class="border-t border-dashed border-slate-300 pt-5 space-y-2">
+              <div class="flex items-center justify-between text-sm text-slate-600">
+                <span class="text-lg">Total Items</span>
+                <span class="text-lg">{{ receiptTotalItems }}</span>
               </div>
-              <div class="flex items-center justify-between text-xl font-bold text-gray-900">
+              <div class="flex items-center justify-between text-xl font-bold text-slate-900">
                 <span>Grand Total</span>
-                <span class="text-orange-600">
+                <span class="text-system">
                   ${{ Number(receiptData.sale.total_price || 0).toFixed(2) }}
                 </span>
               </div>
             </div>
 
-            <div class="mt-6 text-center text-xs text-gray-400">
-              Thank you for your business.
+            <div class="mt-6 text-center text-lg text-slate-400">
+              Thank you for your business. Hope to see you back another day
             </div>
           </div>
 
           <div
-            class="px-5 md:px-6 py-4 border-t border-gray-100 bg-gray-50 flex flex-col sm:flex-row gap-3 justify-end">
+            class="px-5 md:px-6 py-4 border-t border-slate-100 bg-slate-50 flex flex-col sm:flex-row gap-3 justify-end">
             <button @click="closeReceiptModal"
-              class="px-5 py-3 rounded-xl border border-gray-200 text-gray-700 font-medium hover:bg-white">
+              class="px-5 py-3 rounded-xl border border-slate-200 text-slate-700 font-medium hover:bg-white">
               Close
             </button>
 
@@ -770,6 +786,8 @@ import SideBar from '@/components/SideBar.vue'
 const SALES_API = 'http://localhost:5000/api/sales'
 const PRODUCTS_API = 'http://localhost:5000/api/products'
 const CUSTOMERS_API = 'http://localhost:5000/api/customers'
+
+const sidebarOpen = ref(false)
 
 const sales = ref([])
 const products = ref([])
@@ -799,8 +817,8 @@ const productSearch = ref('')
 const customers = ref([])
 const customersLoading = ref(false)
 const customerMode = ref('existing')
-const customerSearch = ref('');
-const selectedCustomer = ref(null);
+const customerSearch = ref('')
+const selectedCustomer = ref(null)
 
 const saleForm = ref({
   customer_id: '',
@@ -808,6 +826,14 @@ const saleForm = ref({
   customer_email: '',
   customer_phone_number: '',
   payment_method: 'cash'
+})
+
+const getToken = () => localStorage.getItem('token')
+
+const axiosConfig = () => ({
+  headers: {
+    Authorization: `Bearer ${getToken()}`
+  }
 })
 
 const fetchCustomers = async () => {
@@ -822,14 +848,6 @@ const fetchCustomers = async () => {
     customersLoading.value = false
   }
 }
-
-const getToken = () => localStorage.getItem('token')
-
-const axiosConfig = () => ({
-  headers: {
-    Authorization: `Bearer ${getToken()}`
-  }
-})
 
 const fetchSales = async () => {
   loading.value = true
@@ -898,7 +916,7 @@ const paymentClass = (method) => {
   if (value === 'cash') return 'bg-green-100 text-green-700'
   if (value === 'card') return 'bg-blue-100 text-blue-700'
   if (value === 'mobile_money') return 'bg-purple-100 text-purple-700'
-  return 'bg-gray-100 text-gray-700'
+  return 'bg-slate-100 text-slate-700'
 }
 
 const formatDate = (dateValue) => {
@@ -986,6 +1004,7 @@ const customerSelectionIsValid = computed(() => {
     !!saleForm.value.customer_email?.trim()
   )
 })
+
 const filteredCustomers = computed(() => {
   const term = customerSearch.value.trim().toLowerCase()
 
@@ -1066,7 +1085,7 @@ const submitSale = async () => {
 
     let receiptCustomerName = 'Customer'
     if (customerMode.value === 'existing') {
-      receiptCustomerName = selectedCustomer.value?.name || "Customer"
+      receiptCustomerName = selectedCustomer.value?.name || 'Customer'
     } else {
       receiptCustomerName = saleForm.value.customer_name
     }
@@ -1173,12 +1192,9 @@ const printReceipt = () => {
             border-bottom: 1px solid #e5e7eb;
             font-size: 14px;
           }
-          .text-right {
-            text-align: right;
-          }
         </style>
       </head>
-      <body>c
+      <body>
         ${printContents}
       </body>
     </html>

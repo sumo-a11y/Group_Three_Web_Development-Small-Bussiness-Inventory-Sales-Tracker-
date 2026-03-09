@@ -14,6 +14,7 @@ import salesRoute from './route/sales.route.js';
 import productRoute from './route/products.routes.js';
 import customerRoute from './route/customer.routes.js'
 import notificationRoute from './route/notification.routes.js';
+import purchaseOrderRoute from './route/purchaseOrder.routes.js';
 import db from './config/connect.js';
 
 dotenv.config();
@@ -52,6 +53,7 @@ app.use('/api/customers', customerRoute);
 app.use('/api/sales', salesRoute);
 app.use('/api/products', productRoute)
 app.use('/api/notifications', notificationRoute)
+app.use('/api/purchase-orders', purchaseOrderRoute)
 
 // Root route
 app.get('/', (req, res) => {
