@@ -300,7 +300,7 @@
 <script setup>
 import { computed, ref } from "vue";
 import SideBar from "@/components/SideBar.vue";
-import CustomerModal from "@/components/CustomerModel.vue";
+import CustomerModal from "@/components/CustomerModal.vue";
 
 const sidebarOpen = ref(false);
 const showNotifications = ref(false);

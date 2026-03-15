@@ -10,7 +10,6 @@ import AdminDashbaord from "@/pages/AdminDashbaord.vue";
 import Products from "@/pages/Products.vue";
 import Sales from "@/pages/Sales.vue"
 import PurchaseOrders from "@/pages/PurchaseOrders.vue";
-import CustomerModel from "@/components/CustomerModel.vue";
 import InventoryPage from "@/pages/InventoryPage.vue";
 import Customer from "@/pages/Customer.vue";
 import Reports from "@/pages/Reports.vue";
@@ -27,7 +26,6 @@ const router = createRouter({
     {
       path: "/admin", component: AdminDashbaord, meta: { requiresAuth: true, role: "system_admin" }
     },
-    { path: "/customermodel", component: CustomerModel, meta: {requiresAuth:true }},
     { path: "/sales", component: Sales, meta: { requiresAuth: true } },
     { path: "/purchase-orders", component: PurchaseOrders, meta: { requiresAuth: true } },
     { path: "/inventory", component: InventoryPage, meta: { requiresAuth: true } },
