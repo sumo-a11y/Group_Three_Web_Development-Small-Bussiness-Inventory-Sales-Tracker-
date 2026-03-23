@@ -1,4 +1,5 @@
 import { Router } from "express";
+import upload from "../utils/uploads/imageUploads.middleware.js";
 import {
     registerUser,
     loginUser,
@@ -12,7 +13,15 @@ import {
 
 const router = Router();
 
-router.post("/register", registerUser);
+router.post(
+    "/register",
+    upload.fields([
+        { name: "avatar", maxCount: 1 },
+        { name: "businessLogo", maxCount: 1 },
+    ]),
+    registerUser
+);
+
 router.post("/login", loginUser);
 router.post("/refresh", refreshToken);
 router.post("/logout", logoutUser);

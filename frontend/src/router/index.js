@@ -12,6 +12,7 @@ import Sales from "@/pages/Sales.vue"
 import PurchaseOrders from "@/pages/PurchaseOrders.vue";
 import InventoryPage from "@/pages/InventoryPage.vue";
 import Reports from "@/pages/Reports.vue";
+import Settings from "@/pages/Settings.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -28,7 +29,8 @@ const router = createRouter({
     { path: "/sales", component: Sales, meta: { requiresAuth: true } },
     { path: "/purchase-orders", component: PurchaseOrders, meta: { requiresAuth: true } },
     { path: "/inventory", component: InventoryPage, meta: { requiresAuth: true } },
-    { path: "/reports", component: Reports, meta: { requiresAuth: true } }
+    { path: "/reports", component: Reports, meta: { requiresAuth: true } },
+    { path: "/settings", component: Settings, meta: { requiresAuth: true } },
   ],
 });
 
@@ -48,10 +50,11 @@ router.beforeEach((to) => {
   }
 
   // role gating
-  const requiredRole = to.matched.find((r) => r.meta.role)?.meta?.role;
-  if (requiredRole && auth.role !== requiredRole) {
-    return { path: "/dashboard" };
-  }
+  // const requiredRole = to.matched.find((r) => r.meta.role)?.meta?.role;
+  // if (requiredRole && auth.role !== requiredRole) {
+  //   console.log('This is working')
+  //   return { path: "/dashboard" };
+  // }
 });
 
 export default router;

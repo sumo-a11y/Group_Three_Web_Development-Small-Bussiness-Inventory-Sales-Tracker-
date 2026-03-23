@@ -1,110 +1,155 @@
-// src/stores/auth.store.js
 import { defineStore } from "pinia";
-import { ref, computed } from "vue";
-import api from "@/services/api";
 import { authService } from "@/services/authServices";
 
-function decodeJwt(token) {
-    try {
-        const payload = token.split(".")[1];
-        const json = atob(payload.replace(/-/g, "+").replace(/_/g, "/"));
-        return JSON.parse(json);
-    } catch {
-        return null;
-    }
-}
+export const useAuthStore = defineStore("auth", {
+  state: () => ({
+    token: localStorage.getItem("token") || "",
+    user: null,
+    business: null,
+    loading: false,
+  }),
 
-function isTokenExpired(token) {
-    const payload = decodeJwt(token);
-    if (!payload?.exp) return true;
-    // exp is seconds
-    return Date.now() >= payload.exp * 1000;
-}
+  getters: {
+    isAuthenticated: (state) => !!state.token,
+    userName: (state) => state.user?.name || "",
+    businessName: (state) => state.business?.name || "",
+    userRole: (state) => state.user?.role || "",
+    userAvatar: (state) =>
+      state.user?.avatar_url ||
+      `https://ui-avatars.com/api/?name=${encodeURIComponent(
+        state.user?.name || "User"
+      )}&background=f97316&color=fff`,
+  },
 
-export const useAuthStore = defineStore("auth", () => {
-    const token = ref(localStorage.getItem("token") || "");
+  actions: {
+    setToken(token) {
+      this.token = token || "";
+      if (token) {
+        localStorage.setItem("token", token);
+      } else {
+        localStorage.removeItem("token");
+      }
+    },
 
-    // ✅ fix: store parsed object, NOT a function
-    const user = ref(null);
-    try {
-        user.value = JSON.parse(localStorage.getItem("user") || "null");
-    } catch {
-        user.value = null;
-    }
+    setAuthData(payload = {}) {
+      this.user = payload.user || null;
+      this.business = payload.business || null;
 
-    const isAuthenticated = computed(() => !!token.value && !isTokenExpired(token.value));
-    const businessName = computed(() => user.value?.businessName || "");
-    const userName = computed(() => user.value?.name || "");
-    const role = computed(() => user.value?.role || "");
+      if (this.user) {
+        localStorage.setItem("user", JSON.stringify(this.user));
+      } else {
+        localStorage.removeItem("user");
+      }
 
-    function setSession({ token: t, user: u }) {
-        token.value = t || "";
-        user.value = u || null;
+      if (this.business) {
+        localStorage.setItem("business", JSON.stringify(this.business));
+      } else {
+        localStorage.removeItem("business");
+      }
+    },
 
-        if (t) localStorage.setItem("token", t);
-        else localStorage.removeItem("token");
+    loadStoredAuth() {
+      try {
+        this.user = JSON.parse(localStorage.getItem("user") || "null");
+      } catch {
+        this.user = null;
+      }
 
-        if (u) localStorage.setItem("user", JSON.stringify(u));
-        else localStorage.removeItem("user");
-    }
+      try {
+        this.business = JSON.parse(localStorage.getItem("business") || "null");
+      } catch {
+        this.business = null;
+      }
+    },
 
-    async function login(email, password) {
-        const res = await authService.login({ email, password });
-        setSession({ token: res.data.token, user: res.data.user });
-        return res.data;
-    }
+    clearAuthData() {
+      this.token = "";
+      this.user = null;
+      this.business = null;
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      localStorage.removeItem("business");
+    },
 
-    async function register(payload) {
-        const res = await authService.signup(payload);
-        return res.data;
-    }
+    async register(payload) {
+      this.loading = true;
+      try {
+        const { data } = await authService.signup(payload);
 
-    async function logout() {
-        try {
-            await authService.logOut?.(); // optional backend logout if exists
-        } catch (_) { }
-        setSession({ token: "", user: null });
-    }
+        return data;
+      } finally {
+        this.loading = false;
+      }
+    },
 
-    /**
-     * Install once after pinia is active.
-     * - Auto logout on 401
-     * - Auto logout if token is expired before request
-     */
-    function installInterceptors() {
-        api.interceptors.request.use((config) => {
-            const t = localStorage.getItem("token");
-            if (t) {
-                if (isTokenExpired(t)) {
-                    logout();
-                    // cancel request
-                    return Promise.reject(new Error("Session expired"));
-                }
-                config.headers.Authorization = `Bearer ${t}`;
-            }
-            return config;
+    async login(email, password) {
+      this.loading = true;
+      try {
+        const { data } = await authService.login({ email, password });
+
+        if (data?.token) {
+          this.setToken(data.token);
+        }
+
+        if (data?.user || data?.business) {
+          this.setAuthData({
+            user: data.user || null,
+            business: data.business || null,
+          });
+        }
+
+        await this.fetchProfile();
+
+        return data;
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    async fetchProfile() {
+      if (!this.token) return null;
+
+      this.loading = true;
+      try {
+        const { data } = await authService.getProfile();
+
+        this.setAuthData({
+          user: {
+            id: data.id,
+            name: data.name,
+            email: data.email,
+            phone: data.phone || "",
+            avatar_url: data.avatar_url || "",
+            role: data.role || "",
+            email_verified: data.email_verified ?? false,
+          },
+          business: data.business || null,
         });
 
-        api.interceptors.response.use(
-            (res) => res,
-            (err) => {
-                if (err?.response?.status === 401) logout();
-                return Promise.reject(err);
-            }
-        );
-    }
+        return data;
+      } catch (error) {
+        if (error?.response?.status === 401) {
+          this.clearAuthData();
+        }
+        throw error;
+      } finally {
+        this.loading = false;
+      }
+    },
 
-    return {
-        token,
-        user,
-        role,
-        isAuthenticated,
-        businessName,
-        userName,
-        login,
-        register,
-        logout,
-        installInterceptors,
-        setSession,
-    };
+    async logout() {
+      try {
+        await authService.logOut();
+      } catch (error) {
+        console.error("Logout request failed:", error);
+      } finally {
+        this.clearAuthData();
+      }
+    },
+
+    async resendVerificationEmail(email) {
+      const { data } = await authService.resendVerificationEmail(email);
+      return data;
+    },
+  },
 });

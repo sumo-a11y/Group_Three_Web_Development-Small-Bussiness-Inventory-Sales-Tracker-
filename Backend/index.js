@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import helmet from 'helmet';
+import helmet, { crossOriginResourcePolicy } from 'helmet';
 import morgan from 'morgan';
 import session from 'express-session';
 import cookieParser from 'cookie-parser';
@@ -15,6 +15,9 @@ import productRoute from './route/products.routes.js';
 import customerRoute from './route/customer.routes.js'
 import notificationRoute from './route/notification.routes.js';
 import purchaseOrderRoute from './route/purchaseOrder.routes.js';
+import ProfileRouter from './route/profile.routes.js';
+import settingRoute from './route/settings.routes.js';
+
 import db from './config/connect.js';
 
 dotenv.config();
@@ -23,11 +26,18 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(helmet());
+app.use(
+    helmet({
+        crossOriginResourcePolicy: { policy: "cross-origin" },
+    })
+);
+
 app.use(cors({
     origin: process.env.APP_URL || "http://localhost:5173",
     credentials: true,
 }));
+
+app.use("/uploads", express.static("uploads"));
 
 app.use(morgan('combined'));
 app.use(cookieParser());
@@ -54,7 +64,8 @@ app.use('/api/sales', salesRoute);
 app.use('/api/products', productRoute)
 app.use('/api/notifications', notificationRoute)
 app.use('/api/purchase-orders', purchaseOrderRoute)
-
+app.use('/api/profile', ProfileRouter)
+app.use('/api/settings', settingRoute)
 // Root route
 app.get('/', (req, res) => {
     res.send('Welcome to the Inventory and Sales Tracker API!');

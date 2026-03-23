@@ -7,6 +7,7 @@ import PurchaseOrderItem from "./purchaseOrderItem.model.js"
 import Business from "./business.models.js"
 import user from "./user.models.js"
 import Customer from "./customers.models.js"
+import BusinessSettings from "./businessSettings.models.js"
 
 Sale.hasMany(SaleItem, {
     foreignKey: 'saleId',
@@ -95,6 +96,9 @@ Business.hasMany(Sale, {
     foreignKey: "businessId",
     as: "sales"
 });
+
+Business.hasOne(BusinessSettings, { foreignKey: "businessId", as: "settings" });
+BusinessSettings.belongsTo(Business, { foreignKey: "businessId", as: "business" });
 
 Sale.belongsTo(Business, {
     foreignKey: "businessId",

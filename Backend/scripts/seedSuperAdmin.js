@@ -36,7 +36,7 @@ async function seed() {
     await User.create({
         name: "System Admin",
         email,
-        hashed_password: hashed,
+        password: hashed,
         role: "system_admin",
         businessId: systemBiz.id, // ✅ FIX
     });
