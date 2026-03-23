@@ -11,6 +11,7 @@ import Products from "@/pages/Products.vue";
 import Sales from "@/pages/Sales.vue"
 import PurchaseOrders from "@/pages/PurchaseOrders.vue";
 import InventoryPage from "@/pages/InventoryPage.vue";
+import Customer from "@/pages/Customer.vue";
 import Reports from "@/pages/Reports.vue";
 
 const router = createRouter({
@@ -28,6 +29,7 @@ const router = createRouter({
     { path: "/sales", component: Sales, meta: { requiresAuth: true } },
     { path: "/purchase-orders", component: PurchaseOrders, meta: { requiresAuth: true } },
     { path: "/inventory", component: InventoryPage, meta: { requiresAuth: true } },
+    { path: "/customers", component: Customer, meta:{requiresAuth: true } },
     { path: "/reports", component: Reports, meta: { requiresAuth: true } }
   ],
 });
