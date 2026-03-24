@@ -7,6 +7,8 @@ import Login from "@/pages/Login.vue";
 import SignUp from "@/pages/SignUp.vue";
 import BusinessDashboard from "@/pages/BusinessDashboard.vue";
 import AdminDashbaord from "@/pages/AdminDashbaord.vue";
+import Businesses from "@/pages/Businesses.vue";
+import Report from "@/pages/Report.vue";
 import Products from "@/pages/Products.vue";
 import Sales from "@/pages/Sales.vue"
 import PurchaseOrders from "@/pages/PurchaseOrders.vue";
@@ -25,6 +27,12 @@ const router = createRouter({
     { path: "/dashboard", component: BusinessDashboard, meta: { requiresAuth: true } },
     {
       path: "/admin", component: AdminDashbaord, meta: { requiresAuth: true, role: "system_admin" }
+    },
+    {
+      path: "/businesses", component: Businesses, meta: { requiresAuth: true, role: "system_admin" }
+    },
+    {
+      path: "/system/reports", component: Report, meta: { requiresAuth: true, role: "system_admin" }
     },
     { path: "/sales", component: Sales, meta: { requiresAuth: true } },
     { path: "/purchase-orders", component: PurchaseOrders, meta: { requiresAuth: true } },
