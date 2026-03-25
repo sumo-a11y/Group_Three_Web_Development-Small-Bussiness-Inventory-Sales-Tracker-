@@ -1,6 +1,7 @@
 // controllers/auth.controllers.js
 import crypto from "crypto";
 import Business from "../models/business.models.js";
+import BusinessSettings from "../models/businessSettings.models.js";
 import User from "../models/user.models.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
@@ -42,85 +43,167 @@ function clearRefreshCookie(res) {
     });
 }
 
-function safeUserResponse(user, business) {
+function safeUserResponse(user, business = null) {
     return {
         id: user.id,
         name: user.name,
+        email: user.email,
+        phone: user.phone,
+        avatar_url: user.avatar_url || "",
+        email_verified: user.email_verified,
         role: user.role,
-        businessId: user.businessId,
-        businessName: business?.name || null,
+        business: business ?
+            {
+                id: business.id,
+                name: business.name,
+                owner_name: business.owner_name,
+                email: business.email,
+                phone: business.phone,
+                address: business.address,
+                logo_url: business.logo_url,
+                theme_color: business.theme_color
+            }
+            : null,
     };
-}
+};
 
 export const registerUser = async (req, res) => {
+    const transaction = await Business.sequelize.transaction();
+
     try {
-        const { name, owner_name, email, password, taxIdentificationNumber } = req.body;
+        const {
+            name,
+            owner_name,
+            email,
+            password,
+            taxIdentificationNumber,
+            phone,
+            business_email,
+            business_phone,
+            address,
+            theme_color,
+        } = req.body;
 
         if (!name || !owner_name || !email || !password || !taxIdentificationNumber) {
-            return res.status(400).json({ message: "All fields are required" });
+            await transaction.rollback();
+            return res.status(400).json({ message: "All required fields are required" });
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            await transaction.rollback();
+            return res.status(400).json({ message: "Invalid email format" });
+        }
+
+        if (password.length < 8) {
+            await transaction.rollback();
+            return res.status(400).json({ message: "Password must be at least 8 characters" });
+        }
+
+        if (theme_color && !/^#([A-Fa-f0-9]{6})$/.test(theme_color)) {
+            await transaction.rollback();
+            return res.status(400).json({ message: "Invalid theme color format" });
         }
 
         const existingBiz = await Business.findOne({ where: { name } });
-        if (existingBiz) return res.status(400).json({ message: "Business already exists" });
+        if (existingBiz) {
+            await transaction.rollback();
+            return res.status(400).json({ message: "Business already exists" });
+        }
 
         const existingUser = await User.findOne({ where: { email } });
-        if (existingUser) return res.status(400).json({ message: "Email already in use" });
+        if (existingUser) {
+            await transaction.rollback();
+            return res.status(400).json({ message: "Email already in use" });
+        }
 
-        const business = await Business.create({ name, owner_name, taxIdentificationNumber });
+        const avatarFile = req.files?.avatar?.[0];
+        const businessLogoFile = req.files?.businessLogo?.[0];
+
+        const business = await Business.create(
+            {
+                name,
+                owner_name,
+                taxIdentificationNumber,
+                email: business_email || null,
+                phone: business_phone || null,
+                address: address || null,
+                theme_color: theme_color || "#f97316",
+                logo_url: businessLogoFile
+                    ? `/${businessLogoFile.path.replace(/\\/g, "/")}`
+                    : null,
+            },
+            { transaction }
+        );
 
         const hashedPassword = await bcrypt.hash(password, 12);
 
-        const user = await User.create({
-            name: owner_name,
-            email,
-            hashed_password: hashedPassword,
-            role: "business_admin",
-            businessId: business.id,
-        });
+        const user = await User.create(
+            {
+                name: owner_name,
+                email,
+                phone: phone || null,
+                password: hashedPassword,
+                avatar_url: avatarFile
+                    ? `/${avatarFile.path.replace(/\\/g, "/")}`
+                    : null,
+                role: "business_admin",
+                businessId: business.id,
+            },
+            { transaction }
+        );
 
-        //  Generate email verification token
-        const { rawToken, hashedToken } = generateTokenPair(); // reuse helper
+        const { rawToken, hashedToken } = generateTokenPair();
 
-        //  Use correct field names from your model
         user.email_verification_token = hashedToken;
         user.email_verify_expires = new Date(Date.now() + 24 * 60 * 60 * 1000);
-        await user.save();
+        await user.save({ transaction });
+
+        await BusinessSettings.create(
+            {
+                businessId: business.id,
+            },
+            { transaction }
+        );
+
+        await transaction.commit();
 
         const verifyLink = `${process.env.BACKEND_URL}/api/auth/verify-email?token=${rawToken}&email=${encodeURIComponent(
             user.email
         )}`;
 
-        //  Don’t fail registration if email fails
         sendEmail({
             to: user.email,
             subject: "Account Created Successfully.",
             text: `Verify your email: ${verifyLink}`,
             html: `
-        <div style="font-family: Arial, sans-serif">
-          <h2>Verify your email</h2>
-          <p>Please verify your email to activate your account.</p>
-          <p><a href="${verifyLink}">Verify Email</a></p>
-          <p>This link expires in 24 hours.</p>
-        </div>
-      `,
+                <div style="font-family: Arial, sans-serif">
+                    <h2>Verify your email</h2>
+                    <p>Please verify your email to activate your account.</p>
+                    <p><a href="${verifyLink}">Verify Email</a></p>
+                    <p>This link expires in 24 hours.</p>
+                </div>
+            `,
         }).catch((err) => console.error("Verification email failed:", err));
 
-        // Issue tokens (your choice: you can still issue tokens, but block login actions until verified)
-        const jwtPayload = { userId: user.id, businessId: user.businessId, role: user.role };
-        const accessToken = signAccessToken(jwtPayload);
-        const refreshToken = signRefreshToken(jwtPayload);
-        setRefreshCookie(res, refreshToken);
+        const jwtPayload = {
+            userId: user.id,
+            businessId: user.businessId,
+            role: user.role,
+        };
 
         return res.status(201).json({
             message: "Business and user registered successfully. Please verify your email.",
-            token: accessToken,
             user: safeUserResponse(user, business),
+            requiresEmailVerification: true
         });
     } catch (error) {
+        await transaction.rollback();
         console.error("Registration error:", error);
         return res.status(500).json({ message: "Internal server error" });
     }
 };
+
 export const verifyEmailRedirect = async (req, res) => {
     try {
         const { email, token } = req.query;
@@ -247,7 +330,7 @@ export const loginUser = async (req, res) => {
             });
         }
 
-        const isMatch = await bcrypt.compare(password, user.hashed_password);
+        const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return res.status(400).json({ message: "Invalid email or password" });
 
         const business = await Business.findByPk(user.businessId);

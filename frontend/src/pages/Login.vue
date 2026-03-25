@@ -3,7 +3,8 @@
     <div
       class="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 overflow-hidden rounded-3xl bg-white shadow-xl border border-slate-100">
       <!-- Left: Brand / Illustration -->
-      <div class="relative hidden md:block p-10 bg-linear-to-br from-orange-400 via-orange-400 to-amber-300 text-white">
+      <div
+        class="relative hidden md:block overflow-hidden bg-linear-to-br from-[#f97316] via-[#fb923c] to-[#fdba74] p-8 text-white lg:p-10">
         <div
           class="pointer-events-none absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_top,rgba(255,255,255,.85),transparent_55%)]">
         </div>
@@ -271,6 +272,7 @@ async function handleLogin() {
   } catch (err) {
     const status = err?.response?.status;
     const msg = err?.response?.data?.message || "Login failed.";
+    console.log(err)
 
     // ✅ If backend blocks unverified emails with 403
     if (status === 403) {

@@ -35,7 +35,7 @@ const SaleItem = db.define('SaleItem', {
             model: 'Product',
             key: 'id'
         },
-        onDelete: 'CASCADE'
+        onDelete: 'RESTRICT'
     }
 }, {
     timestamps: true,
