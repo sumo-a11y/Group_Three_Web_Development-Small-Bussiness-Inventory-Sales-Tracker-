@@ -806,7 +806,7 @@ async function handleSubmit() {
     toast.success(res?.message || "Registered successfully!");
     router.replace("/login");
   } catch (err) {
-    const message = toast.err?.response?.data?.message || "Signup failed.";
+    const message = err?.response?.data?.message || err?.message || "Signup failed.";
     console.log(message)
     statusType.value = "error";
     statusMessage.value = message;
