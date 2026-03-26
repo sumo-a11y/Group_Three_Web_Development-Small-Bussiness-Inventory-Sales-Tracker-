@@ -1,3 +1,4 @@
+import { Op } from "sequelize";
 import Notification from "../models/notification.model.js";
 
 export const createNotificationService = async ({
@@ -68,4 +69,22 @@ export const deleteAllNotificationsService = async (businessId) => {
   });
 
   return { message: "Notifications cleared successfully" };
+};
+
+export const resolveStockNotificationsForProductService = async (productId, businessId) => {
+  await Notification.update(
+    { is_read: true },
+    {
+      where: {
+        businessId,
+        productId,
+        type: {
+          [Op.in]: ["low_stock", "out_of_stock"]
+        },
+        is_read: false
+      }
+    }
+  );
+
+  return { message: "Stock notifications resolved successfully" };
 };
