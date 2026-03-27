@@ -46,9 +46,9 @@ const Sale = db.define('Sale', {
         references: {
             model: 'Customer',
             key: 'id'
-        }
-    },
-    onDelete: 'CASCADE'
+        },
+        onDelete: 'CASCADE'
+    }
 }, {
     timestamps: true,
     freezeTableName: true

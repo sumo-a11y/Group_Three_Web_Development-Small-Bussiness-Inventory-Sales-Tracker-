@@ -16,14 +16,10 @@
           {{ subtitle }}
         </p>
 
-        <span v-if="change && !loading"
+        <span v-if="effectiveDelta && !loading"
           class="mt-3 inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold"
-          :class="toneClass">
-          <i v-if="changeTone === 'up'" class="fa-solid fa-arrow-trend-up"></i>
-          <i v-else-if="changeTone === 'down'" class="fa-solid fa-arrow-trend-down"></i>
-          <i v-else-if="changeTone === 'warn'" class="fa-solid fa-triangle-exclamation"></i>
-          <i v-else class="fa-solid fa-circle-info"></i>
-          {{ change }}
+          :class="deltaToneClass">
+          {{ effectiveDelta }}
         </span>
       </div>
 
@@ -33,7 +29,7 @@
     </div>
 
     <!-- mini spark -->
-    <div v-if="showSparkline" class="mt-4 flex items-end gap-1.5 h-7">
+    <div v-if="showSparkline && sparklineData && sparklineData.length" class="mt-4 flex items-end gap-1.5 h-7">
       <span v-for="(bar, index) in sparklineData" :key="index" class="w-1.5 rounded-sm bg-orange-300/80"
         :style="{ height: `${normalizeBarHeight(bar)}px` }"></span>
     </div>
@@ -46,35 +42,53 @@ import { computed } from "vue";
 const props = defineProps({
   title: { type: String, required: true },
   value: { type: [String, Number], required: true },
-  change: { type: [String, Number], default: "" },
+  delta: { type: [String, Number], default: "" },
   subtitle: { type: String, default: "" },
   loading: { type: Boolean, default: false },
-  changeTone: { type: String, default: "up" }, // up | down | warn | neutral
+  deltaTone: { type: String, default: "up" }, // up | down | warn | neutral
   icon: { type: String, default: "fa-solid fa-chart-line" },
   showSparkline: { type: Boolean, default: true },
+  sparkSeries: {
+    type: Array,
+    default: () => [],
+  },
+  // Legacy support
+  change: { type: [String, Number], default: "" },
+  changeTone: { type: String, default: "up" },
   sparkline: {
     type: Array,
     default: () => [10, 18, 14, 22, 12, 16, 21, 17, 13, 20, 15, 24],
   },
 });
 
-const toneClass = computed(() => {
-  if (props.changeTone === "down") {
+const deltaToneClass = computed(() => {
+  const tone = props.deltaTone || props.changeTone;
+  if (tone === "down") {
     return "text-rose-700 bg-rose-50 border-rose-100";
   }
 
-  if (props.changeTone === "warn") {
+  if (tone === "warn") {
     return "text-orange-800 bg-orange-50 border-orange-100";
   }
 
-  if (props.changeTone === "neutral") {
+  if (tone === "neutral") {
     return "text-slate-700 bg-slate-50 border-slate-200";
   }
 
   return "text-emerald-700 bg-emerald-50 border-emerald-100";
 });
 
+const effectiveDelta = computed(() => {
+  if (props.delta !== "" && props.delta !== null && props.delta !== undefined) {
+    return props.delta;
+  }
+  return props.change;
+});
+
 const sparklineData = computed(() => {
+  if (props.sparkSeries && props.sparkSeries.length) {
+    return props.sparkSeries;
+  }
   return Array.isArray(props.sparkline) && props.sparkline.length
     ? props.sparkline
     : [10, 18, 14, 22, 12, 16, 21, 17, 13, 20, 15, 24];

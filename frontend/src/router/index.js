@@ -7,12 +7,15 @@ import Login from "@/pages/Login.vue";
 import SignUp from "@/pages/SignUp.vue";
 import BusinessDashboard from "@/pages/BusinessDashboard.vue";
 import AdminDashbaord from "@/pages/AdminDashbaord.vue";
+import Businesses from "@/pages/Businesses.vue";
+import Report from "@/pages/Report.vue";
 import Products from "@/pages/Products.vue";
 import Sales from "@/pages/Sales.vue"
 import PurchaseOrders from "@/pages/PurchaseOrders.vue";
 import InventoryPage from "@/pages/InventoryPage.vue";
 import Customer from "@/pages/Customer.vue";
 import Reports from "@/pages/Reports.vue";
+import Settings from "@/pages/Settings.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -26,11 +29,18 @@ const router = createRouter({
     {
       path: "/admin", component: AdminDashbaord, meta: { requiresAuth: true, role: "system_admin" }
     },
+    {
+      path: "/businesses", component: Businesses, meta: { requiresAuth: true, role: "system_admin" }
+    },
+    {
+      path: "/system/reports", component: Report, meta: { requiresAuth: true, role: "system_admin" }
+    },
     { path: "/sales", component: Sales, meta: { requiresAuth: true } },
     { path: "/purchase-orders", component: PurchaseOrders, meta: { requiresAuth: true } },
     { path: "/inventory", component: InventoryPage, meta: { requiresAuth: true } },
-    { path: "/customers", component: Customer, meta:{requiresAuth: true } },
-    { path: "/reports", component: Reports, meta: { requiresAuth: true } }
+    { path: "/customers", component: Customer, meta: { requiresAuth: true } },
+    { path: "/reports", component: Reports, meta: { requiresAuth: true } },
+    { path: "/settings", component: Settings, meta: { requiresAuth: true } },
   ],
 });
 
@@ -50,10 +60,11 @@ router.beforeEach((to) => {
   }
 
   // role gating
-  const requiredRole = to.matched.find((r) => r.meta.role)?.meta?.role;
-  if (requiredRole && auth.role !== requiredRole) {
-    return { path: "/dashboard" };
-  }
+  // const requiredRole = to.matched.find((r) => r.meta.role)?.meta?.role;
+  // if (requiredRole && auth.role !== requiredRole) {
+  //   console.log('This is working')
+  //   return { path: "/dashboard" };
+  // }
 });
 
 export default router;
