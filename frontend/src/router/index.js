@@ -8,7 +8,7 @@ import SignUp from "@/pages/SignUp.vue";
 import BusinessDashboard from "@/pages/BusinessDashboard.vue";
 import AdminDashbaord from "@/pages/AdminDashbaord.vue";
 import Businesses from "@/pages/Businesses.vue";
-import Report from "@/pages/Report.vue";
+import Report from "@/pages/Reports.vue";
 import Products from "@/pages/Products.vue";
 import Sales from "@/pages/Sales.vue"
 import PurchaseOrders from "@/pages/PurchaseOrders.vue";
